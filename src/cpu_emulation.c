@@ -52,7 +52,8 @@ uint16_t cpu_read_word(struct nes *nes, uint16_t addr) {
 uint16_t read_on_indirect(struct nes *nes, uint16_t addr) {
   uint16_t low = (uint16_t)cpu_read(nes, addr);
   // Reproduce 6502 bug - http://nesdev.com/6502bugs.txt
-  uint16_t high = (uint16_t)cpu_read(nes, (addr & 0xFF00) | ((addr + 1) & 0x00FF));
+  uint16_t high =
+      (uint16_t)cpu_read(nes, (addr & 0xFF00) | ((addr + 1) & 0x00FF));
   return low | (high << 8);
 }
 
@@ -68,103 +69,90 @@ uint16_t cpu_get_operand(struct nes *nes, enum cpu_addressing_mode mode) {
     return nes->cpu->A;
   case immediate:
     return ++nes->cpu->PC;
-  case zero_page:
-    {
-        uint16_t value = cpu_read(nes, nes->cpu->PC);
-        nes->cpu->PC++;
-        return value;
+  case zero_page: {
+    uint16_t value = cpu_read(nes, nes->cpu->PC);
+    nes->cpu->PC++;
+    return value;
+  }
+  case zero_page_x: {
+    cpu_tick(nes);
+    uint16_t value = (cpu_read(nes, nes->cpu->PC) + nes->cpu->X) & 0xFF;
+    nes->cpu->PC++;
+    return value;
+  }
+  case zero_page_y: {
+    cpu_tick(nes);
+    uint16_t value = (cpu_read(nes, nes->cpu->PC) + nes->cpu->Y) & 0xFF;
+    nes->cpu->PC++;
+    return value;
+  }
+  case absolute: {
+    uint16_t value = cpu_read_word(nes, nes->cpu->PC);
+    nes->cpu->PC += 2;
+    return value;
+  }
+  case absolute_x: {
+    uint16_t value = cpu_read_word(nes, nes->cpu->PC);
+    nes->cpu->PC += 2;
+    cpu_tick(nes);
+    return value + nes->cpu->X;
+  }
+  case absolute_x_with_penalty: {
+    uint16_t value = cpu_read_word(nes, nes->cpu->PC);
+    nes->cpu->PC += 2;
+    if (is_page_crossed(nes->cpu->X, value)) {
+      cpu_tick(nes);
     }
-  case zero_page_x:
-    {
-        cpu_tick(nes);
-        uint16_t value = (cpu_read(nes, nes->cpu->PC) + nes->cpu->X) & 0xFF;
-        nes->cpu->PC++;
-        return value;
+    return value + nes->cpu->X;
+  }
+  case absolute_y: {
+    uint16_t value = cpu_read_word(nes, nes->cpu->PC);
+    nes->cpu->PC += 2;
+    cpu_tick(nes);
+    return value + nes->cpu->Y;
+  }
+  case absolute_y_with_penalty: {
+    uint16_t value = cpu_read_word(nes, nes->cpu->PC);
+    nes->cpu->PC += 2;
+    if (is_page_crossed(nes->cpu->Y, value)) {
+      cpu_tick(nes);
     }
-  case zero_page_y:
-    {
-        cpu_tick(nes);
-        uint16_t value = (cpu_read(nes, nes->cpu->PC) + nes->cpu->Y) & 0xFF;
-        nes->cpu->PC++;
-        return value;
+    return value + nes->cpu->Y;
+  }
+  case relative: {
+    uint16_t value = cpu_read(nes, nes->cpu->PC);
+    nes->cpu->PC++;
+    return value;
+  }
+  case indirect: {
+    uint16_t m = cpu_read_word(nes, nes->cpu->PC);
+    uint16_t value = read_on_indirect(nes, m);
+    nes->cpu->PC += 2;
+    return value;
+  }
+  case indexed_indirect: {
+    uint8_t m = cpu_read(nes, nes->cpu->PC);
+    uint16_t value = read_on_indirect(nes, (uint8_t)(m + nes->cpu->X));
+    nes->cpu->PC += 1;
+    cpu_tick(nes);
+    return value;
+  }
+  case indirect_indexed: {
+    uint8_t m = cpu_read(nes, nes->cpu->PC);
+    uint16_t value = read_on_indirect(nes, m);
+    nes->cpu->PC++;
+    cpu_tick(nes);
+    return value + nes->cpu->Y;
+  }
+  case indirect_indexed_with_penalty: {
+    uint8_t m = cpu_read(nes, nes->cpu->PC);
+    uint16_t value = read_on_indirect(nes, m);
+    nes->cpu->PC++;
+    if (is_page_crossed(nes->cpu->Y, value)) {
+      cpu_tick(nes);
     }
-  case absolute:
-    {
-        uint16_t value = cpu_read_word(nes, nes->cpu->PC);
-        nes->cpu->PC += 2;
-        return value;
-    }
-  case absolute_x:
-    {
-        uint16_t value = cpu_read_word(nes, nes->cpu->PC);
-        nes->cpu->PC += 2;
-        cpu_tick(nes);
-        return value + nes->cpu->X;
-    }
-  case absolute_x_with_penalty:
-    {
-        uint16_t value = cpu_read_word(nes, nes->cpu->PC);
-        nes->cpu->PC += 2;
-        if (is_page_crossed(nes->cpu->X, value)) {
-          cpu_tick(nes);
-        }
-        return value + nes->cpu->X;
-    }
-  case absolute_y:
-    {
-        uint16_t value = cpu_read_word(nes, nes->cpu->PC);
-        nes->cpu->PC += 2;
-        cpu_tick(nes);
-        return value + nes->cpu->Y;
-    }
-  case absolute_y_with_penalty:
-    {
-        uint16_t value = cpu_read_word(nes, nes->cpu->PC);
-        nes->cpu->PC += 2;
-        if (is_page_crossed(nes->cpu->Y, value)) {
-          cpu_tick(nes);
-        }
-        return value + nes->cpu->Y;
-    }
-  case relative:
-    {
-        uint16_t value = cpu_read(nes, nes->cpu->PC);
-        nes->cpu->PC++;
-        return value;
-    }
-  case indirect:
-    {
-        uint16_t m = cpu_read_word(nes, nes->cpu->PC);
-        uint16_t value = read_on_indirect(nes, m);
-        nes->cpu->PC += 2;
-        return value;
-    }
-  case indexed_indirect:
-    {
-        uint8_t m = cpu_read(nes, nes->cpu->PC);
-        uint16_t value = read_on_indirect(nes, (uint8_t)(m + nes->cpu->X));
-        nes->cpu->PC += 1;
-        cpu_tick(nes);
-        return value;
-    }
-  case indirect_indexed:
-    {
-        uint8_t m = cpu_read(nes, nes->cpu->PC);
-        uint16_t value = read_on_indirect(nes, m);
-        nes->cpu->PC++;
-        cpu_tick(nes);
-        return value + nes->cpu->Y;
-    }
-  case indirect_indexed_with_penalty:
-    {
-        uint8_t m = cpu_read(nes, nes->cpu->PC);
-        uint16_t value = read_on_indirect(nes, m);
-        nes->cpu->PC++;
-        if (is_page_crossed(nes->cpu->Y, value)) {
-          cpu_tick(nes);
-        }
-        return value + nes->cpu->Y;
-    }
+    return value + nes->cpu->Y;
+  }
   }
   return 0;
 }
