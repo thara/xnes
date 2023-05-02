@@ -33,24 +33,26 @@ void cpu_power_on(struct nes *nes) {
   cpu_write(nes, 0x4015, 0x00); // all channels disabled
 }
 
-static void execute(struct nes *nes, struct cpu_instruction inst);
+void cpu_execute(struct nes *nes, struct cpu_instruction inst);
 
 void cpu_step(struct nes *nes) {
   uint8_t op = cpu_read(nes, nes->cpu->PC);
   nes->cpu->PC++;
 
   struct cpu_instruction inst = cpu_decode(op);
-  execute(nes, inst);
+  cpu_execute(nes, inst);
 }
 
 uint16_t cpu_read_word(struct nes *nes, uint16_t addr) {
   return cpu_read(nes, addr) | cpu_read(nes, addr + 1) << 8;
 }
 
+#include <stdio.h>
+
 uint16_t read_on_indirect(struct nes *nes, uint16_t addr) {
-  uint16_t low = cpu_read(nes, addr);
+  uint16_t low = (uint16_t)cpu_read(nes, addr);
   // Reproduce 6502 bug - http://nesdev.com/6502bugs.txt
-  uint16_t high = cpu_read(nes, (addr & 0xFF00) | ((addr + 1) & 0x00FF));
+  uint16_t high = (uint16_t)cpu_read(nes, (addr & 0xFF00) | ((addr + 1) & 0x00FF));
   return low | (high << 8);
 }
 
@@ -59,79 +61,112 @@ bool is_page_crossed(uint16_t a, uint16_t b) {
 }
 
 uint16_t cpu_get_operand(struct nes *nes, enum cpu_addressing_mode mode) {
-  uint16_t operand;
-
   switch (mode) {
   case implicit:
-    operand = 0;
+    return 0;
   case accumulator:
-    operand = nes->cpu->A;
+    return nes->cpu->A;
   case immediate:
-    operand = ++nes->cpu->PC;
+    return ++nes->cpu->PC;
   case zero_page:
-    operand = cpu_read(nes, nes->cpu->PC);
-    nes->cpu->PC++;
+    {
+        uint16_t value = cpu_read(nes, nes->cpu->PC);
+        nes->cpu->PC++;
+        return value;
+    }
   case zero_page_x:
-    cpu_tick(nes);
-    operand = (cpu_read(nes, nes->cpu->PC) + nes->cpu->X) & 0xFF;
-    nes->cpu->PC++;
+    {
+        cpu_tick(nes);
+        uint16_t value = (cpu_read(nes, nes->cpu->PC) + nes->cpu->X) & 0xFF;
+        nes->cpu->PC++;
+        return value;
+    }
   case zero_page_y:
-    cpu_tick(nes);
-    operand = (cpu_read(nes, nes->cpu->PC) + nes->cpu->Y) & 0xFF;
-    nes->cpu->PC++;
+    {
+        cpu_tick(nes);
+        uint16_t value = (cpu_read(nes, nes->cpu->PC) + nes->cpu->Y) & 0xFF;
+        nes->cpu->PC++;
+        return value;
+    }
   case absolute:
-    operand = cpu_read_word(nes, nes->cpu->PC);
-    nes->cpu->PC += 2;
+    {
+        uint16_t value = cpu_read_word(nes, nes->cpu->PC);
+        nes->cpu->PC += 2;
+        return value;
+    }
   case absolute_x:
-    operand = cpu_read_word(nes, nes->cpu->PC);
-    nes->cpu->PC += 2;
-    cpu_tick(nes);
-    operand += nes->cpu->X;
+    {
+        uint16_t value = cpu_read_word(nes, nes->cpu->PC);
+        nes->cpu->PC += 2;
+        cpu_tick(nes);
+        return value + nes->cpu->X;
+    }
   case absolute_x_with_penalty:
-    operand = cpu_read_word(nes, nes->cpu->PC);
-    nes->cpu->PC += 2;
-    if (is_page_crossed(nes->cpu->X, operand)) {
-      cpu_tick(nes);
+    {
+        uint16_t value = cpu_read_word(nes, nes->cpu->PC);
+        nes->cpu->PC += 2;
+        if (is_page_crossed(nes->cpu->X, value)) {
+          cpu_tick(nes);
+        }
+        return value + nes->cpu->X;
     }
-    operand += nes->cpu->X;
   case absolute_y:
-    operand = cpu_read_word(nes, nes->cpu->PC);
-    nes->cpu->PC += 2;
-    cpu_tick(nes);
-    operand += nes->cpu->Y;
+    {
+        uint16_t value = cpu_read_word(nes, nes->cpu->PC);
+        nes->cpu->PC += 2;
+        cpu_tick(nes);
+        return value + nes->cpu->Y;
+    }
   case absolute_y_with_penalty:
-    operand = cpu_read_word(nes, nes->cpu->PC);
-    nes->cpu->PC += 2;
-    if (is_page_crossed(nes->cpu->Y, operand)) {
-      cpu_tick(nes);
+    {
+        uint16_t value = cpu_read_word(nes, nes->cpu->PC);
+        nes->cpu->PC += 2;
+        if (is_page_crossed(nes->cpu->Y, value)) {
+          cpu_tick(nes);
+        }
+        return value + nes->cpu->Y;
     }
-    operand += nes->cpu->Y;
   case relative:
-    operand = cpu_read(nes, nes->cpu->PC);
-    nes->cpu->PC++;
-  case indirect:
-    operand = read_on_indirect(nes, cpu_read_word(nes, nes->cpu->PC));
-    nes->cpu->PC += 2;
-  case indexed_indirect:
-    operand = read_on_indirect(nes, cpu_read(nes, nes->cpu->PC) + nes->cpu->X);
-    nes->cpu->PC += 2;
-    cpu_tick(nes);
-  case indirect_indexed:
-    operand = read_on_indirect(nes, cpu_read(nes, nes->cpu->PC));
-    nes->cpu->PC++;
-    cpu_tick(nes);
-    operand += nes->cpu->Y;
-  case indirect_indexed_with_penalty:
-    operand = read_on_indirect(nes, cpu_read(nes, nes->cpu->PC));
-    nes->cpu->PC++;
-    if (is_page_crossed(nes->cpu->Y, operand)) {
-      cpu_tick(nes);
+    {
+        uint16_t value = cpu_read(nes, nes->cpu->PC);
+        nes->cpu->PC++;
+        return value;
     }
-    operand += nes->cpu->Y;
-    // default:
-    //   exit failure
+  case indirect:
+    {
+        uint16_t m = cpu_read_word(nes, nes->cpu->PC);
+        uint16_t value = read_on_indirect(nes, m);
+        nes->cpu->PC += 2;
+        return value;
+    }
+  case indexed_indirect:
+    {
+        uint8_t m = cpu_read(nes, nes->cpu->PC);
+        uint16_t value = read_on_indirect(nes, (uint8_t)(m + nes->cpu->X));
+        nes->cpu->PC += 1;
+        cpu_tick(nes);
+        return value;
+    }
+  case indirect_indexed:
+    {
+        uint8_t m = cpu_read(nes, nes->cpu->PC);
+        uint16_t value = read_on_indirect(nes, m);
+        nes->cpu->PC++;
+        cpu_tick(nes);
+        return value + nes->cpu->Y;
+    }
+  case indirect_indexed_with_penalty:
+    {
+        uint8_t m = cpu_read(nes, nes->cpu->PC);
+        uint16_t value = read_on_indirect(nes, m);
+        nes->cpu->PC++;
+        if (is_page_crossed(nes->cpu->Y, value)) {
+          cpu_tick(nes);
+        }
+        return value + nes->cpu->Y;
+    }
   }
-  return operand;
+  return 0;
 }
 
 // B flags
@@ -172,7 +207,7 @@ void branch(struct nes *nes, uint8_t v);
 
 void set_carry_status(struct nes *nes, uint8_t m, uint8_t r);
 
-void execute(struct nes *nes, struct cpu_instruction inst) {
+void cpu_execute(struct nes *nes, struct cpu_instruction inst) {
   uint16_t operand = cpu_get_operand(nes, inst.mode);
 
   switch (inst.mnemonic) {
