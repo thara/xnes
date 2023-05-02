@@ -29,6 +29,8 @@ enum cpu_status {
   N, // Negative
 };
 
+struct cpu* cpu_new();
+
 void cpu_status_set(struct cpu *cpu, enum cpu_status s, bool v);
 
 bool cpu_status_enabled(struct cpu *cpu, enum cpu_status s);

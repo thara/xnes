@@ -1,13 +1,14 @@
 #include <stdlib.h>
 
 #include "nes.h"
+#include "cpu.h"
 
 struct nes *nes_new() {
   struct nes *nes = malloc(sizeof(struct nes));
   if (nes == NULL) {
     return NULL;
   }
-  nes->cpu = malloc(sizeof(struct cpu));
+  nes->cpu = cpu_new();
   return nes;
 }
 

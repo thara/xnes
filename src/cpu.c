@@ -1,4 +1,11 @@
+#include <stdlib.h>
+
 #include "cpu.h"
+
+struct cpu* cpu_new() {
+    struct cpu* cpu = calloc(1, sizeof(struct cpu));
+    return cpu;
+}
 
 void cpu_status_set(struct cpu *cpu, enum cpu_status s, bool v) {
   cpu->P &= ~(1 << s);
