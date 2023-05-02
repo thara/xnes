@@ -47,8 +47,6 @@ uint16_t cpu_read_word(struct nes *nes, uint16_t addr) {
   return cpu_read(nes, addr) | cpu_read(nes, addr + 1) << 8;
 }
 
-#include <stdio.h>
-
 uint16_t read_on_indirect(struct nes *nes, uint16_t addr) {
   uint16_t low = (uint16_t)cpu_read(nes, addr);
   // Reproduce 6502 bug - http://nesdev.com/6502bugs.txt
