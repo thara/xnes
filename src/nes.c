@@ -7,6 +7,7 @@ struct nes *nes_new() {
   if (nes == NULL) {
     return NULL;
   }
+  nes->cpu = malloc(sizeof(struct cpu));
   return nes;
 }
 
