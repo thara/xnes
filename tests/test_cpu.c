@@ -8,7 +8,7 @@ TEST(test_cpu_status_set) {
   cpu.P = 0b11001100;
   cpu_status_set(&cpu, V, true);
 
-  test_assert_int_eq(0b11011100, cpu.P);
+  test_assert_bit_eq(0b11011100, cpu.P);
 }
 
 TEST(test_cpu_status_enabled) {

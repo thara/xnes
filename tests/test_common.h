@@ -3,6 +3,7 @@
 
 #include <stdbool.h>
 #include <stdio.h>
+#include <stdint.h>
 
 static int test_count = 0;
 static int test_assert_count = 0;
@@ -59,6 +60,42 @@ static char test_last_message[TESTMESSAGE_LEN];
   int got = (actual);\
   if (want != got) {\
     snprintf(test_last_message, TESTMESSAGE_LEN, "%s failed:\n\t%s:%d: %d expected but was %d", __func__, __FILE__, __LINE__, want, got);\
+    test_status_failed = true;\
+  } else { \
+    printf(".");\
+  }\
+} while(0)
+
+static void test_int_to_binary(uint16_t n, char* output) {
+    int size = sizeof(n) * 8;
+    for (int i = size; 0 <= i; i--) {
+        output[size - 1 - i] = ((n >>i ) & 1) ? '1' : '0';
+    }
+    output[size] = '\0';
+}
+
+#define test_assert_bit_eq(expect, actual) do {\
+  test_assert_count++;\
+  int want = (expect);\
+  int got = (actual);\
+  if (want != got) {\
+    char want_str[17];\
+    test_int_to_binary(want, want_str);\
+    char got_str[17];\
+    test_int_to_binary(got, got_str);\
+    snprintf(test_last_message, TESTMESSAGE_LEN, "%s failed:\n\t%s:%d: 0b%s expected but was 0b%s", __func__, __FILE__, __LINE__, want_str, got_str);\
+    test_status_failed = true;\
+  } else { \
+    printf(".");\
+  }\
+} while(0)
+
+#define test_assert_byte_eq(expect, actual) do {\
+  test_assert_count++;\
+  int want = (expect);\
+  int got = (actual);\
+  if (want != got) {\
+    snprintf(test_last_message, TESTMESSAGE_LEN, "%s failed:\n\t%s:%d: 0x%08X expected but was 0x%08X", __func__, __FILE__, __LINE__, want, got);\
     test_status_failed = true;\
   } else { \
     printf(".");\
