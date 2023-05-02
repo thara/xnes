@@ -1,7 +1,9 @@
 #include <stdio.h>
 
-#include "cpu.h"
+#include "nes.h"
 
 int main() {
-    printf("Hello NES\n");
+  struct nes *nes = nes_new();
+  nes_release(nes);
+  printf("Hello NES\n");
 }
