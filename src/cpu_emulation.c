@@ -66,7 +66,7 @@ uint16_t cpu_get_operand(struct nes *nes, enum cpu_addressing_mode mode) {
   case accumulator:
     return nes->cpu->A;
   case immediate:
-    return ++nes->cpu->PC;
+    return nes->cpu->PC++;
   case zero_page: {
     uint16_t value = cpu_read(nes, nes->cpu->PC);
     nes->cpu->PC++;
@@ -262,12 +262,13 @@ void cpu_execute(struct nes *nes, struct cpu_instruction inst) {
     cpu_tick(nes);
     cpu_tick(nes);
     break;
-  case PLP:
-    nes->cpu->P = (cpu_pull_stack(nes) & ~cpu_status_instruction_b) |
-                  0b100000; // for nestest
+  case PLP: {
+    nes->cpu->P = cpu_pull_stack(nes) & ~cpu_status_instruction_b;
+    nes->cpu->P |= 0b00100000; // for nestest
     cpu_tick(nes);
     cpu_tick(nes);
     break;
+  }
 
   case AND:
     and(nes, operand);
@@ -470,7 +471,7 @@ void cpu_execute(struct nes *nes, struct cpu_instruction inst) {
     cpu_tick(nes);
     break;
   case RTI:
-    nes->cpu->P |= cpu_pull_stack(nes);
+    nes->cpu->P = cpu_pull_stack(nes);
     nes->cpu->PC = cpu_pull_stack_word(nes);
     cpu_tick(nes);
     cpu_tick(nes);
@@ -635,8 +636,8 @@ void ror(struct nes *nes, uint8_t *m) {
 
 void branch(struct nes *nes, uint8_t v) {
   cpu_tick(nes);
-  uint16_t base = nes->cpu->PC;
-  int8_t offset = v; // to negative number
+  int16_t base = (int16_t)nes->cpu->PC;
+  int8_t offset = (int8_t)v; // to negative number
   if (is_page_crossed(offset, base)) {
     cpu_tick(nes);
   }

@@ -6,9 +6,12 @@
 TEST(test_cpu_status_set) {
   struct cpu cpu;
   cpu.P = 0b11001100;
-  cpu_status_set(&cpu, V, true);
 
-  test_assert_bit_eq(0b11011100, cpu.P);
+  cpu_status_set(&cpu, C, true);
+  test_assert_bit_eq(0b11001101, cpu.P);
+
+  cpu_status_set(&cpu, I, false);
+  test_assert_bit_eq(0b11001001, cpu.P);
 }
 
 TEST(test_cpu_status_enabled) {

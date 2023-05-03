@@ -21,12 +21,12 @@ struct cpu {
 };
 
 enum cpu_status {
-  C, // Carry
-  Z, // Zero
-  I, // Interrupt Disable
-  D, // Decimal
-  V, // Overflow
-  N, // Negative
+  C = 0, // Carry
+  Z = 1, // Zero
+  I = 2, // Interrupt Disable
+  D = 3, // Decimal
+  V = 6, // Overflow
+  N = 7, // Negative
 };
 
 struct cpu* cpu_new();
