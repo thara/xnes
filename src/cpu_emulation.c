@@ -200,71 +200,91 @@ void cpu_execute(struct nes *nes, struct cpu_instruction inst) {
   case LDA:
     nes->cpu->A = cpu_read(nes, operand);
     cpu_status_set_zn(nes->cpu, nes->cpu->A);
+    break;
   case LDX:
     nes->cpu->X = cpu_read(nes, operand);
     cpu_status_set_zn(nes->cpu, nes->cpu->X);
+    break;
   case LDY:
     nes->cpu->Y = cpu_read(nes, operand);
     cpu_status_set_zn(nes->cpu, nes->cpu->Y);
+    break;
   case STA:
     cpu_write(nes, operand, nes->cpu->A);
+    break;
   case STX:
     cpu_write(nes, operand, nes->cpu->X);
+    break;
   case STY:
     cpu_write(nes, operand, nes->cpu->Y);
+    break;
   case TAX:
     nes->cpu->X = nes->cpu->A;
     cpu_status_set_zn(nes->cpu, nes->cpu->X);
     cpu_tick(nes);
+    break;
   case TAY:
     nes->cpu->Y = nes->cpu->A;
     cpu_status_set_zn(nes->cpu, nes->cpu->Y);
     cpu_tick(nes);
+    break;
   case TXA:
     nes->cpu->A = nes->cpu->X;
     cpu_status_set_zn(nes->cpu, nes->cpu->A);
     cpu_tick(nes);
+    break;
   case TYA:
     nes->cpu->A = nes->cpu->Y;
     cpu_status_set_zn(nes->cpu, nes->cpu->A);
     cpu_tick(nes);
+    break;
   case TSX:
     nes->cpu->X = nes->cpu->S;
     cpu_status_set_zn(nes->cpu, nes->cpu->X);
     cpu_tick(nes);
+    break;
   case TXS:
     nes->cpu->S = nes->cpu->X;
     cpu_tick(nes);
+    break;
 
   case PHA:
     push_stack(nes, nes->cpu->A);
     cpu_tick(nes);
+    break;
   case PHP:
     push_stack(nes, nes->cpu->P | cpu_status_instruction_b);
     cpu_tick(nes);
+    break;
   case PLA:
     nes->cpu->A = cpu_pull_stack(nes);
     cpu_status_set_zn(nes->cpu, nes->cpu->A);
     cpu_tick(nes);
     cpu_tick(nes);
+    break;
   case PLP:
     nes->cpu->P = (cpu_pull_stack(nes) & ~cpu_status_instruction_b) |
                   0b100000; // for nestest
     cpu_tick(nes);
     cpu_tick(nes);
+    break;
 
   case AND:
     and(nes, operand);
+    break;
   case EOR:
     eor(nes, operand);
+    break;
   case ORA:
     ora(nes, operand);
+    break;
   case BIT: {
     uint8_t m = cpu_read(nes, operand);
     uint8_t b = nes->cpu->A & m;
     nes->cpu->P |= (b == 0) << Z;
     nes->cpu->P |= ((m & 0x40) == 0x40) << V;
     nes->cpu->P |= ((m & 0x80) == 0x80) << N;
+    break;
   }
 
   case ADC: {
@@ -275,44 +295,55 @@ void cpu_execute(struct nes *nes, struct cpu_instruction inst) {
     set_carry_status(nes, m, r);
     nes->cpu->A = r;
     cpu_status_set_zn(nes->cpu, nes->cpu->A);
+    break;
   }
   case SBC:
     sbc(nes, operand);
+    break;
   case CMP:
     cmp(nes, nes->cpu->A, operand);
+    break;
   case CPX:
     cmp(nes, nes->cpu->X, operand);
+    break;
   case CPY:
     cmp(nes, nes->cpu->Y, operand);
+    break;
 
   case INC: {
     uint8_t r = cpu_read(nes, operand) + 1;
     cpu_write(nes, operand, r);
     cpu_status_set_zn(nes->cpu, r);
     cpu_tick(nes);
+    break;
   }
   case INX:
     nes->cpu->X++;
     cpu_status_set_zn(nes->cpu, nes->cpu->X);
     cpu_tick(nes);
+    break;
   case INY:
     nes->cpu->Y++;
     cpu_status_set_zn(nes->cpu, nes->cpu->Y);
     cpu_tick(nes);
+    break;
   case DEC: {
     uint8_t r = cpu_read(nes, operand) - 1;
     cpu_write(nes, operand, r);
     cpu_status_set_zn(nes->cpu, r);
     cpu_tick(nes);
+    break;
   }
   case DEX:
     nes->cpu->X--;
     cpu_status_set_zn(nes->cpu, nes->cpu->X);
     cpu_tick(nes);
+    break;
   case DEY:
     nes->cpu->Y--;
     cpu_status_set_zn(nes->cpu, nes->cpu->Y);
     cpu_tick(nes);
+    break;
 
   case ASL:
     if (inst.mode == accumulator) {
@@ -322,6 +353,7 @@ void cpu_execute(struct nes *nes, struct cpu_instruction inst) {
       asl(nes, &m);
       cpu_write(nes, operand, m);
     }
+    break;
   case LSR:
     if (inst.mode == accumulator) {
       lsr(nes, &nes->cpu->A);
@@ -338,6 +370,7 @@ void cpu_execute(struct nes *nes, struct cpu_instruction inst) {
       rol(nes, &m);
       cpu_write(nes, operand, m);
     }
+    break;
   case ROR:
     if (inst.mode == accumulator) {
       ror(nes, &nes->cpu->A);
@@ -346,66 +379,85 @@ void cpu_execute(struct nes *nes, struct cpu_instruction inst) {
       ror(nes, &m);
       cpu_write(nes, operand, m);
     }
+    break;
 
   case JMP:
     nes->cpu->PC = operand;
+    break;
   case JSR:
     push_stack_word(nes, nes->cpu->PC - 1);
     nes->cpu->PC = operand;
     cpu_tick(nes);
+    break;
   case RTS:
     nes->cpu->PC = cpu_pull_stack_word(nes);
     nes->cpu->PC++;
     cpu_tick(nes);
     cpu_tick(nes);
     cpu_tick(nes);
+    break;
 
   case BCC:
     if (!cpu_status_enabled(nes->cpu, C))
       branch(nes, operand);
+    break;
   case BCS:
     if (cpu_status_enabled(nes->cpu, C))
       branch(nes, operand);
+    break;
   case BEQ:
     if (cpu_status_enabled(nes->cpu, Z))
       branch(nes, operand);
+    break;
   case BMI:
     if (cpu_status_enabled(nes->cpu, N))
       branch(nes, operand);
+    break;
   case BNE:
     if (!cpu_status_enabled(nes->cpu, Z))
       branch(nes, operand);
+    break;
   case BPL:
     if (!cpu_status_enabled(nes->cpu, N))
       branch(nes, operand);
+    break;
   case BVC:
     if (!cpu_status_enabled(nes->cpu, V))
       branch(nes, operand);
+    break;
   case BVS:
     if (cpu_status_enabled(nes->cpu, V))
       branch(nes, operand);
+    break;
 
   case CLC:
     cpu_status_set(nes->cpu, C, false);
     cpu_tick(nes);
+    break;
   case CLD:
     cpu_status_set(nes->cpu, D, false);
     cpu_tick(nes);
+    break;
   case CLI:
     cpu_status_set(nes->cpu, I, false);
     cpu_tick(nes);
+    break;
   case CLV:
     cpu_status_set(nes->cpu, V, false);
     cpu_tick(nes);
+    break;
   case SEC:
     cpu_status_set(nes->cpu, C, true);
     cpu_tick(nes);
+    break;
   case SED:
     cpu_status_set(nes->cpu, D, true);
     cpu_tick(nes);
+    break;
   case SEI:
     cpu_status_set(nes->cpu, I, true);
     cpu_tick(nes);
+    break;
 
   case BRK:
     push_stack_word(nes, nes->cpu->PC);
@@ -413,85 +465,90 @@ void cpu_execute(struct nes *nes, struct cpu_instruction inst) {
     push_stack(nes, nes->cpu->P);
     nes->cpu->PC = cpu_read_word(nes, 0xFFFE);
     cpu_tick(nes);
+    break;
   case NOP:
     cpu_tick(nes);
+    break;
   case RTI:
     nes->cpu->P |= cpu_pull_stack(nes);
     nes->cpu->PC = cpu_pull_stack_word(nes);
     cpu_tick(nes);
     cpu_tick(nes);
+    break;
 
   case LAX: {
     uint8_t m = cpu_read(nes, operand);
     nes->cpu->A = m;
     cpu_status_set_zn(nes->cpu, m);
     nes->cpu->X = m;
+    break;
   }
   case SAX:
     cpu_write(nes, operand, nes->cpu->A & nes->cpu->X);
-  case DCP:
+    break;
+  case DCP: {
     // decrementMemory excluding tick
-    {
-      uint8_t m = cpu_read(nes, operand) - 1;
-      cpu_status_set_zn(nes->cpu, m);
-      cpu_write(nes, operand, m);
-      cmp(nes, nes->cpu->A, operand);
-    }
-  case ISB:
+    uint8_t m = cpu_read(nes, operand) - 1;
+    cpu_status_set_zn(nes->cpu, m);
+    cpu_write(nes, operand, m);
+    cmp(nes, nes->cpu->A, operand);
+    break;
+  }
+  case ISB: {
     // incrementMemory excluding tick
-    {
-      uint8_t m = cpu_read(nes, operand) - 1;
-      cpu_status_set_zn(nes->cpu, m);
-      cpu_write(nes, operand, m);
-      sbc(nes, operand);
-    }
-  case SLO:
+    uint8_t m = cpu_read(nes, operand) - 1;
+    cpu_status_set_zn(nes->cpu, m);
+    cpu_write(nes, operand, m);
+    sbc(nes, operand);
+    break;
+  }
+  case SLO: {
     // arithmeticShiftLeft excluding tick
-    {
-      uint8_t m = cpu_read(nes, operand);
-      cpu_status_set(nes->cpu, C, (m & 0x80) == 0x80);
-      m <<= 1;
-      cpu_write(nes, operand, m);
-      ora(nes, operand);
-    }
-  case RLA:
+    uint8_t m = cpu_read(nes, operand);
+    cpu_status_set(nes->cpu, C, (m & 0x80) == 0x80);
+    m <<= 1;
+    cpu_write(nes, operand, m);
+    ora(nes, operand);
+    break;
+  }
+  case RLA: {
     // rotateLeft excluding tick
-    {
-      uint8_t m = cpu_read(nes, operand);
-      uint8_t carry = m & 0x80;
-      m <<= 1;
-      if (cpu_status_enabled(nes->cpu, C)) {
-        m |= 1;
-      }
-      cpu_status_set(nes->cpu, C, carry == 0x80);
-      cpu_status_set_zn(nes->cpu, m);
-      cpu_write(nes, operand, m);
-      and(nes, operand);
+    uint8_t m = cpu_read(nes, operand);
+    uint8_t carry = m & 0x80;
+    m <<= 1;
+    if (cpu_status_enabled(nes->cpu, C)) {
+      m |= 1;
     }
-  case SRE:
+    cpu_status_set(nes->cpu, C, carry == 0x80);
+    cpu_status_set_zn(nes->cpu, m);
+    cpu_write(nes, operand, m);
+    and(nes, operand);
+    break;
+  }
+  case SRE: {
     // logicalShiftRight excluding tick
-    {
-      uint8_t m = cpu_read(nes, operand);
-      cpu_status_set(nes->cpu, C, (m & 1) == 1);
-      m >>= 1;
-      cpu_status_set_zn(nes->cpu, m);
-      cpu_write(nes, operand, m);
-      eor(nes, operand);
-    }
-  case RRA:
+    uint8_t m = cpu_read(nes, operand);
+    cpu_status_set(nes->cpu, C, (m & 1) == 1);
+    m >>= 1;
+    cpu_status_set_zn(nes->cpu, m);
+    cpu_write(nes, operand, m);
+    eor(nes, operand);
+    break;
+  }
+  case RRA: {
     // rotateRight excluding tick
-    {
-      uint8_t m = cpu_read(nes, operand);
-      uint8_t carry = m & 1;
-      m >>= 1;
-      if (cpu_status_enabled(nes->cpu, C)) {
-        m |= 0x80;
-      }
-      cpu_status_set(nes->cpu, C, carry == 1);
-      cpu_status_set_zn(nes->cpu, m);
-      cpu_write(nes, operand, m);
-      abc(nes, operand);
+    uint8_t m = cpu_read(nes, operand);
+    uint8_t carry = m & 1;
+    m >>= 1;
+    if (cpu_status_enabled(nes->cpu, C)) {
+      m |= 0x80;
     }
+    cpu_status_set(nes->cpu, C, carry == 1);
+    cpu_status_set_zn(nes->cpu, m);
+    cpu_write(nes, operand, m);
+    abc(nes, operand);
+    break;
+  }
     /* default: */
     /*     panic(fmt.Sprintf("unrecognized mnemonic: %d", inst.Mnemonic)) */
   }
