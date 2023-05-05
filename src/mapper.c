@@ -38,9 +38,10 @@ void detect_mapper(ROM *rom, Mapper *mapper, MapperError *error) {
     mapper0_init(rom, mapper, error);
     break;
   default:
-    *error = mapper_error_unsupported_mapper;
+    *error = MAPPER_ERROR_UNSUPPORTED;
     return;
   }
+  *error = MAPPER_ERROR_NONE;
 }
 
 void mapper0_init(ROM *rom, Mapper *mapper, MapperError *error) {

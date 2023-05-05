@@ -14,8 +14,8 @@ typedef enum{
 } MirroringMode;
 
 typedef enum {
-    mapper_error_none,
-    mapper_error_unsupported_mapper,
+    MAPPER_ERROR_NONE,
+    MAPPER_ERROR_UNSUPPORTED,
 } MapperError;
 
 void detect_mapper(ROM *rom, Mapper *mapper, MapperError* error);
