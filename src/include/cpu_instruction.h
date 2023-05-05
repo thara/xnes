@@ -9,11 +9,11 @@
 
 // https://wiki.nesdev.org/w/index.php?title=CPU_addressing_modes
 typedef enum {
-  implicit, accumulator, immediate,
-  zero_page, zero_page_x, zero_page_y,
-  absolute, absolute_x, absolute_x_with_penalty, absolute_y, absolute_y_with_penalty,
-  relative,
-  indirect, indexed_indirect, indirect_indexed, indirect_indexed_with_penalty,
+  IMPLICIT, ACCUMULATOR, IMMEDIATE,
+  ZERO_PAGE, ZERO_PAGE_X, ZERO_PAGE_Y,
+  ABSOLUTE, ABSOLUTE_X, ABSOLUTE_X_WITH_PENALTY, ABSOLUTE_Y, ABSOLUTE_Y_WITH_PENALTY,
+  RELATIVE,
+  INDIRECT, INDEXED_INDIRECT, INDIRECT_INDEXED, INDIRECT_INDEXED_WITH_PENALTY,
 } AddressingMode;
 
 typedef enum {

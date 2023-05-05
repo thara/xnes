@@ -5,8 +5,7 @@
 static uint8_t magic_number[4] = {0x4E, 0x45, 0x53, 0x1A};
 static uint8_t padding[5];
 
-void parse_rom(uint8_t *buf, uint64_t buf_len, ROM *rom,
-               ROMParseError *error) {
+void parse_rom(uint8_t *buf, uint64_t buf_len, ROM *rom, ROMParseError *error) {
   if (rom == NULL) {
     *error = rom_parse_error_null;
     return;

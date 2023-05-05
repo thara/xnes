@@ -12,7 +12,7 @@ uint16_t cpu_get_operand(NES *nes, AddressingMode mode);
 TEST(test_get_operand_implicit) {
   NES *nes = nes_new();
 
-  uint16_t result = cpu_get_operand(nes, implicit);
+  uint16_t result = cpu_get_operand(nes, IMPLICIT);
   test_assert_int_eq(0, result);
   test_assert_int_eq(0, nes->cpu.cycles);
 }
@@ -21,7 +21,7 @@ TEST(test_get_operand_accumulator) {
   NES *nes = nes_new();
   nes->cpu.A = 0xFB;
 
-  uint16_t result = cpu_get_operand(nes, accumulator);
+  uint16_t result = cpu_get_operand(nes, ACCUMULATOR);
   test_assert_byte_eq(0xFB, result);
   test_assert_int_eq(0, nes->cpu.cycles);
 }
@@ -30,7 +30,7 @@ TEST(test_get_operand_immediate) {
   NES *nes = nes_new();
   nes->cpu.PC = 0x8234;
 
-  uint16_t result = cpu_get_operand(nes, immediate);
+  uint16_t result = cpu_get_operand(nes, IMMEDIATE);
   test_assert_byte_eq(0x8234, result);
   test_assert_int_eq(0, nes->cpu.cycles);
 }
@@ -42,7 +42,7 @@ TEST(test_get_operand_zero_page) {
   nes->cpu.PC = 0x0414;
   mem_write(nes, 0x0414, 0x91);
 
-  uint16_t result = cpu_get_operand(nes, zero_page);
+  uint16_t result = cpu_get_operand(nes, ZERO_PAGE);
   test_assert_byte_eq(0x91, result);
   test_assert_int_eq(1, nes->cpu.cycles);
 }
@@ -55,7 +55,7 @@ TEST(test_get_operand_zero_page_x) {
   nes->cpu.X = 0x93;
   mem_write(nes, 0x0100, 0x80);
 
-  uint16_t result = cpu_get_operand(nes, zero_page_x);
+  uint16_t result = cpu_get_operand(nes, ZERO_PAGE_X);
   test_assert_byte_eq(0x13, result);
   test_assert_int_eq(2, nes->cpu.cycles);
 }
@@ -68,7 +68,7 @@ TEST(test_get_operand_zero_page_y) {
   nes->cpu.Y = 0xF1;
   mem_write(nes, 0x0423, 0x36);
 
-  uint16_t result = cpu_get_operand(nes, zero_page_y);
+  uint16_t result = cpu_get_operand(nes, ZERO_PAGE_Y);
   test_assert_byte_eq(0x27, result);
   test_assert_int_eq(2, nes->cpu.cycles);
 }
@@ -81,7 +81,7 @@ TEST(test_get_operand_absolute) {
   mem_write(nes, 0x0423, 0x36);
   mem_write(nes, 0x0424, 0xF0);
 
-  uint16_t result = cpu_get_operand(nes, absolute);
+  uint16_t result = cpu_get_operand(nes, ABSOLUTE);
   test_assert_byte_eq(0xF036, result);
   test_assert_int_eq(2, nes->cpu.cycles);
 }
@@ -96,7 +96,7 @@ TEST(test_get_operand_absolute_x) {
 
   nes->cpu.X = 0x31;
 
-  uint16_t result = cpu_get_operand(nes, absolute_x);
+  uint16_t result = cpu_get_operand(nes, ABSOLUTE_X);
   test_assert_byte_eq(0xF067, result);
   test_assert_int_eq(3, nes->cpu.cycles);
 }
@@ -111,7 +111,7 @@ TEST(test_get_operand_absolute_x_with_penalty_not_page_crossed) {
 
   nes->cpu.X = 0x31;
 
-  uint16_t result = cpu_get_operand(nes, absolute_x_with_penalty);
+  uint16_t result = cpu_get_operand(nes, ABSOLUTE_X_WITH_PENALTY);
   test_assert_byte_eq(0xF067, result);
   test_assert_int_eq(2, nes->cpu.cycles);
 }
@@ -126,7 +126,7 @@ TEST(test_get_operand_absolute_x_with_penalty_page_crossed) {
 
   nes->cpu.X = 0xF0;
 
-  uint16_t result = cpu_get_operand(nes, absolute_x_with_penalty);
+  uint16_t result = cpu_get_operand(nes, ABSOLUTE_X_WITH_PENALTY);
   test_assert_byte_eq(0xF126, result);
   test_assert_int_eq(3, nes->cpu.cycles);
 }
@@ -141,7 +141,7 @@ TEST(test_get_operand_absolute_y) {
 
   nes->cpu.Y = 0x31;
 
-  uint16_t result = cpu_get_operand(nes, absolute_y);
+  uint16_t result = cpu_get_operand(nes, ABSOLUTE_Y);
   test_assert_byte_eq(0xF067, result);
   test_assert_int_eq(3, nes->cpu.cycles);
 }
@@ -156,7 +156,7 @@ TEST(test_get_operand_absolute_y_with_penalty_not_page_crossed) {
 
   nes->cpu.Y = 0x31;
 
-  uint16_t result = cpu_get_operand(nes, absolute_y_with_penalty);
+  uint16_t result = cpu_get_operand(nes, ABSOLUTE_Y_WITH_PENALTY);
   test_assert_byte_eq(0xF067, result);
   test_assert_int_eq(2, nes->cpu.cycles);
 }
@@ -171,7 +171,7 @@ TEST(test_get_operand_absolute_y_with_penalty_page_crossed) {
 
   nes->cpu.Y = 0xF0;
 
-  uint16_t result = cpu_get_operand(nes, absolute_y_with_penalty);
+  uint16_t result = cpu_get_operand(nes, ABSOLUTE_Y_WITH_PENALTY);
   test_assert_byte_eq(0xF126, result);
   test_assert_int_eq(3, nes->cpu.cycles);
 }
@@ -183,7 +183,7 @@ TEST(test_get_operand_relative) {
   nes->cpu.PC = 0x0414;
   mem_write(nes, 0x0414, 0x91);
 
-  uint16_t result = cpu_get_operand(nes, relative);
+  uint16_t result = cpu_get_operand(nes, RELATIVE);
   test_assert_byte_eq(0x91, result);
   test_assert_int_eq(1, nes->cpu.cycles);
 }
@@ -197,7 +197,7 @@ TEST(test_get_operand_indirect) {
   mem_write(nes, 0x0210, 0x03);
   mem_write(nes, 0x0310, 0x9F);
 
-  uint16_t result = cpu_get_operand(nes, indirect);
+  uint16_t result = cpu_get_operand(nes, INDIRECT);
   test_assert_byte_eq(0x9F, result);
   test_assert_int_eq(4, nes->cpu.cycles);
 }
@@ -212,7 +212,7 @@ TEST(test_get_operand_indexed_indirect) {
   mem_write(nes, 0x0085, 0x12);
   mem_write(nes, 0x0086, 0x90);
 
-  uint16_t result = cpu_get_operand(nes, indexed_indirect);
+  uint16_t result = cpu_get_operand(nes, INDEXED_INDIRECT);
   test_assert_byte_eq(0x9012, result);
   test_assert_int_eq(4, nes->cpu.cycles);
 }
@@ -228,7 +228,7 @@ TEST(test_get_operand_indirect_indexed) {
 
   nes->cpu.Y = 0xF3;
 
-  uint16_t result = cpu_get_operand(nes, indirect_indexed);
+  uint16_t result = cpu_get_operand(nes, INDIRECT_INDEXED);
   test_assert_byte_eq(0x9105, result);
   test_assert_int_eq(4, nes->cpu.cycles);
 }
@@ -244,7 +244,7 @@ TEST(test_get_operand_indirect_indexed_with_penalty_not_page_crossed) {
 
   nes->cpu.Y = 0x83;
 
-  uint16_t result = cpu_get_operand(nes, indirect_indexed_with_penalty);
+  uint16_t result = cpu_get_operand(nes, INDIRECT_INDEXED_WITH_PENALTY);
   test_assert_byte_eq(0x9095, result);
   test_assert_int_eq(3, nes->cpu.cycles);
 }
@@ -260,7 +260,7 @@ TEST(test_get_operand_indirect_indexed_with_penalty_page_crossed) {
 
   nes->cpu.Y = 0xF3;
 
-  uint16_t result = cpu_get_operand(nes, indirect_indexed_with_penalty);
+  uint16_t result = cpu_get_operand(nes, INDIRECT_INDEXED_WITH_PENALTY);
   test_assert_byte_eq(0x9105, result);
   test_assert_int_eq(4, nes->cpu.cycles);
 }

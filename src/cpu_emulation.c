@@ -61,41 +61,41 @@ bool is_page_crossed(uint16_t a, uint16_t b) {
 
 uint16_t cpu_get_operand(NES *nes, AddressingMode mode) {
   switch (mode) {
-  case implicit:
+  case IMPLICIT:
     return 0;
-  case accumulator:
+  case ACCUMULATOR:
     return nes->cpu.A;
-  case immediate:
+  case IMMEDIATE:
     return nes->cpu.PC++;
-  case zero_page: {
+  case ZERO_PAGE: {
     uint16_t value = cpu_read(nes, nes->cpu.PC);
     nes->cpu.PC++;
     return value;
   }
-  case zero_page_x: {
+  case ZERO_PAGE_X: {
     cpu_tick(nes);
     uint16_t value = (cpu_read(nes, nes->cpu.PC) + nes->cpu.X) & 0xFF;
     nes->cpu.PC++;
     return value;
   }
-  case zero_page_y: {
+  case ZERO_PAGE_Y: {
     cpu_tick(nes);
     uint16_t value = (cpu_read(nes, nes->cpu.PC) + nes->cpu.Y) & 0xFF;
     nes->cpu.PC++;
     return value;
   }
-  case absolute: {
+  case ABSOLUTE: {
     uint16_t value = cpu_read_word(nes, nes->cpu.PC);
     nes->cpu.PC += 2;
     return value;
   }
-  case absolute_x: {
+  case ABSOLUTE_X: {
     uint16_t value = cpu_read_word(nes, nes->cpu.PC);
     nes->cpu.PC += 2;
     cpu_tick(nes);
     return value + nes->cpu.X;
   }
-  case absolute_x_with_penalty: {
+  case ABSOLUTE_X_WITH_PENALTY: {
     uint16_t value = cpu_read_word(nes, nes->cpu.PC);
     nes->cpu.PC += 2;
     if (is_page_crossed(nes->cpu.X, value)) {
@@ -103,13 +103,13 @@ uint16_t cpu_get_operand(NES *nes, AddressingMode mode) {
     }
     return value + nes->cpu.X;
   }
-  case absolute_y: {
+  case ABSOLUTE_Y: {
     uint16_t value = cpu_read_word(nes, nes->cpu.PC);
     nes->cpu.PC += 2;
     cpu_tick(nes);
     return value + nes->cpu.Y;
   }
-  case absolute_y_with_penalty: {
+  case ABSOLUTE_Y_WITH_PENALTY: {
     uint16_t value = cpu_read_word(nes, nes->cpu.PC);
     nes->cpu.PC += 2;
     if (is_page_crossed(nes->cpu.Y, value)) {
@@ -117,32 +117,32 @@ uint16_t cpu_get_operand(NES *nes, AddressingMode mode) {
     }
     return value + nes->cpu.Y;
   }
-  case relative: {
+  case RELATIVE: {
     uint16_t value = cpu_read(nes, nes->cpu.PC);
     nes->cpu.PC++;
     return value;
   }
-  case indirect: {
+  case INDIRECT: {
     uint16_t m = cpu_read_word(nes, nes->cpu.PC);
     uint16_t value = read_on_indirect(nes, m);
     nes->cpu.PC += 2;
     return value;
   }
-  case indexed_indirect: {
+  case INDEXED_INDIRECT: {
     uint8_t m = cpu_read(nes, nes->cpu.PC);
     uint16_t value = read_on_indirect(nes, (uint8_t)(m + nes->cpu.X));
     nes->cpu.PC += 1;
     cpu_tick(nes);
     return value;
   }
-  case indirect_indexed: {
+  case INDIRECT_INDEXED: {
     uint8_t m = cpu_read(nes, nes->cpu.PC);
     uint16_t value = read_on_indirect(nes, m);
     nes->cpu.PC++;
     cpu_tick(nes);
     return value + nes->cpu.Y;
   }
-  case indirect_indexed_with_penalty: {
+  case INDIRECT_INDEXED_WITH_PENALTY: {
     uint8_t m = cpu_read(nes, nes->cpu.PC);
     uint16_t value = read_on_indirect(nes, m);
     nes->cpu.PC++;
@@ -347,7 +347,7 @@ void cpu_execute(NES *nes, CPUInstruction inst) {
     break;
 
   case ASL:
-    if (inst.mode == accumulator) {
+    if (inst.mode == ACCUMULATOR) {
       asl(nes, &nes->cpu.A);
     } else {
       uint8_t m = cpu_read(nes, operand);
@@ -356,7 +356,7 @@ void cpu_execute(NES *nes, CPUInstruction inst) {
     }
     break;
   case LSR:
-    if (inst.mode == accumulator) {
+    if (inst.mode == ACCUMULATOR) {
       lsr(nes, &nes->cpu.A);
     } else {
       uint8_t m = cpu_read(nes, operand);
@@ -364,7 +364,7 @@ void cpu_execute(NES *nes, CPUInstruction inst) {
       cpu_write(nes, operand, m);
     }
   case ROL:
-    if (inst.mode == accumulator) {
+    if (inst.mode == ACCUMULATOR) {
       rol(nes, &nes->cpu.A);
     } else {
       uint8_t m = cpu_read(nes, operand);
@@ -373,7 +373,7 @@ void cpu_execute(NES *nes, CPUInstruction inst) {
     }
     break;
   case ROR:
-    if (inst.mode == accumulator) {
+    if (inst.mode == ACCUMULATOR) {
       ror(nes, &nes->cpu.A);
     } else {
       uint8_t m = cpu_read(nes, operand);

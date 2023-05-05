@@ -3,471 +3,471 @@
 CPUInstruction cpu_decode(uint8_t opcode) {
   switch (opcode) {
   case 0x69:
-    return (CPUInstruction){ADC, immediate};
+    return (CPUInstruction){ADC, IMMEDIATE};
   case 0x65:
-    return (CPUInstruction){ADC, zero_page};
+    return (CPUInstruction){ADC, ZERO_PAGE};
   case 0x75:
-    return (CPUInstruction){ADC, zero_page_x};
+    return (CPUInstruction){ADC, ZERO_PAGE_X};
   case 0x6D:
-    return (CPUInstruction){ADC, absolute};
+    return (CPUInstruction){ADC, ABSOLUTE};
   case 0x7D:
-    return (CPUInstruction){ADC, absolute_x_with_penalty};
+    return (CPUInstruction){ADC, ABSOLUTE_X_WITH_PENALTY};
   case 0x79:
-    return (CPUInstruction){ADC, absolute_y_with_penalty};
+    return (CPUInstruction){ADC, ABSOLUTE_Y_WITH_PENALTY};
   case 0x61:
-    return (CPUInstruction){ADC, indexed_indirect};
+    return (CPUInstruction){ADC, INDEXED_INDIRECT};
   case 0x71:
-    return (CPUInstruction){ADC, indirect_indexed_with_penalty};
+    return (CPUInstruction){ADC, INDIRECT_INDEXED_WITH_PENALTY};
 
   case 0x29:
-    return (CPUInstruction){AND, immediate};
+    return (CPUInstruction){AND, IMMEDIATE};
   case 0x25:
-    return (CPUInstruction){AND, zero_page};
+    return (CPUInstruction){AND, ZERO_PAGE};
   case 0x35:
-    return (CPUInstruction){AND, zero_page_x};
+    return (CPUInstruction){AND, ZERO_PAGE_X};
   case 0x2D:
-    return (CPUInstruction){AND, absolute};
+    return (CPUInstruction){AND, ABSOLUTE};
   case 0x3D:
-    return (CPUInstruction){AND, absolute_x_with_penalty};
+    return (CPUInstruction){AND, ABSOLUTE_X_WITH_PENALTY};
   case 0x39:
-    return (CPUInstruction){AND, absolute_y_with_penalty};
+    return (CPUInstruction){AND, ABSOLUTE_Y_WITH_PENALTY};
   case 0x21:
-    return (CPUInstruction){AND, indexed_indirect};
+    return (CPUInstruction){AND, INDEXED_INDIRECT};
   case 0x31:
-    return (CPUInstruction){AND, indirect_indexed_with_penalty};
+    return (CPUInstruction){AND, INDIRECT_INDEXED_WITH_PENALTY};
 
   case 0x0A:
-    return (CPUInstruction){ASL, accumulator};
+    return (CPUInstruction){ASL, ACCUMULATOR};
   case 0x06:
-    return (CPUInstruction){ASL, zero_page};
+    return (CPUInstruction){ASL, ZERO_PAGE};
   case 0x16:
-    return (CPUInstruction){ASL, zero_page_x};
+    return (CPUInstruction){ASL, ZERO_PAGE_X};
   case 0x0E:
-    return (CPUInstruction){ASL, absolute};
+    return (CPUInstruction){ASL, ABSOLUTE};
   case 0x1E:
-    return (CPUInstruction){ASL, absolute_x};
+    return (CPUInstruction){ASL, ABSOLUTE_X};
 
   case 0x90:
-    return (CPUInstruction){BCC, relative};
+    return (CPUInstruction){BCC, RELATIVE};
   case 0xB0:
-    return (CPUInstruction){BCS, relative};
+    return (CPUInstruction){BCS, RELATIVE};
   case 0xF0:
-    return (CPUInstruction){BEQ, relative};
+    return (CPUInstruction){BEQ, RELATIVE};
 
   case 0x24:
-    return (CPUInstruction){BIT, zero_page};
+    return (CPUInstruction){BIT, ZERO_PAGE};
   case 0x2C:
-    return (CPUInstruction){BIT, absolute};
+    return (CPUInstruction){BIT, ABSOLUTE};
 
   case 0x30:
-    return (CPUInstruction){BMI, relative};
+    return (CPUInstruction){BMI, RELATIVE};
   case 0xD0:
-    return (CPUInstruction){BNE, relative};
+    return (CPUInstruction){BNE, RELATIVE};
   case 0x10:
-    return (CPUInstruction){BPL, relative};
+    return (CPUInstruction){BPL, RELATIVE};
 
   case 0x00:
-    return (CPUInstruction){BRK, implicit};
+    return (CPUInstruction){BRK, IMPLICIT};
 
   case 0x50:
-    return (CPUInstruction){BVC, relative};
+    return (CPUInstruction){BVC, RELATIVE};
   case 0x70:
-    return (CPUInstruction){BVS, relative};
+    return (CPUInstruction){BVS, RELATIVE};
 
   case 0x18:
-    return (CPUInstruction){CLC, implicit};
+    return (CPUInstruction){CLC, IMPLICIT};
   case 0xD8:
-    return (CPUInstruction){CLD, implicit};
+    return (CPUInstruction){CLD, IMPLICIT};
   case 0x58:
-    return (CPUInstruction){CLI, implicit};
+    return (CPUInstruction){CLI, IMPLICIT};
   case 0xB8:
-    return (CPUInstruction){CLV, implicit};
+    return (CPUInstruction){CLV, IMPLICIT};
 
   case 0xC9:
-    return (CPUInstruction){CMP, immediate};
+    return (CPUInstruction){CMP, IMMEDIATE};
   case 0xC5:
-    return (CPUInstruction){CMP, zero_page};
+    return (CPUInstruction){CMP, ZERO_PAGE};
   case 0xD5:
-    return (CPUInstruction){CMP, zero_page_x};
+    return (CPUInstruction){CMP, ZERO_PAGE_X};
   case 0xCD:
-    return (CPUInstruction){CMP, absolute};
+    return (CPUInstruction){CMP, ABSOLUTE};
   case 0xDD:
-    return (CPUInstruction){CMP, absolute_x_with_penalty};
+    return (CPUInstruction){CMP, ABSOLUTE_X_WITH_PENALTY};
   case 0xD9:
-    return (CPUInstruction){CMP, absolute_y_with_penalty};
+    return (CPUInstruction){CMP, ABSOLUTE_Y_WITH_PENALTY};
   case 0xC1:
-    return (CPUInstruction){CMP, indexed_indirect};
+    return (CPUInstruction){CMP, INDEXED_INDIRECT};
   case 0xD1:
-    return (CPUInstruction){CMP, indirect_indexed_with_penalty};
+    return (CPUInstruction){CMP, INDIRECT_INDEXED_WITH_PENALTY};
 
   case 0xE0:
-    return (CPUInstruction){CPX, immediate};
+    return (CPUInstruction){CPX, IMMEDIATE};
   case 0xE4:
-    return (CPUInstruction){CPX, zero_page};
+    return (CPUInstruction){CPX, ZERO_PAGE};
   case 0xEC:
-    return (CPUInstruction){CPX, absolute};
+    return (CPUInstruction){CPX, ABSOLUTE};
   case 0xC0:
-    return (CPUInstruction){CPY, immediate};
+    return (CPUInstruction){CPY, IMMEDIATE};
   case 0xC4:
-    return (CPUInstruction){CPY, zero_page};
+    return (CPUInstruction){CPY, ZERO_PAGE};
   case 0xCC:
-    return (CPUInstruction){CPY, absolute};
+    return (CPUInstruction){CPY, ABSOLUTE};
 
   case 0xC6:
-    return (CPUInstruction){DEC, zero_page};
+    return (CPUInstruction){DEC, ZERO_PAGE};
   case 0xD6:
-    return (CPUInstruction){DEC, zero_page_x};
+    return (CPUInstruction){DEC, ZERO_PAGE_X};
   case 0xCE:
-    return (CPUInstruction){DEC, absolute};
+    return (CPUInstruction){DEC, ABSOLUTE};
   case 0xDE:
-    return (CPUInstruction){DEC, absolute_x};
+    return (CPUInstruction){DEC, ABSOLUTE_X};
 
   case 0xCA:
-    return (CPUInstruction){DEX, implicit};
+    return (CPUInstruction){DEX, IMPLICIT};
   case 0x88:
-    return (CPUInstruction){DEY, implicit};
+    return (CPUInstruction){DEY, IMPLICIT};
 
   case 0x49:
-    return (CPUInstruction){EOR, immediate};
+    return (CPUInstruction){EOR, IMMEDIATE};
   case 0x45:
-    return (CPUInstruction){EOR, zero_page};
+    return (CPUInstruction){EOR, ZERO_PAGE};
   case 0x55:
-    return (CPUInstruction){EOR, zero_page_x};
+    return (CPUInstruction){EOR, ZERO_PAGE_X};
   case 0x4D:
-    return (CPUInstruction){EOR, absolute};
+    return (CPUInstruction){EOR, ABSOLUTE};
   case 0x5D:
-    return (CPUInstruction){EOR, absolute_x_with_penalty};
+    return (CPUInstruction){EOR, ABSOLUTE_X_WITH_PENALTY};
   case 0x59:
-    return (CPUInstruction){EOR, absolute_y_with_penalty};
+    return (CPUInstruction){EOR, ABSOLUTE_Y_WITH_PENALTY};
   case 0x41:
-    return (CPUInstruction){EOR, indexed_indirect};
+    return (CPUInstruction){EOR, INDEXED_INDIRECT};
   case 0x51:
-    return (CPUInstruction){EOR, indirect_indexed_with_penalty};
+    return (CPUInstruction){EOR, INDIRECT_INDEXED_WITH_PENALTY};
 
   case 0xE6:
-    return (CPUInstruction){INC, zero_page};
+    return (CPUInstruction){INC, ZERO_PAGE};
   case 0xF6:
-    return (CPUInstruction){INC, zero_page_x};
+    return (CPUInstruction){INC, ZERO_PAGE_X};
   case 0xEE:
-    return (CPUInstruction){INC, absolute};
+    return (CPUInstruction){INC, ABSOLUTE};
   case 0xFE:
-    return (CPUInstruction){INC, absolute_x};
+    return (CPUInstruction){INC, ABSOLUTE_X};
 
   case 0xE8:
-    return (CPUInstruction){INX, implicit};
+    return (CPUInstruction){INX, IMPLICIT};
   case 0xC8:
-    return (CPUInstruction){INY, implicit};
+    return (CPUInstruction){INY, IMPLICIT};
 
   case 0x4C:
-    return (CPUInstruction){JMP, absolute};
+    return (CPUInstruction){JMP, ABSOLUTE};
   case 0x6C:
-    return (CPUInstruction){JMP, indirect};
+    return (CPUInstruction){JMP, INDIRECT};
 
   case 0x20:
-    return (CPUInstruction){JSR, absolute};
+    return (CPUInstruction){JSR, ABSOLUTE};
 
   case 0xA9:
-    return (CPUInstruction){LDA, immediate};
+    return (CPUInstruction){LDA, IMMEDIATE};
   case 0xA5:
-    return (CPUInstruction){LDA, zero_page};
+    return (CPUInstruction){LDA, ZERO_PAGE};
   case 0xB5:
-    return (CPUInstruction){LDA, zero_page_x};
+    return (CPUInstruction){LDA, ZERO_PAGE_X};
   case 0xAD:
-    return (CPUInstruction){LDA, absolute};
+    return (CPUInstruction){LDA, ABSOLUTE};
   case 0xBD:
-    return (CPUInstruction){LDA, absolute_x_with_penalty};
+    return (CPUInstruction){LDA, ABSOLUTE_X_WITH_PENALTY};
   case 0xB9:
-    return (CPUInstruction){LDA, absolute_y_with_penalty};
+    return (CPUInstruction){LDA, ABSOLUTE_Y_WITH_PENALTY};
   case 0xA1:
-    return (CPUInstruction){LDA, indexed_indirect};
+    return (CPUInstruction){LDA, INDEXED_INDIRECT};
   case 0xB1:
-    return (CPUInstruction){LDA, indirect_indexed_with_penalty};
+    return (CPUInstruction){LDA, INDIRECT_INDEXED_WITH_PENALTY};
 
   case 0xA2:
-    return (CPUInstruction){LDX, immediate};
+    return (CPUInstruction){LDX, IMMEDIATE};
   case 0xA6:
-    return (CPUInstruction){LDX, zero_page};
+    return (CPUInstruction){LDX, ZERO_PAGE};
   case 0xB6:
-    return (CPUInstruction){LDX, zero_page_y};
+    return (CPUInstruction){LDX, ZERO_PAGE_Y};
   case 0xAE:
-    return (CPUInstruction){LDX, absolute};
+    return (CPUInstruction){LDX, ABSOLUTE};
   case 0xBE:
-    return (CPUInstruction){LDX, absolute_y_with_penalty};
+    return (CPUInstruction){LDX, ABSOLUTE_Y_WITH_PENALTY};
 
   case 0xA0:
-    return (CPUInstruction){LDY, immediate};
+    return (CPUInstruction){LDY, IMMEDIATE};
   case 0xA4:
-    return (CPUInstruction){LDY, zero_page};
+    return (CPUInstruction){LDY, ZERO_PAGE};
   case 0xB4:
-    return (CPUInstruction){LDY, zero_page_x};
+    return (CPUInstruction){LDY, ZERO_PAGE_X};
   case 0xAC:
-    return (CPUInstruction){LDY, absolute};
+    return (CPUInstruction){LDY, ABSOLUTE};
   case 0xBC:
-    return (CPUInstruction){LDY, absolute_x_with_penalty};
+    return (CPUInstruction){LDY, ABSOLUTE_X_WITH_PENALTY};
 
   case 0x4A:
-    return (CPUInstruction){LSR, accumulator};
+    return (CPUInstruction){LSR, ACCUMULATOR};
   case 0x46:
-    return (CPUInstruction){LSR, zero_page};
+    return (CPUInstruction){LSR, ZERO_PAGE};
   case 0x56:
-    return (CPUInstruction){LSR, zero_page_x};
+    return (CPUInstruction){LSR, ZERO_PAGE_X};
   case 0x4E:
-    return (CPUInstruction){LSR, absolute};
+    return (CPUInstruction){LSR, ABSOLUTE};
   case 0x5E:
-    return (CPUInstruction){LSR, absolute_x};
+    return (CPUInstruction){LSR, ABSOLUTE_X};
 
   case 0x09:
-    return (CPUInstruction){ORA, immediate};
+    return (CPUInstruction){ORA, IMMEDIATE};
   case 0x05:
-    return (CPUInstruction){ORA, zero_page};
+    return (CPUInstruction){ORA, ZERO_PAGE};
   case 0x15:
-    return (CPUInstruction){ORA, zero_page_x};
+    return (CPUInstruction){ORA, ZERO_PAGE_X};
   case 0x0D:
-    return (CPUInstruction){ORA, absolute};
+    return (CPUInstruction){ORA, ABSOLUTE};
   case 0x1D:
-    return (CPUInstruction){ORA, absolute_x_with_penalty};
+    return (CPUInstruction){ORA, ABSOLUTE_X_WITH_PENALTY};
   case 0x19:
-    return (CPUInstruction){ORA, absolute_y_with_penalty};
+    return (CPUInstruction){ORA, ABSOLUTE_Y_WITH_PENALTY};
   case 0x01:
-    return (CPUInstruction){ORA, indexed_indirect};
+    return (CPUInstruction){ORA, INDEXED_INDIRECT};
   case 0x11:
-    return (CPUInstruction){ORA, indirect_indexed_with_penalty};
+    return (CPUInstruction){ORA, INDIRECT_INDEXED_WITH_PENALTY};
 
   case 0x48:
-    return (CPUInstruction){PHA, implicit};
+    return (CPUInstruction){PHA, IMPLICIT};
   case 0x08:
-    return (CPUInstruction){PHP, implicit};
+    return (CPUInstruction){PHP, IMPLICIT};
   case 0x68:
-    return (CPUInstruction){PLA, implicit};
+    return (CPUInstruction){PLA, IMPLICIT};
   case 0x28:
-    return (CPUInstruction){PLP, implicit};
+    return (CPUInstruction){PLP, IMPLICIT};
 
   case 0x2A:
-    return (CPUInstruction){ROL, accumulator};
+    return (CPUInstruction){ROL, ACCUMULATOR};
   case 0x26:
-    return (CPUInstruction){ROL, zero_page};
+    return (CPUInstruction){ROL, ZERO_PAGE};
   case 0x36:
-    return (CPUInstruction){ROL, zero_page_x};
+    return (CPUInstruction){ROL, ZERO_PAGE_X};
   case 0x2E:
-    return (CPUInstruction){ROL, absolute};
+    return (CPUInstruction){ROL, ABSOLUTE};
   case 0x3E:
-    return (CPUInstruction){ROL, absolute_x};
+    return (CPUInstruction){ROL, ABSOLUTE_X};
 
   case 0x6A:
-    return (CPUInstruction){ROR, accumulator};
+    return (CPUInstruction){ROR, ACCUMULATOR};
   case 0x66:
-    return (CPUInstruction){ROR, zero_page};
+    return (CPUInstruction){ROR, ZERO_PAGE};
   case 0x76:
-    return (CPUInstruction){ROR, zero_page_x};
+    return (CPUInstruction){ROR, ZERO_PAGE_X};
   case 0x6E:
-    return (CPUInstruction){ROR, absolute};
+    return (CPUInstruction){ROR, ABSOLUTE};
   case 0x7E:
-    return (CPUInstruction){ROR, absolute_x};
+    return (CPUInstruction){ROR, ABSOLUTE_X};
 
   case 0x40:
-    return (CPUInstruction){RTI, implicit};
+    return (CPUInstruction){RTI, IMPLICIT};
   case 0x60:
-    return (CPUInstruction){RTS, implicit};
+    return (CPUInstruction){RTS, IMPLICIT};
 
   case 0xE9:
-    return (CPUInstruction){SBC, immediate};
+    return (CPUInstruction){SBC, IMMEDIATE};
   case 0xE5:
-    return (CPUInstruction){SBC, zero_page};
+    return (CPUInstruction){SBC, ZERO_PAGE};
   case 0xF5:
-    return (CPUInstruction){SBC, zero_page_x};
+    return (CPUInstruction){SBC, ZERO_PAGE_X};
   case 0xED:
-    return (CPUInstruction){SBC, absolute};
+    return (CPUInstruction){SBC, ABSOLUTE};
   case 0xFD:
-    return (CPUInstruction){SBC, absolute_x_with_penalty};
+    return (CPUInstruction){SBC, ABSOLUTE_X_WITH_PENALTY};
   case 0xF9:
-    return (CPUInstruction){SBC, absolute_y_with_penalty};
+    return (CPUInstruction){SBC, ABSOLUTE_Y_WITH_PENALTY};
   case 0xE1:
-    return (CPUInstruction){SBC, indexed_indirect};
+    return (CPUInstruction){SBC, INDEXED_INDIRECT};
   case 0xF1:
-    return (CPUInstruction){SBC, indirect_indexed_with_penalty};
+    return (CPUInstruction){SBC, INDIRECT_INDEXED_WITH_PENALTY};
 
   case 0x38:
-    return (CPUInstruction){SEC, implicit};
+    return (CPUInstruction){SEC, IMPLICIT};
   case 0xF8:
-    return (CPUInstruction){SED, implicit};
+    return (CPUInstruction){SED, IMPLICIT};
   case 0x78:
-    return (CPUInstruction){SEI, implicit};
+    return (CPUInstruction){SEI, IMPLICIT};
 
   case 0x85:
-    return (CPUInstruction){STA, zero_page};
+    return (CPUInstruction){STA, ZERO_PAGE};
   case 0x95:
-    return (CPUInstruction){STA, zero_page_x};
+    return (CPUInstruction){STA, ZERO_PAGE_X};
   case 0x8D:
-    return (CPUInstruction){STA, absolute};
+    return (CPUInstruction){STA, ABSOLUTE};
   case 0x9D:
-    return (CPUInstruction){STA, absolute_x};
+    return (CPUInstruction){STA, ABSOLUTE_X};
   case 0x99:
-    return (CPUInstruction){STA, absolute_y};
+    return (CPUInstruction){STA, ABSOLUTE_Y};
   case 0x81:
-    return (CPUInstruction){STA, indexed_indirect};
+    return (CPUInstruction){STA, INDEXED_INDIRECT};
   case 0x91:
-    return (CPUInstruction){STA, indirect_indexed};
+    return (CPUInstruction){STA, INDIRECT_INDEXED};
 
   case 0x86:
-    return (CPUInstruction){STX, zero_page};
+    return (CPUInstruction){STX, ZERO_PAGE};
   case 0x96:
-    return (CPUInstruction){STX, zero_page_y};
+    return (CPUInstruction){STX, ZERO_PAGE_Y};
   case 0x8E:
-    return (CPUInstruction){STX, absolute};
+    return (CPUInstruction){STX, ABSOLUTE};
   case 0x84:
-    return (CPUInstruction){STY, zero_page};
+    return (CPUInstruction){STY, ZERO_PAGE};
   case 0x94:
-    return (CPUInstruction){STY, zero_page_x};
+    return (CPUInstruction){STY, ZERO_PAGE_X};
   case 0x8C:
-    return (CPUInstruction){STY, absolute};
+    return (CPUInstruction){STY, ABSOLUTE};
 
   case 0xAA:
-    return (CPUInstruction){TAX, implicit};
+    return (CPUInstruction){TAX, IMPLICIT};
   case 0xA8:
-    return (CPUInstruction){TAY, implicit};
+    return (CPUInstruction){TAY, IMPLICIT};
   case 0xBA:
-    return (CPUInstruction){TSX, implicit};
+    return (CPUInstruction){TSX, IMPLICIT};
   case 0x8A:
-    return (CPUInstruction){TXA, implicit};
+    return (CPUInstruction){TXA, IMPLICIT};
   case 0x9A:
-    return (CPUInstruction){TXS, implicit};
+    return (CPUInstruction){TXS, IMPLICIT};
   case 0x98:
-    return (CPUInstruction){TYA, implicit};
+    return (CPUInstruction){TYA, IMPLICIT};
 
     // clang-format off
   case 0x04: case 0x44: case 0x64:
-    return (CPUInstruction){NOP, zero_page};
+    return (CPUInstruction){NOP, ZERO_PAGE};
   case 0x0C:
-    return (CPUInstruction){NOP, absolute};
+    return (CPUInstruction){NOP, ABSOLUTE};
   case 0x14: case 0x34: case 0x54: case 0x74: case 0xD4: case 0xF4:
-    return (CPUInstruction){NOP, zero_page_x};
+    return (CPUInstruction){NOP, ZERO_PAGE_X};
   case 0x1A: case 0x3A: case 0x5A: case 0x7A: case 0xDA: case 0xEA: case 0xFA:
-    return (CPUInstruction){NOP, implicit};
+    return (CPUInstruction){NOP, IMPLICIT};
   case 0x1C: case 0x3C: case 0x5C: case 0x7C: case 0xDC: case 0xFC:
-    return (CPUInstruction){NOP, absolute_x_with_penalty};
+    return (CPUInstruction){NOP, ABSOLUTE_X_WITH_PENALTY};
   case 0x80: case 0x82: case 0x89: case 0xc2: case 0xE2:
-    return (CPUInstruction){NOP, immediate};
+    return (CPUInstruction){NOP, IMMEDIATE};
     // clang-format on
 
   // unofficial
   case 0xEB:
-    return (CPUInstruction){SBC, immediate};
+    return (CPUInstruction){SBC, IMMEDIATE};
 
   case 0xA3:
-    return (CPUInstruction){LAX, indexed_indirect};
+    return (CPUInstruction){LAX, INDEXED_INDIRECT};
   case 0xA7:
-    return (CPUInstruction){LAX, zero_page};
+    return (CPUInstruction){LAX, ZERO_PAGE};
   case 0xAB:
-    return (CPUInstruction){LAX, immediate};
+    return (CPUInstruction){LAX, IMMEDIATE};
   case 0xAF:
-    return (CPUInstruction){LAX, absolute};
+    return (CPUInstruction){LAX, ABSOLUTE};
   case 0xB3:
-    return (CPUInstruction){LAX, indirect_indexed_with_penalty};
+    return (CPUInstruction){LAX, INDIRECT_INDEXED_WITH_PENALTY};
   case 0xB7:
-    return (CPUInstruction){LAX, zero_page_y};
+    return (CPUInstruction){LAX, ZERO_PAGE_Y};
   case 0xBF:
-    return (CPUInstruction){LAX, absolute_y_with_penalty};
+    return (CPUInstruction){LAX, ABSOLUTE_Y_WITH_PENALTY};
 
   case 0x83:
-    return (CPUInstruction){SAX, indexed_indirect};
+    return (CPUInstruction){SAX, INDEXED_INDIRECT};
   case 0x87:
-    return (CPUInstruction){SAX, zero_page};
+    return (CPUInstruction){SAX, ZERO_PAGE};
   case 0x8F:
-    return (CPUInstruction){SAX, absolute};
+    return (CPUInstruction){SAX, ABSOLUTE};
   case 0x97:
-    return (CPUInstruction){SAX, zero_page_y};
+    return (CPUInstruction){SAX, ZERO_PAGE_Y};
 
   case 0xC3:
-    return (CPUInstruction){DCP, indexed_indirect};
+    return (CPUInstruction){DCP, INDEXED_INDIRECT};
   case 0xC7:
-    return (CPUInstruction){DCP, zero_page};
+    return (CPUInstruction){DCP, ZERO_PAGE};
   case 0xCF:
-    return (CPUInstruction){DCP, absolute};
+    return (CPUInstruction){DCP, ABSOLUTE};
   case 0xD3:
-    return (CPUInstruction){DCP, indirect_indexed};
+    return (CPUInstruction){DCP, INDIRECT_INDEXED};
   case 0xD7:
-    return (CPUInstruction){DCP, zero_page_x};
+    return (CPUInstruction){DCP, ZERO_PAGE_X};
   case 0xDB:
-    return (CPUInstruction){DCP, absolute_y};
+    return (CPUInstruction){DCP, ABSOLUTE_Y};
   case 0xDF:
-    return (CPUInstruction){DCP, absolute_x};
+    return (CPUInstruction){DCP, ABSOLUTE_X};
 
   case 0xE3:
-    return (CPUInstruction){ISB, indexed_indirect};
+    return (CPUInstruction){ISB, INDEXED_INDIRECT};
   case 0xE7:
-    return (CPUInstruction){ISB, zero_page};
+    return (CPUInstruction){ISB, ZERO_PAGE};
   case 0xEF:
-    return (CPUInstruction){ISB, absolute};
+    return (CPUInstruction){ISB, ABSOLUTE};
   case 0xF3:
-    return (CPUInstruction){ISB, indirect_indexed};
+    return (CPUInstruction){ISB, INDIRECT_INDEXED};
   case 0xF7:
-    return (CPUInstruction){ISB, zero_page_x};
+    return (CPUInstruction){ISB, ZERO_PAGE_X};
   case 0xFB:
-    return (CPUInstruction){ISB, absolute_y};
+    return (CPUInstruction){ISB, ABSOLUTE_Y};
   case 0xFF:
-    return (CPUInstruction){ISB, absolute_x};
+    return (CPUInstruction){ISB, ABSOLUTE_X};
 
   case 0x03:
-    return (CPUInstruction){SLO, indexed_indirect};
+    return (CPUInstruction){SLO, INDEXED_INDIRECT};
   case 0x07:
-    return (CPUInstruction){SLO, zero_page};
+    return (CPUInstruction){SLO, ZERO_PAGE};
   case 0x0F:
-    return (CPUInstruction){SLO, absolute};
+    return (CPUInstruction){SLO, ABSOLUTE};
   case 0x13:
-    return (CPUInstruction){SLO, indirect_indexed};
+    return (CPUInstruction){SLO, INDIRECT_INDEXED};
   case 0x17:
-    return (CPUInstruction){SLO, zero_page_x};
+    return (CPUInstruction){SLO, ZERO_PAGE_X};
   case 0x1B:
-    return (CPUInstruction){SLO, absolute_y};
+    return (CPUInstruction){SLO, ABSOLUTE_Y};
   case 0x1F:
-    return (CPUInstruction){SLO, absolute_x};
+    return (CPUInstruction){SLO, ABSOLUTE_X};
 
   case 0x23:
-    return (CPUInstruction){RLA, indexed_indirect};
+    return (CPUInstruction){RLA, INDEXED_INDIRECT};
   case 0x27:
-    return (CPUInstruction){RLA, zero_page};
+    return (CPUInstruction){RLA, ZERO_PAGE};
   case 0x2F:
-    return (CPUInstruction){RLA, absolute};
+    return (CPUInstruction){RLA, ABSOLUTE};
   case 0x33:
-    return (CPUInstruction){RLA, indirect_indexed};
+    return (CPUInstruction){RLA, INDIRECT_INDEXED};
   case 0x37:
-    return (CPUInstruction){RLA, zero_page_x};
+    return (CPUInstruction){RLA, ZERO_PAGE_X};
   case 0x3B:
-    return (CPUInstruction){RLA, absolute_y};
+    return (CPUInstruction){RLA, ABSOLUTE_Y};
   case 0x3F:
-    return (CPUInstruction){RLA, absolute_x};
+    return (CPUInstruction){RLA, ABSOLUTE_X};
 
   case 0x43:
-    return (CPUInstruction){SRE, indexed_indirect};
+    return (CPUInstruction){SRE, INDEXED_INDIRECT};
   case 0x47:
-    return (CPUInstruction){SRE, zero_page};
+    return (CPUInstruction){SRE, ZERO_PAGE};
   case 0x4F:
-    return (CPUInstruction){SRE, absolute};
+    return (CPUInstruction){SRE, ABSOLUTE};
   case 0x53:
-    return (CPUInstruction){SRE, indirect_indexed};
+    return (CPUInstruction){SRE, INDIRECT_INDEXED};
   case 0x57:
-    return (CPUInstruction){SRE, zero_page_x};
+    return (CPUInstruction){SRE, ZERO_PAGE_X};
   case 0x5B:
-    return (CPUInstruction){SRE, absolute_y};
+    return (CPUInstruction){SRE, ABSOLUTE_Y};
   case 0x5F:
-    return (CPUInstruction){SRE, absolute_x};
+    return (CPUInstruction){SRE, ABSOLUTE_X};
 
   case 0x63:
-    return (CPUInstruction){RRA, indexed_indirect};
+    return (CPUInstruction){RRA, INDEXED_INDIRECT};
   case 0x67:
-    return (CPUInstruction){RRA, zero_page};
+    return (CPUInstruction){RRA, ZERO_PAGE};
   case 0x6F:
-    return (CPUInstruction){RRA, absolute};
+    return (CPUInstruction){RRA, ABSOLUTE};
   case 0x73:
-    return (CPUInstruction){RRA, indirect_indexed};
+    return (CPUInstruction){RRA, INDIRECT_INDEXED};
   case 0x77:
-    return (CPUInstruction){RRA, zero_page_x};
+    return (CPUInstruction){RRA, ZERO_PAGE_X};
   case 0x7B:
-    return (CPUInstruction){RRA, absolute_y};
+    return (CPUInstruction){RRA, ABSOLUTE_Y};
   case 0x7F:
-    return (CPUInstruction){RRA, absolute_x};
+    return (CPUInstruction){RRA, ABSOLUTE_X};
 
   default:
-    return (CPUInstruction){NOP, implicit};
+    return (CPUInstruction){NOP, IMPLICIT};
   }
 }
