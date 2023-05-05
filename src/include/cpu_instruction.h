@@ -45,12 +45,12 @@ enum cpu_mnemonic {
 
 // clang-format on
 
-struct cpu_instruction {
+typedef struct {
   enum cpu_mnemonic mnemonic;
   enum cpu_addressing_mode mode;
-};
+} cpu_instruction;
 
-struct cpu_instruction cpu_decode(uint8_t opcode);
+cpu_instruction cpu_decode(uint8_t opcode);
 
 #endif // CPU_INSTRUCTION_H
 

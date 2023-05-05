@@ -4,7 +4,7 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-struct cpu {
+typedef struct {
   // https://wiki.nesdev.org/w/index.php?title=CPU_registers
 
   // Accumulator, Index X/Y register
@@ -18,7 +18,7 @@ struct cpu {
 
   // clock cycle
   uintmax_t cycles;
-};
+} cpu;
 
 enum cpu_status {
   C = 0, // Carry
@@ -29,12 +29,12 @@ enum cpu_status {
   N = 7, // Negative
 };
 
-struct cpu* cpu_new();
+cpu* cpu_new();
 
-void cpu_status_set(struct cpu *cpu, enum cpu_status s, bool v);
+void cpu_status_set(cpu *cpu, enum cpu_status s, bool v);
 
-bool cpu_status_enabled(struct cpu *cpu, enum cpu_status s);
+bool cpu_status_enabled(cpu *cpu, enum cpu_status s);
 
-void cpu_status_set_zn(struct cpu *cpu, uint8_t v);
+void cpu_status_set_zn(cpu *cpu, uint8_t v);
 
 #endif // CPU_H

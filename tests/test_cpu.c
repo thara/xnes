@@ -4,7 +4,7 @@
 #include "mem.h"
 
 TEST(test_cpu_status_set) {
-  struct cpu cpu;
+  cpu cpu;
   cpu.P = 0b11001100;
 
   cpu_status_set(&cpu, C, true);
@@ -15,7 +15,7 @@ TEST(test_cpu_status_set) {
 }
 
 TEST(test_cpu_status_enabled) {
-  struct cpu cpu;
+  cpu cpu;
   cpu.P = 0b11001100;
 
   test_assert(cpu_status_enabled(&cpu, D), "decimal flag should be true");
@@ -23,7 +23,7 @@ TEST(test_cpu_status_enabled) {
 }
 
 TEST(test_cpu_status_set_zn) {
-  struct cpu cpu;
+  cpu cpu;
   cpu.P = 0b11001100;
   cpu_status_set_zn(&cpu, 0);
 
