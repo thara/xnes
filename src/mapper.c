@@ -5,7 +5,7 @@
 struct mapper {
   uint8_t (*read)(struct mapper *self, uint16_t addr);
   void (*write)(struct mapper *self, uint16_t addr, uint8_t value);
-  enum mirroring mirroring;
+  mirroring mirroring;
 };
 
 uint8_t mapper_read(struct mapper *mapper, uint16_t addr) {
@@ -28,13 +28,11 @@ struct mapper0 {
   bool mirrored;
 };
 
-void mapper0_init(rom *rom, struct mapper *mapper,
-                  enum mapper_error *error);
+void mapper0_init(rom *rom, struct mapper *mapper, mapper_error *error);
 uint8_t mapper0_read(struct mapper *self, uint16_t addr);
 void mapper0_write(struct mapper *self, uint16_t addr, uint8_t value);
 
-void detect_mapper(rom *rom, struct mapper *mapper,
-                   enum mapper_error *error) {
+void detect_mapper(rom *rom, struct mapper *mapper, mapper_error *error) {
   switch (rom->mapper_no) {
   case 0:
     mapper0_init(rom, mapper, error);
@@ -45,8 +43,7 @@ void detect_mapper(rom *rom, struct mapper *mapper,
   }
 }
 
-void mapper0_init(rom *rom, struct mapper *mapper,
-                  enum mapper_error *error) {
+void mapper0_init(rom *rom, struct mapper *mapper, mapper_error *error) {
   struct mapper0 *m = (struct mapper0 *)malloc(sizeof(struct mapper0));
   m->base = malloc(sizeof(struct mapper));
   m->base->read = mapper0_read;

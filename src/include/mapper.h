@@ -7,17 +7,17 @@
 
 struct mapper;
 
-enum mirroring{
+typedef enum{
     horizontal,
     vertical,
-};
+} mirroring;
 
-enum mapper_error {
+typedef enum {
     mapper_error_none,
     mapper_error_unsupported_mapper,
-};
+} mapper_error;
 
-void detect_mapper(rom *rom, struct mapper *mapper, enum mapper_error* error);
+void detect_mapper(rom *rom, struct mapper *mapper, mapper_error* error);
 
 uint8_t mapper_read(struct mapper *mapper, uint16_t addr);
 
