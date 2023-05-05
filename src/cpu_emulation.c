@@ -6,23 +6,23 @@
 #include "cpu_instruction.h"
 #include "mem.h"
 
-void cpu_tick(struct nes *nes) {
+void cpu_tick(nes *nes) {
   nes_tick(nes);
   nes->cpu.cycles++;
 }
 
-uint8_t cpu_read(struct nes *nes, uint16_t addr) {
+uint8_t cpu_read(nes *nes, uint16_t addr) {
   uint8_t m = mem_read(nes, addr);
   cpu_tick(nes);
   return m;
 }
 
-void cpu_write(struct nes *nes, uint16_t addr, uint8_t val) {
+void cpu_write(nes *nes, uint16_t addr, uint8_t val) {
   mem_write(nes, addr, val);
   cpu_tick(nes);
 }
 
-void cpu_power_on(struct nes *nes) {
+void cpu_power_on(nes *nes) {
   // https://wiki.nesdev.com/w/index.php/CPU_power_up_state
   nes->cpu.A = 0x00;
   nes->cpu.X = 0x00;
@@ -33,9 +33,9 @@ void cpu_power_on(struct nes *nes) {
   cpu_write(nes, 0x4015, 0x00); // all channels disabled
 }
 
-void cpu_execute(struct nes *nes, struct cpu_instruction inst);
+void cpu_execute(nes *nes, struct cpu_instruction inst);
 
-void cpu_step(struct nes *nes) {
+void cpu_step(nes *nes) {
   uint8_t op = cpu_read(nes, nes->cpu.PC);
   nes->cpu.PC++;
 
@@ -43,11 +43,11 @@ void cpu_step(struct nes *nes) {
   cpu_execute(nes, inst);
 }
 
-uint16_t cpu_read_word(struct nes *nes, uint16_t addr) {
+uint16_t cpu_read_word(nes *nes, uint16_t addr) {
   return cpu_read(nes, addr) | cpu_read(nes, addr + 1) << 8;
 }
 
-uint16_t read_on_indirect(struct nes *nes, uint16_t addr) {
+uint16_t read_on_indirect(nes *nes, uint16_t addr) {
   uint16_t low = (uint16_t)cpu_read(nes, addr);
   // Reproduce 6502 bug - http://nesdev.com/6502bugs.txt
   uint16_t high =
@@ -59,7 +59,7 @@ bool is_page_crossed(uint16_t a, uint16_t b) {
   return ((a + b) & 0xFF00) != (b & 0xFF00);
 }
 
-uint16_t cpu_get_operand(struct nes *nes, enum cpu_addressing_mode mode) {
+uint16_t cpu_get_operand(nes *nes, enum cpu_addressing_mode mode) {
   switch (mode) {
   case implicit:
     return 0;
@@ -160,40 +160,40 @@ uint16_t cpu_get_operand(struct nes *nes, enum cpu_addressing_mode mode) {
 static uint8_t cpu_status_interrupt_b = 0b00100000;
 static uint8_t cpu_status_instruction_b = 0b00110000;
 
-void push_stack(struct nes *nes, uint8_t v) {
+void push_stack(nes *nes, uint8_t v) {
   cpu_write(nes, nes->cpu.S + 0x0100, v);
   nes->cpu.S--;
 }
 
-void push_stack_word(struct nes *nes, uint16_t v) {
+void push_stack_word(nes *nes, uint16_t v) {
   push_stack(nes, v >> 8);
   push_stack(nes, v & 0xFF);
 }
 
-uint8_t cpu_pull_stack(struct nes *nes) {
+uint8_t cpu_pull_stack(nes *nes) {
   nes->cpu.S++;
   return cpu_read(nes, nes->cpu.S + 0x0100);
 }
 
-uint16_t cpu_pull_stack_word(struct nes *nes) {
+uint16_t cpu_pull_stack_word(nes *nes) {
   return (uint16_t)cpu_pull_stack(nes) | ((uint16_t)cpu_pull_stack(nes) << 8);
 }
 
-void and (struct nes * nes, uint16_t v);
-void eor(struct nes *nes, uint16_t v);
-void ora(struct nes *nes, uint16_t v);
-void abc(struct nes *nes, uint16_t v);
-void sbc(struct nes *nes, uint16_t v);
-void cmp(struct nes *nes, uint8_t m, uint16_t v);
-void asl(struct nes *nes, uint8_t *m);
-void lsr(struct nes *nes, uint8_t *m);
-void rol(struct nes *nes, uint8_t *m);
-void ror(struct nes *nes, uint8_t *m);
-void branch(struct nes *nes, uint8_t v);
+void and (nes * nes, uint16_t v);
+void eor(nes *nes, uint16_t v);
+void ora(nes *nes, uint16_t v);
+void abc(nes *nes, uint16_t v);
+void sbc(nes *nes, uint16_t v);
+void cmp(nes *nes, uint8_t m, uint16_t v);
+void asl(nes *nes, uint8_t *m);
+void lsr(nes *nes, uint8_t *m);
+void rol(nes *nes, uint8_t *m);
+void ror(nes *nes, uint8_t *m);
+void branch(nes *nes, uint8_t v);
 
-void set_carry_status(struct nes *nes, uint8_t m, uint8_t r);
+void set_carry_status(nes *nes, uint8_t m, uint8_t r);
 
-void cpu_execute(struct nes *nes, struct cpu_instruction inst) {
+void cpu_execute(nes *nes, struct cpu_instruction inst) {
   uint16_t operand = cpu_get_operand(nes, inst.mode);
 
   switch (inst.mnemonic) {
@@ -555,22 +555,22 @@ void cpu_execute(struct nes *nes, struct cpu_instruction inst) {
   }
 }
 
-void and (struct nes * nes, uint16_t v) {
+void and (nes * nes, uint16_t v) {
   nes->cpu.A &= cpu_read(nes, v);
   cpu_status_set_zn(&nes->cpu, nes->cpu.A);
 }
 
-void eor(struct nes *nes, uint16_t v) {
+void eor(nes *nes, uint16_t v) {
   nes->cpu.A ^= cpu_read(nes, v);
   cpu_status_set_zn(&nes->cpu, nes->cpu.A);
 }
 
-void ora(struct nes *nes, uint16_t v) {
+void ora(nes *nes, uint16_t v) {
   nes->cpu.A |= cpu_read(nes, v);
   cpu_status_set_zn(&nes->cpu, nes->cpu.A);
 }
 
-void abc(struct nes *nes, uint16_t v) {
+void abc(nes *nes, uint16_t v) {
   uint8_t m = cpu_read(nes, v);
   uint8_t r = nes->cpu.A + m;
   if (cpu_status_enabled(&nes->cpu, C)) {
@@ -581,7 +581,7 @@ void abc(struct nes *nes, uint16_t v) {
   cpu_status_set_zn(&nes->cpu, nes->cpu.A);
 }
 
-void sbc(struct nes *nes, uint16_t v) {
+void sbc(nes *nes, uint16_t v) {
   uint8_t m = ~cpu_read(nes, v);
   uint8_t r = nes->cpu.A + m;
   if (cpu_status_enabled(&nes->cpu, C)) {
@@ -592,27 +592,27 @@ void sbc(struct nes *nes, uint16_t v) {
   cpu_status_set_zn(&nes->cpu, nes->cpu.A);
 }
 
-void cmp(struct nes *nes, uint8_t m, uint16_t v) {
+void cmp(nes *nes, uint8_t m, uint16_t v) {
   int16_t r = (int16_t)m - (int16_t)cpu_read(nes, v);
   cpu_status_set_zn(&nes->cpu, r);
   cpu_status_set(&nes->cpu, C, 0 <= r);
 }
 
-void asl(struct nes *nes, uint8_t *m) {
+void asl(nes *nes, uint8_t *m) {
   cpu_status_set(&nes->cpu, C, (*m & 0x80) == 0x80);
   *m <<= 1;
   cpu_status_set_zn(&nes->cpu, *m);
   cpu_tick(nes);
 }
 
-void lsr(struct nes *nes, uint8_t *m) {
+void lsr(nes *nes, uint8_t *m) {
   cpu_status_set(&nes->cpu, C, (*m & 1) == 1);
   *m >>= 1;
   cpu_status_set_zn(&nes->cpu, *m);
   cpu_tick(nes);
 }
 
-void rol(struct nes *nes, uint8_t *m) {
+void rol(nes *nes, uint8_t *m) {
   uint8_t carry = *m & 0x80;
   *m <<= 1;
   if (cpu_status_enabled(&nes->cpu, C)) {
@@ -623,7 +623,7 @@ void rol(struct nes *nes, uint8_t *m) {
   cpu_tick(nes);
 }
 
-void ror(struct nes *nes, uint8_t *m) {
+void ror(nes *nes, uint8_t *m) {
   uint8_t carry = *m & 1;
   *m >>= 1;
   if (cpu_status_enabled(&nes->cpu, C)) {
@@ -634,7 +634,7 @@ void ror(struct nes *nes, uint8_t *m) {
   cpu_tick(nes);
 }
 
-void branch(struct nes *nes, uint8_t v) {
+void branch(nes *nes, uint8_t v) {
   cpu_tick(nes);
   int16_t base = (int16_t)nes->cpu.PC;
   int8_t offset = (int8_t)v; // to negative number
@@ -644,7 +644,7 @@ void branch(struct nes *nes, uint8_t v) {
   nes->cpu.PC = base + (int16_t)offset;
 }
 
-void set_carry_status(struct nes *nes, uint8_t m, uint8_t r) {
+void set_carry_status(nes *nes, uint8_t m, uint8_t r) {
   uint8_t a7 = nes->cpu.A >> 7 & 1;
   uint8_t m7 = m >> 7 & 1;
   uint8_t c6 = a7 ^ m7 ^ (r >> 7 & 1);

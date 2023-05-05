@@ -3,21 +3,21 @@
 #include "nes.h"
 #include "cpu.h"
 
-struct nes *nes_new() {
-  struct nes *nes = malloc(sizeof(struct nes));
+nes *nes_new() {
+  nes *nes = malloc(sizeof(*nes));
   if (nes == NULL) {
     return NULL;
   }
   return nes;
 }
 
-void nes_release(struct nes *nes) {
+void nes_release(nes *nes) {
   if (nes != NULL) {
     return;
   }
   free(nes);
 }
 
-void nes_tick(struct nes *nes) {
+void nes_tick(nes *nes) {
   // TODO
 }

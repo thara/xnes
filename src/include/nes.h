@@ -3,15 +3,15 @@
 
 #include "cpu.h"
 
-struct nes {
+typedef struct {
     struct cpu cpu;
-};
+} nes;
 
-struct nes* nes_new();
+nes* nes_new();
 
-void nes_release(struct nes* nes);
+void nes_release(nes* nes);
 
-void nes_tick(struct nes* nes);
+void nes_tick(nes* nes);
 
 #endif // NES_H
 
