@@ -4,14 +4,14 @@
 #include <stdbool.h>
 #include <stdint.h>
 
-struct rom {
+typedef struct {
    uint8_t mapper_no;
    uint32_t prg_rom_size;
    uint32_t chr_rom_size;
    bool mirroring_vertical;
 
    uint8_t* raw;
-};
+} rom;
 
 typedef enum {
     rom_parse_error_none,
@@ -20,6 +20,6 @@ typedef enum {
     rom_parse_error_padding,
 } rom_parse_error;
 
-void parse_rom(uint8_t* buf, uint64_t buf_len, struct rom* rom, rom_parse_error* error);
+void parse_rom(uint8_t* buf, uint64_t buf_len, rom* rom, rom_parse_error* error);
 
 #endif // ROM_H

@@ -17,7 +17,7 @@ enum mapper_error {
     mapper_error_unsupported_mapper,
 };
 
-void detect_mapper(struct rom *rom, struct mapper *mapper, enum mapper_error* error);
+void detect_mapper(rom *rom, struct mapper *mapper, enum mapper_error* error);
 
 uint8_t mapper_read(struct mapper *mapper, uint16_t addr);
 

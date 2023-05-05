@@ -32,8 +32,8 @@ TEST(test_detect_mapper) {
     test_precondition_failed("Failed to read test file\n");
   }
 
-  struct rom rom;
-  enum rom_parse_error error;
+  rom rom;
+  rom_parse_error error;
   parse_rom(buf, file_size, &rom, &error);
 
   test_assert(error == rom_parse_error_none, "rom_parse_error should be none");
