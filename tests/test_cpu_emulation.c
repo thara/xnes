@@ -14,255 +14,255 @@ TEST(test_get_operand_implicit) {
 
   uint16_t result = cpu_get_operand(nes, implicit);
   test_assert_int_eq(0, result);
-  test_assert_int_eq(0, nes->cpu->cycles);
+  test_assert_int_eq(0, nes->cpu.cycles);
 }
 
 TEST(test_get_operand_accumulator) {
   struct nes *nes = nes_new();
-  nes->cpu->A = 0xFB;
+  nes->cpu.A = 0xFB;
 
   uint16_t result = cpu_get_operand(nes, accumulator);
   test_assert_byte_eq(0xFB, result);
-  test_assert_int_eq(0, nes->cpu->cycles);
+  test_assert_int_eq(0, nes->cpu.cycles);
 }
 
 TEST(test_get_operand_immediate) {
   struct nes *nes = nes_new();
-  nes->cpu->PC = 0x8234;
+  nes->cpu.PC = 0x8234;
 
   uint16_t result = cpu_get_operand(nes, immediate);
   test_assert_byte_eq(0x8234, result);
-  test_assert_int_eq(0, nes->cpu->cycles);
+  test_assert_int_eq(0, nes->cpu.cycles);
 }
 
 TEST(test_get_operand_zero_page) {
   mem_init();
 
   struct nes *nes = nes_new();
-  nes->cpu->PC = 0x0414;
+  nes->cpu.PC = 0x0414;
   mem_write(nes, 0x0414, 0x91);
 
   uint16_t result = cpu_get_operand(nes, zero_page);
   test_assert_byte_eq(0x91, result);
-  test_assert_int_eq(1, nes->cpu->cycles);
+  test_assert_int_eq(1, nes->cpu.cycles);
 }
 
 TEST(test_get_operand_zero_page_x) {
   mem_init();
 
   struct nes *nes = nes_new();
-  nes->cpu->PC = 0x0100;
-  nes->cpu->X = 0x93;
+  nes->cpu.PC = 0x0100;
+  nes->cpu.X = 0x93;
   mem_write(nes, 0x0100, 0x80);
 
   uint16_t result = cpu_get_operand(nes, zero_page_x);
   test_assert_byte_eq(0x13, result);
-  test_assert_int_eq(2, nes->cpu->cycles);
+  test_assert_int_eq(2, nes->cpu.cycles);
 }
 
 TEST(test_get_operand_zero_page_y) {
   mem_init();
 
   struct nes *nes = nes_new();
-  nes->cpu->PC = 0x0423;
-  nes->cpu->Y = 0xF1;
+  nes->cpu.PC = 0x0423;
+  nes->cpu.Y = 0xF1;
   mem_write(nes, 0x0423, 0x36);
 
   uint16_t result = cpu_get_operand(nes, zero_page_y);
   test_assert_byte_eq(0x27, result);
-  test_assert_int_eq(2, nes->cpu->cycles);
+  test_assert_int_eq(2, nes->cpu.cycles);
 }
 
 TEST(test_get_operand_absolute) {
   mem_init();
 
   struct nes *nes = nes_new();
-  nes->cpu->PC = 0x0423;
+  nes->cpu.PC = 0x0423;
   mem_write(nes, 0x0423, 0x36);
   mem_write(nes, 0x0424, 0xF0);
 
   uint16_t result = cpu_get_operand(nes, absolute);
   test_assert_byte_eq(0xF036, result);
-  test_assert_int_eq(2, nes->cpu->cycles);
+  test_assert_int_eq(2, nes->cpu.cycles);
 }
 
 TEST(test_get_operand_absolute_x) {
   mem_init();
 
   struct nes *nes = nes_new();
-  nes->cpu->PC = 0x0423;
+  nes->cpu.PC = 0x0423;
   mem_write(nes, 0x0423, 0x36);
   mem_write(nes, 0x0424, 0xF0);
 
-  nes->cpu->X = 0x31;
+  nes->cpu.X = 0x31;
 
   uint16_t result = cpu_get_operand(nes, absolute_x);
   test_assert_byte_eq(0xF067, result);
-  test_assert_int_eq(3, nes->cpu->cycles);
+  test_assert_int_eq(3, nes->cpu.cycles);
 }
 
 TEST(test_get_operand_absolute_x_with_penalty_not_page_crossed) {
   mem_init();
 
   struct nes *nes = nes_new();
-  nes->cpu->PC = 0x0423;
+  nes->cpu.PC = 0x0423;
   mem_write(nes, 0x0423, 0x36);
   mem_write(nes, 0x0424, 0xF0);
 
-  nes->cpu->X = 0x31;
+  nes->cpu.X = 0x31;
 
   uint16_t result = cpu_get_operand(nes, absolute_x_with_penalty);
   test_assert_byte_eq(0xF067, result);
-  test_assert_int_eq(2, nes->cpu->cycles);
+  test_assert_int_eq(2, nes->cpu.cycles);
 }
 
 TEST(test_get_operand_absolute_x_with_penalty_page_crossed) {
   mem_init();
 
   struct nes *nes = nes_new();
-  nes->cpu->PC = 0x0423;
+  nes->cpu.PC = 0x0423;
   mem_write(nes, 0x0423, 0x36);
   mem_write(nes, 0x0424, 0xF0);
 
-  nes->cpu->X = 0xF0;
+  nes->cpu.X = 0xF0;
 
   uint16_t result = cpu_get_operand(nes, absolute_x_with_penalty);
   test_assert_byte_eq(0xF126, result);
-  test_assert_int_eq(3, nes->cpu->cycles);
+  test_assert_int_eq(3, nes->cpu.cycles);
 }
 
 TEST(test_get_operand_absolute_y) {
   mem_init();
 
   struct nes *nes = nes_new();
-  nes->cpu->PC = 0x0423;
+  nes->cpu.PC = 0x0423;
   mem_write(nes, 0x0423, 0x36);
   mem_write(nes, 0x0424, 0xF0);
 
-  nes->cpu->Y = 0x31;
+  nes->cpu.Y = 0x31;
 
   uint16_t result = cpu_get_operand(nes, absolute_y);
   test_assert_byte_eq(0xF067, result);
-  test_assert_int_eq(3, nes->cpu->cycles);
+  test_assert_int_eq(3, nes->cpu.cycles);
 }
 
 TEST(test_get_operand_absolute_y_with_penalty_not_page_crossed) {
   mem_init();
 
   struct nes *nes = nes_new();
-  nes->cpu->PC = 0x0423;
+  nes->cpu.PC = 0x0423;
   mem_write(nes, 0x0423, 0x36);
   mem_write(nes, 0x0424, 0xF0);
 
-  nes->cpu->Y = 0x31;
+  nes->cpu.Y = 0x31;
 
   uint16_t result = cpu_get_operand(nes, absolute_y_with_penalty);
   test_assert_byte_eq(0xF067, result);
-  test_assert_int_eq(2, nes->cpu->cycles);
+  test_assert_int_eq(2, nes->cpu.cycles);
 }
 
 TEST(test_get_operand_absolute_y_with_penalty_page_crossed) {
   mem_init();
 
   struct nes *nes = nes_new();
-  nes->cpu->PC = 0x0423;
+  nes->cpu.PC = 0x0423;
   mem_write(nes, 0x0423, 0x36);
   mem_write(nes, 0x0424, 0xF0);
 
-  nes->cpu->Y = 0xF0;
+  nes->cpu.Y = 0xF0;
 
   uint16_t result = cpu_get_operand(nes, absolute_y_with_penalty);
   test_assert_byte_eq(0xF126, result);
-  test_assert_int_eq(3, nes->cpu->cycles);
+  test_assert_int_eq(3, nes->cpu.cycles);
 }
 
 TEST(test_get_operand_relative) {
   mem_init();
 
   struct nes *nes = nes_new();
-  nes->cpu->PC = 0x0414;
+  nes->cpu.PC = 0x0414;
   mem_write(nes, 0x0414, 0x91);
 
   uint16_t result = cpu_get_operand(nes, relative);
   test_assert_byte_eq(0x91, result);
-  test_assert_int_eq(1, nes->cpu->cycles);
+  test_assert_int_eq(1, nes->cpu.cycles);
 }
 
 TEST(test_get_operand_indirect) {
   mem_init();
 
   struct nes *nes = nes_new();
-  nes->cpu->PC = 0x020F;
+  nes->cpu.PC = 0x020F;
   mem_write(nes, 0x020F, 0x10);
   mem_write(nes, 0x0210, 0x03);
   mem_write(nes, 0x0310, 0x9F);
 
   uint16_t result = cpu_get_operand(nes, indirect);
   test_assert_byte_eq(0x9F, result);
-  test_assert_int_eq(4, nes->cpu->cycles);
+  test_assert_int_eq(4, nes->cpu.cycles);
 }
 
 TEST(test_get_operand_indexed_indirect) {
   mem_init();
 
   struct nes *nes = nes_new();
-  nes->cpu->PC = 0x020F;
-  nes->cpu->X = 0x95;
+  nes->cpu.PC = 0x020F;
+  nes->cpu.X = 0x95;
   mem_write(nes, 0x020F, 0xF0);
   mem_write(nes, 0x0085, 0x12);
   mem_write(nes, 0x0086, 0x90);
 
   uint16_t result = cpu_get_operand(nes, indexed_indirect);
   test_assert_byte_eq(0x9012, result);
-  test_assert_int_eq(4, nes->cpu->cycles);
+  test_assert_int_eq(4, nes->cpu.cycles);
 }
 
 TEST(test_get_operand_indirect_indexed) {
   mem_init();
 
   struct nes *nes = nes_new();
-  nes->cpu->PC = 0x020F;
+  nes->cpu.PC = 0x020F;
   mem_write(nes, 0x020F, 0xF0);
   mem_write(nes, 0x00F0, 0x12);
   mem_write(nes, 0x00F1, 0x90);
 
-  nes->cpu->Y = 0xF3;
+  nes->cpu.Y = 0xF3;
 
   uint16_t result = cpu_get_operand(nes, indirect_indexed);
   test_assert_byte_eq(0x9105, result);
-  test_assert_int_eq(4, nes->cpu->cycles);
+  test_assert_int_eq(4, nes->cpu.cycles);
 }
 
 TEST(test_get_operand_indirect_indexed_with_penalty_not_page_crossed) {
   mem_init();
 
   struct nes *nes = nes_new();
-  nes->cpu->PC = 0x020F;
+  nes->cpu.PC = 0x020F;
   mem_write(nes, 0x020F, 0xF0);
   mem_write(nes, 0x00F0, 0x12);
   mem_write(nes, 0x00F1, 0x90);
 
-  nes->cpu->Y = 0x83;
+  nes->cpu.Y = 0x83;
 
   uint16_t result = cpu_get_operand(nes, indirect_indexed_with_penalty);
   test_assert_byte_eq(0x9095, result);
-  test_assert_int_eq(3, nes->cpu->cycles);
+  test_assert_int_eq(3, nes->cpu.cycles);
 }
 
 TEST(test_get_operand_indirect_indexed_with_penalty_page_crossed) {
   mem_init();
 
   struct nes *nes = nes_new();
-  nes->cpu->PC = 0x020F;
+  nes->cpu.PC = 0x020F;
   mem_write(nes, 0x020F, 0xF0);
   mem_write(nes, 0x00F0, 0x12);
   mem_write(nes, 0x00F1, 0x90);
 
-  nes->cpu->Y = 0xF3;
+  nes->cpu.Y = 0xF3;
 
   uint16_t result = cpu_get_operand(nes, indirect_indexed_with_penalty);
   test_assert_byte_eq(0x9105, result);
-  test_assert_int_eq(4, nes->cpu->cycles);
+  test_assert_int_eq(4, nes->cpu.cycles);
 }
 
 TEST_SUITE(test_get_operand) {
@@ -290,23 +290,23 @@ TEST(test_LDA) {
   mem_init();
 
   struct nes *nes = nes_new();
-  nes->cpu->PC = 0x020F;
+  nes->cpu.PC = 0x020F;
   mem_write(nes, 0x020F, 0xA9);
   mem_write(nes, 0x0210, 0x31);
 
   cpu_step(nes);
 
-  test_assert_byte_eq(0x31, nes->cpu->A);
-  test_assert_int_eq(2, nes->cpu->cycles);
-  test_assert_byte_eq(0, nes->cpu->P);
+  test_assert_byte_eq(0x31, nes->cpu.A);
+  test_assert_int_eq(2, nes->cpu.cycles);
+  test_assert_byte_eq(0, nes->cpu.P);
 }
 
 TEST(test_STA) {
   mem_init();
 
   struct nes *nes = nes_new();
-  nes->cpu->PC = 0x020F;
-  nes->cpu->A = 0x91;
+  nes->cpu.PC = 0x020F;
+  nes->cpu.A = 0x91;
   mem_write(nes, 0x020F, 0x8D);
   mem_write(nes, 0x0210, 0x19);
   mem_write(nes, 0x0211, 0x04);
@@ -314,127 +314,127 @@ TEST(test_STA) {
   cpu_step(nes);
 
   test_assert_byte_eq(0x91, mem_read(nes, 0x0419));
-  test_assert_int_eq(4, nes->cpu->cycles);
-  test_assert_byte_eq(0, nes->cpu->P);
+  test_assert_int_eq(4, nes->cpu.cycles);
+  test_assert_byte_eq(0, nes->cpu.P);
 }
 
 TEST(test_TAX) {
   mem_init();
 
   struct nes *nes = nes_new();
-  nes->cpu->PC = 0x020F;
-  nes->cpu->A = 0x83;
+  nes->cpu.PC = 0x020F;
+  nes->cpu.A = 0x83;
   mem_write(nes, 0x020F, 0xAA);
 
   cpu_step(nes);
 
-  test_assert_byte_eq(0x83, nes->cpu->X);
-  test_assert_int_eq(2, nes->cpu->cycles);
-  test_assert_byte_eq(0x80, nes->cpu->P);
+  test_assert_byte_eq(0x83, nes->cpu.X);
+  test_assert_int_eq(2, nes->cpu.cycles);
+  test_assert_byte_eq(0x80, nes->cpu.P);
 }
 
 TEST(test_TYA) {
   mem_init();
 
   struct nes *nes = nes_new();
-  nes->cpu->PC = 0x020F;
-  nes->cpu->Y = 0xF0;
+  nes->cpu.PC = 0x020F;
+  nes->cpu.Y = 0xF0;
   mem_write(nes, 0x020F, 0x98);
 
   cpu_step(nes);
 
-  test_assert_byte_eq(0xF0, nes->cpu->A);
-  test_assert_int_eq(2, nes->cpu->cycles);
-  test_assert_byte_eq(0x80, nes->cpu->P);
+  test_assert_byte_eq(0xF0, nes->cpu.A);
+  test_assert_int_eq(2, nes->cpu.cycles);
+  test_assert_byte_eq(0x80, nes->cpu.P);
 }
 
 TEST(test_TSX) {
   mem_init();
 
   struct nes *nes = nes_new();
-  nes->cpu->PC = 0x020F;
-  nes->cpu->S = 0xF3;
+  nes->cpu.PC = 0x020F;
+  nes->cpu.S = 0xF3;
   mem_write(nes, 0x020F, 0xBA);
 
   cpu_step(nes);
 
-  test_assert_byte_eq(0xF3, nes->cpu->X);
-  test_assert_int_eq(2, nes->cpu->cycles);
-  test_assert_byte_eq(0x80, nes->cpu->P);
+  test_assert_byte_eq(0xF3, nes->cpu.X);
+  test_assert_int_eq(2, nes->cpu.cycles);
+  test_assert_byte_eq(0x80, nes->cpu.P);
 }
 
 TEST(test_PHA) {
   mem_init();
 
   struct nes *nes = nes_new();
-  nes->cpu->PC = 0x020F;
-  nes->cpu->S = 0xFD;
-  nes->cpu->A = 0x72;
+  nes->cpu.PC = 0x020F;
+  nes->cpu.S = 0xFD;
+  nes->cpu.A = 0x72;
   mem_write(nes, 0x020F, 0x48);
 
   cpu_step(nes);
 
-  test_assert_byte_eq(0xFC, nes->cpu->S);
+  test_assert_byte_eq(0xFC, nes->cpu.S);
   test_assert_byte_eq(0x72, mem_read(nes, 0x01FD));
-  test_assert_int_eq(3, nes->cpu->cycles);
-  test_assert_byte_eq(0, nes->cpu->P);
+  test_assert_int_eq(3, nes->cpu.cycles);
+  test_assert_byte_eq(0, nes->cpu.P);
 }
 
 TEST(test_PHP) {
   mem_init();
 
   struct nes *nes = nes_new();
-  nes->cpu->PC = 0x020F;
-  nes->cpu->S = 0xFD;
-  nes->cpu->A = 0x72;
+  nes->cpu.PC = 0x020F;
+  nes->cpu.S = 0xFD;
+  nes->cpu.A = 0x72;
   mem_write(nes, 0x020F, 0x08);
-  nes->cpu->P = 0b10001001;
+  nes->cpu.P = 0b10001001;
 
   cpu_step(nes);
 
-  test_assert_byte_eq(0xFC, nes->cpu->S);
-  test_assert_bit_eq(nes->cpu->P | 0b00110000, mem_read(nes, 0x01FD));
-  test_assert_int_eq(3, nes->cpu->cycles);
+  test_assert_byte_eq(0xFC, nes->cpu.S);
+  test_assert_bit_eq(nes->cpu.P | 0b00110000, mem_read(nes, 0x01FD));
+  test_assert_int_eq(3, nes->cpu.cycles);
 }
 
 TEST(test_PLP) {
   mem_init();
 
   struct nes *nes = nes_new();
-  nes->cpu->PC = 0x020F;
-  nes->cpu->S = 0xBF;
+  nes->cpu.PC = 0x020F;
+  nes->cpu.S = 0xBF;
   mem_write(nes, 0x020F, 0x28);
   mem_write(nes, 0x01C0, 0x7A);
 
   cpu_step(nes);
 
-  test_assert_byte_eq(0xC0, nes->cpu->S);
-  test_assert_bit_eq(0b01101010, nes->cpu->P);
-  test_assert_int_eq(4, nes->cpu->cycles);
+  test_assert_byte_eq(0xC0, nes->cpu.S);
+  test_assert_bit_eq(0b01101010, nes->cpu.P);
+  test_assert_int_eq(4, nes->cpu.cycles);
 }
 
 TEST(test_EOR) {
   mem_init();
 
   struct nes *nes = nes_new();
-  nes->cpu->PC = 0x020F;
-  nes->cpu->A = 0x21;
+  nes->cpu.PC = 0x020F;
+  nes->cpu.A = 0x21;
   mem_write(nes, 0x020F, 0x49);
   mem_write(nes, 0x0210, 0x38);
 
   cpu_step(nes);
 
-  test_assert_byte_eq(0x19, nes->cpu->A);
-  test_assert_bit_eq(0, nes->cpu->P);
-  test_assert_int_eq(2, nes->cpu->cycles);
+  test_assert_byte_eq(0x19, nes->cpu.A);
+  test_assert_bit_eq(0, nes->cpu.P);
+  test_assert_int_eq(2, nes->cpu.cycles);
 }
 
 TEST(test_BIT) {
   mem_init();
 
   struct nes *nes = nes_new();
-  nes->cpu->PC = 0x020F;
-  nes->cpu->A = 0x48;
+  nes->cpu.PC = 0x020F;
+  nes->cpu.A = 0x48;
   mem_write(nes, 0x020F, 0x2C);
   mem_write(nes, 0x0210, 0xB0);
   mem_write(nes, 0x0211, 0x03);
@@ -442,8 +442,8 @@ TEST(test_BIT) {
 
   cpu_step(nes);
 
-  test_assert_bit_eq(0b11000000, nes->cpu->P);
-  test_assert_int_eq(4, nes->cpu->cycles);
+  test_assert_bit_eq(0b11000000, nes->cpu.P);
+  test_assert_int_eq(4, nes->cpu.cycles);
 }
 
 struct adc_test_pattern {
@@ -463,8 +463,8 @@ TEST(test_ADC) {
     mem_init();
 
     struct nes *nes = nes_new();
-    nes->cpu->PC = 0x020F;
-    nes->cpu->A = test_case.input_a;
+    nes->cpu.PC = 0x020F;
+    nes->cpu.A = test_case.input_a;
 
     mem_write(nes, 0x020F, 0x6D);
     mem_write(nes, 0x0210, 0xD3);
@@ -473,8 +473,8 @@ TEST(test_ADC) {
 
     cpu_step(nes);
 
-    test_assert_byte_eq(test_case.expected_a, nes->cpu->A);
-    test_assert_bit_eq(test_case.expected_p, nes->cpu->P);
+    test_assert_byte_eq(test_case.expected_a, nes->cpu.A);
+    test_assert_bit_eq(test_case.expected_p, nes->cpu.P);
   }
 }
 
@@ -482,22 +482,22 @@ TEST(test_CPY) {
   mem_init();
 
   struct nes *nes = nes_new();
-  nes->cpu->PC = 0x020F;
-  nes->cpu->Y = 0x37;
+  nes->cpu.PC = 0x020F;
+  nes->cpu.Y = 0x37;
   mem_write(nes, 0x020F, 0xCC);
   mem_write(nes, 0x0210, 0x36);
 
   cpu_step(nes);
 
-  test_assert_bit_eq(0b00000001, nes->cpu->P);
-  test_assert_int_eq(4, nes->cpu->cycles);
+  test_assert_bit_eq(0b00000001, nes->cpu.P);
+  test_assert_int_eq(4, nes->cpu.cycles);
 }
 
 TEST(test_INC) {
   mem_init();
 
   struct nes *nes = nes_new();
-  nes->cpu->PC = 0x020F;
+  nes->cpu.PC = 0x020F;
   mem_write(nes, 0x020F, 0xEE);
   mem_write(nes, 0x0210, 0xD3);
   mem_write(nes, 0x0211, 0x04);
@@ -505,16 +505,16 @@ TEST(test_INC) {
 
   cpu_step(nes);
 
-  test_assert_bit_eq(0b10000000, nes->cpu->P);
+  test_assert_bit_eq(0b10000000, nes->cpu.P);
   test_assert_byte_eq(0x80, mem_read(nes, 0x04D3));
-  test_assert_int_eq(6, nes->cpu->cycles);
+  test_assert_int_eq(6, nes->cpu.cycles);
 }
 
 TEST(test_DEC) {
   mem_init();
 
   struct nes *nes = nes_new();
-  nes->cpu->PC = 0x020F;
+  nes->cpu.PC = 0x020F;
   mem_write(nes, 0x020F, 0xCE);
   mem_write(nes, 0x0210, 0xD3);
   mem_write(nes, 0x0211, 0x04);
@@ -522,92 +522,92 @@ TEST(test_DEC) {
 
   cpu_step(nes);
 
-  test_assert_bit_eq(0b10000000, nes->cpu->P);
+  test_assert_bit_eq(0b10000000, nes->cpu.P);
   test_assert_byte_eq(0xBF, mem_read(nes, 0x04D3));
-  test_assert_int_eq(6, nes->cpu->cycles);
+  test_assert_int_eq(6, nes->cpu.cycles);
 }
 
 TEST(test_ASL) {
   mem_init();
 
   struct nes *nes = nes_new();
-  nes->cpu->PC = 0x020F;
-  nes->cpu->A = 0b10001010;
+  nes->cpu.PC = 0x020F;
+  nes->cpu.A = 0b10001010;
   mem_write(nes, 0x020F, 0x0A);
 
   cpu_step(nes);
 
-  test_assert_bit_eq(0b00010100, nes->cpu->A);
-  test_assert_bit_eq(0b00000001, nes->cpu->P);
-  test_assert_int_eq(2, nes->cpu->cycles);
+  test_assert_bit_eq(0b00010100, nes->cpu.A);
+  test_assert_bit_eq(0b00000001, nes->cpu.P);
+  test_assert_int_eq(2, nes->cpu.cycles);
 }
 
 TEST(test_ROL) {
   mem_init();
 
   struct nes *nes = nes_new();
-  nes->cpu->PC = 0x020F;
-  nes->cpu->A = 0b10001010;
-  nes->cpu->P = 0b00000001;
+  nes->cpu.PC = 0x020F;
+  nes->cpu.A = 0b10001010;
+  nes->cpu.P = 0b00000001;
   mem_write(nes, 0x020F, 0x2A);
 
   cpu_step(nes);
 
-  test_assert_bit_eq(0b00010101, nes->cpu->A);
-  test_assert_bit_eq(0b00000001, nes->cpu->P);
-  test_assert_int_eq(2, nes->cpu->cycles);
+  test_assert_bit_eq(0b00010101, nes->cpu.A);
+  test_assert_bit_eq(0b00000001, nes->cpu.P);
+  test_assert_int_eq(2, nes->cpu.cycles);
 }
 
 TEST(test_ROL_carry) {
   mem_init();
 
   struct nes *nes = nes_new();
-  nes->cpu->PC = 0x020F;
-  nes->cpu->A = 0b10001010;
-  nes->cpu->P = 0b10000000;
+  nes->cpu.PC = 0x020F;
+  nes->cpu.A = 0b10001010;
+  nes->cpu.P = 0b10000000;
   mem_write(nes, 0x020F, 0x2A);
 
   cpu_step(nes);
 
-  test_assert_bit_eq(0b00010100, nes->cpu->A);
-  test_assert_bit_eq(0b00000001, nes->cpu->P);
-  test_assert_int_eq(2, nes->cpu->cycles);
+  test_assert_bit_eq(0b00010100, nes->cpu.A);
+  test_assert_bit_eq(0b00000001, nes->cpu.P);
+  test_assert_int_eq(2, nes->cpu.cycles);
 }
 
 TEST(test_JSR) {
   mem_init();
 
   struct nes *nes = nes_new();
-  nes->cpu->PC = 0x020F;
-  nes->cpu->S = 0xBF;
+  nes->cpu.PC = 0x020F;
+  nes->cpu.S = 0xBF;
   mem_write(nes, 0x020F, 0x20);
   mem_write(nes, 0x0210, 0x31);
   mem_write(nes, 0x0211, 0x40);
 
   cpu_step(nes);
 
-  test_assert_byte_eq(0xBD, nes->cpu->S);
-  test_assert_byte_eq(0x4031, nes->cpu->PC);
+  test_assert_byte_eq(0xBD, nes->cpu.S);
+  test_assert_byte_eq(0x4031, nes->cpu.PC);
   test_assert_byte_eq(0x11, mem_read(nes, 0x01BE));
   test_assert_byte_eq(0x02, mem_read(nes, 0x01BF));
-  test_assert_int_eq(6, nes->cpu->cycles);
+  test_assert_int_eq(6, nes->cpu.cycles);
 }
 
 TEST(test_RTS) {
   mem_init();
 
   struct nes *nes = nes_new();
-  nes->cpu->PC = 0x0031;
-  nes->cpu->S = 0xBD;
+  nes->cpu.PC = 0x0031;
+  nes->cpu.S = 0xBD;
   mem_write(nes, 0x0031, 0x60);
   mem_write(nes, 0x01BE, 0x11);
   mem_write(nes, 0x01BF, 0x02);
 
   cpu_step(nes);
 
-  test_assert_byte_eq(0xBF, nes->cpu->S);
-  test_assert_byte_eq(0x0212, nes->cpu->PC);
-  test_assert_int_eq(6, nes->cpu->cycles);
+  test_assert_byte_eq(0xBF, nes->cpu.S);
+  test_assert_byte_eq(0x0212, nes->cpu.PC);
+  test_assert_int_eq(6, nes->cpu.cycles);
 }
 
 struct bcc_test_pattern {
@@ -626,16 +626,16 @@ TEST(test_BCC) {
     mem_init();
 
     struct nes *nes = nes_new();
-    nes->cpu->PC = 0x0031;
-    nes->cpu->P = test_case.input_p;
+    nes->cpu.PC = 0x0031;
+    nes->cpu.P = test_case.input_p;
 
     mem_write(nes, 0x0031, 0x90);
     mem_write(nes, 0x0032, test_case.input_operand);
 
     cpu_step(nes);
 
-    test_assert_byte_eq(test_case.expected_pc, nes->cpu->PC);
-    test_assert_int_eq(test_case.expected_cycles, nes->cpu->cycles);
+    test_assert_byte_eq(test_case.expected_pc, nes->cpu.PC);
+    test_assert_int_eq(test_case.expected_cycles, nes->cpu.cycles);
   }
 }
 
@@ -643,58 +643,58 @@ TEST(test_CLD) {
   mem_init();
 
   struct nes *nes = nes_new();
-  nes->cpu->PC = 0x020F;
-  nes->cpu->P = 0b011001001;
+  nes->cpu.PC = 0x020F;
+  nes->cpu.P = 0b011001001;
   mem_write(nes, 0x020F, 0xD8);
 
   cpu_step(nes);
 
-  test_assert_byte_eq(0x0210, nes->cpu->PC);
-  test_assert_bit_eq(0b011000001, nes->cpu->P);
-  test_assert_int_eq(2, nes->cpu->cycles);
+  test_assert_byte_eq(0x0210, nes->cpu.PC);
+  test_assert_bit_eq(0b011000001, nes->cpu.P);
+  test_assert_int_eq(2, nes->cpu.cycles);
 }
 
 TEST(test_SEI) {
   mem_init();
 
   struct nes *nes = nes_new();
-  nes->cpu->PC = 0x020F;
-  nes->cpu->P = 0b011001001;
+  nes->cpu.PC = 0x020F;
+  nes->cpu.P = 0b011001001;
   mem_write(nes, 0x020F, 0x78);
 
   cpu_step(nes);
 
-  test_assert_byte_eq(0x0210, nes->cpu->PC);
-  test_assert_bit_eq(0b011001101, nes->cpu->P);
-  test_assert_int_eq(2, nes->cpu->cycles);
+  test_assert_byte_eq(0x0210, nes->cpu.PC);
+  test_assert_bit_eq(0b011001101, nes->cpu.P);
+  test_assert_int_eq(2, nes->cpu.cycles);
 }
 
 TEST(test_BRK) {
   mem_init();
 
   struct nes *nes = nes_new();
-  nes->cpu->PC = 0x020F;
-  nes->cpu->P = 0b01100001;
-  nes->cpu->S = 0xBF;
+  nes->cpu.PC = 0x020F;
+  nes->cpu.P = 0b01100001;
+  nes->cpu.S = 0xBF;
   mem_write(nes, 0x020F, 0x00);
   mem_write(nes, 0xFFFE, 0x23);
   mem_write(nes, 0xFFFF, 0x40);
 
   cpu_step(nes);
 
-  test_assert_byte_eq(0x4023, nes->cpu->PC);
-  test_assert_bit_eq(0b01110001, nes->cpu->P);
-  test_assert_byte_eq(0xBC, nes->cpu->S);
-  test_assert_int_eq(7, nes->cpu->cycles);
+  test_assert_byte_eq(0x4023, nes->cpu.PC);
+  test_assert_bit_eq(0b01110001, nes->cpu.P);
+  test_assert_byte_eq(0xBC, nes->cpu.S);
+  test_assert_int_eq(7, nes->cpu.cycles);
 }
 
 TEST(test_RTI) {
   mem_init();
 
   struct nes *nes = nes_new();
-  nes->cpu->PC = 0x020F;
-  nes->cpu->P = 0b01100101;
-  nes->cpu->S = 0xBC;
+  nes->cpu.PC = 0x020F;
+  nes->cpu.P = 0b01100101;
+  nes->cpu.S = 0xBC;
   mem_write(nes, 0x020F, 0x40);
   mem_write(nes, 0x01BD, 0b10000010);
   mem_write(nes, 0x01BE, 0x11);
@@ -702,10 +702,10 @@ TEST(test_RTI) {
 
   cpu_step(nes);
 
-  test_assert_byte_eq(0x0211, nes->cpu->PC);
-  test_assert_bit_eq(0b10000010, nes->cpu->P);
-  test_assert_byte_eq(0xBF, nes->cpu->S);
-  test_assert_int_eq(6, nes->cpu->cycles);
+  test_assert_byte_eq(0x0211, nes->cpu.PC);
+  test_assert_bit_eq(0b10000010, nes->cpu.P);
+  test_assert_byte_eq(0xBF, nes->cpu.S);
+  test_assert_int_eq(6, nes->cpu.cycles);
 }
 
 TEST_SUITE(test_execute) {

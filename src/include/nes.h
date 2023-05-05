@@ -4,7 +4,7 @@
 #include "cpu.h"
 
 struct nes {
-    struct cpu* cpu;
+    struct cpu cpu;
 };
 
 struct nes* nes_new();
