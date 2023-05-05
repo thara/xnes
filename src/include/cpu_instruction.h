@@ -14,7 +14,7 @@ typedef enum {
   absolute, absolute_x, absolute_x_with_penalty, absolute_y, absolute_y_with_penalty,
   relative,
   indirect, indexed_indirect, indirect_indexed, indirect_indexed_with_penalty,
-} cpu_addressing_mode;
+} AddressingMode;
 
 typedef enum {
   // Load/Store Operations,
@@ -47,7 +47,7 @@ typedef enum {
 
 typedef struct {
   cpu_mnemonic mnemonic;
-  cpu_addressing_mode mode;
+  AddressingMode mode;
 } cpu_instruction;
 
 cpu_instruction cpu_decode(uint8_t opcode);

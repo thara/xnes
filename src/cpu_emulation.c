@@ -59,7 +59,7 @@ bool is_page_crossed(uint16_t a, uint16_t b) {
   return ((a + b) & 0xFF00) != (b & 0xFF00);
 }
 
-uint16_t cpu_get_operand(NES *nes, cpu_addressing_mode mode) {
+uint16_t cpu_get_operand(NES *nes, AddressingMode mode) {
   switch (mode) {
   case implicit:
     return 0;
