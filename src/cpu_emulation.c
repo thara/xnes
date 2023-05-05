@@ -282,16 +282,16 @@ void cpu_execute(nes *nes, cpu_instruction inst) {
   case BIT: {
     uint8_t m = cpu_read(nes, operand);
     uint8_t b = nes->cpu.A & m;
-    nes->cpu.P |= (b == 0) << Z;
-    nes->cpu.P |= ((m & 0x40) == 0x40) << V;
-    nes->cpu.P |= ((m & 0x80) == 0x80) << N;
+    nes->cpu.P |= (b == 0) << CPU_STATUS_Z;
+    nes->cpu.P |= ((m & 0x40) == 0x40) << CPU_STATUS_V;
+    nes->cpu.P |= ((m & 0x80) == 0x80) << CPU_STATUS_N;
     break;
   }
 
   case ADC: {
     uint8_t m = cpu_read(nes, operand);
     uint8_t r = nes->cpu.A + m;
-    if (nes->cpu.P >> C)
+    if (nes->cpu.P >> CPU_STATUS_C)
       r++;
     set_carry_status(nes, m, r);
     nes->cpu.A = r;
@@ -399,64 +399,64 @@ void cpu_execute(nes *nes, cpu_instruction inst) {
     break;
 
   case BCC:
-    if (!cpu_status_enabled(&nes->cpu, C))
+    if (!cpu_status_enabled(&nes->cpu, CPU_STATUS_C))
       branch(nes, operand);
     break;
   case BCS:
-    if (cpu_status_enabled(&nes->cpu, C))
+    if (cpu_status_enabled(&nes->cpu, CPU_STATUS_C))
       branch(nes, operand);
     break;
   case BEQ:
-    if (cpu_status_enabled(&nes->cpu, Z))
+    if (cpu_status_enabled(&nes->cpu, CPU_STATUS_Z))
       branch(nes, operand);
     break;
   case BMI:
-    if (cpu_status_enabled(&nes->cpu, N))
+    if (cpu_status_enabled(&nes->cpu, CPU_STATUS_N))
       branch(nes, operand);
     break;
   case BNE:
-    if (!cpu_status_enabled(&nes->cpu, Z))
+    if (!cpu_status_enabled(&nes->cpu, CPU_STATUS_Z))
       branch(nes, operand);
     break;
   case BPL:
-    if (!cpu_status_enabled(&nes->cpu, N))
+    if (!cpu_status_enabled(&nes->cpu, CPU_STATUS_N))
       branch(nes, operand);
     break;
   case BVC:
-    if (!cpu_status_enabled(&nes->cpu, V))
+    if (!cpu_status_enabled(&nes->cpu, CPU_STATUS_V))
       branch(nes, operand);
     break;
   case BVS:
-    if (cpu_status_enabled(&nes->cpu, V))
+    if (cpu_status_enabled(&nes->cpu, CPU_STATUS_V))
       branch(nes, operand);
     break;
 
   case CLC:
-    cpu_status_set(&nes->cpu, C, false);
+    cpu_status_set(&nes->cpu, CPU_STATUS_C, false);
     cpu_tick(nes);
     break;
   case CLD:
-    cpu_status_set(&nes->cpu, D, false);
+    cpu_status_set(&nes->cpu, CPU_STATUS_D, false);
     cpu_tick(nes);
     break;
   case CLI:
-    cpu_status_set(&nes->cpu, I, false);
+    cpu_status_set(&nes->cpu, CPU_STATUS_I, false);
     cpu_tick(nes);
     break;
   case CLV:
-    cpu_status_set(&nes->cpu, V, false);
+    cpu_status_set(&nes->cpu, CPU_STATUS_V, false);
     cpu_tick(nes);
     break;
   case SEC:
-    cpu_status_set(&nes->cpu, C, true);
+    cpu_status_set(&nes->cpu, CPU_STATUS_C, true);
     cpu_tick(nes);
     break;
   case SED:
-    cpu_status_set(&nes->cpu, D, true);
+    cpu_status_set(&nes->cpu, CPU_STATUS_D, true);
     cpu_tick(nes);
     break;
   case SEI:
-    cpu_status_set(&nes->cpu, I, true);
+    cpu_status_set(&nes->cpu, CPU_STATUS_I, true);
     cpu_tick(nes);
     break;
 
@@ -506,7 +506,7 @@ void cpu_execute(nes *nes, cpu_instruction inst) {
   case SLO: {
     // arithmeticShiftLeft excluding tick
     uint8_t m = cpu_read(nes, operand);
-    cpu_status_set(&nes->cpu, C, (m & 0x80) == 0x80);
+    cpu_status_set(&nes->cpu, CPU_STATUS_C, (m & 0x80) == 0x80);
     m <<= 1;
     cpu_write(nes, operand, m);
     ora(nes, operand);
@@ -517,10 +517,10 @@ void cpu_execute(nes *nes, cpu_instruction inst) {
     uint8_t m = cpu_read(nes, operand);
     uint8_t carry = m & 0x80;
     m <<= 1;
-    if (cpu_status_enabled(&nes->cpu, C)) {
+    if (cpu_status_enabled(&nes->cpu, CPU_STATUS_C)) {
       m |= 1;
     }
-    cpu_status_set(&nes->cpu, C, carry == 0x80);
+    cpu_status_set(&nes->cpu, CPU_STATUS_C, carry == 0x80);
     cpu_status_set_zn(&nes->cpu, m);
     cpu_write(nes, operand, m);
     and(nes, operand);
@@ -529,7 +529,7 @@ void cpu_execute(nes *nes, cpu_instruction inst) {
   case SRE: {
     // logicalShiftRight excluding tick
     uint8_t m = cpu_read(nes, operand);
-    cpu_status_set(&nes->cpu, C, (m & 1) == 1);
+    cpu_status_set(&nes->cpu, CPU_STATUS_C, (m & 1) == 1);
     m >>= 1;
     cpu_status_set_zn(&nes->cpu, m);
     cpu_write(nes, operand, m);
@@ -541,10 +541,10 @@ void cpu_execute(nes *nes, cpu_instruction inst) {
     uint8_t m = cpu_read(nes, operand);
     uint8_t carry = m & 1;
     m >>= 1;
-    if (cpu_status_enabled(&nes->cpu, C)) {
+    if (cpu_status_enabled(&nes->cpu, CPU_STATUS_C)) {
       m |= 0x80;
     }
-    cpu_status_set(&nes->cpu, C, carry == 1);
+    cpu_status_set(&nes->cpu, CPU_STATUS_C, carry == 1);
     cpu_status_set_zn(&nes->cpu, m);
     cpu_write(nes, operand, m);
     abc(nes, operand);
@@ -573,7 +573,7 @@ void ora(nes *nes, uint16_t v) {
 void abc(nes *nes, uint16_t v) {
   uint8_t m = cpu_read(nes, v);
   uint8_t r = nes->cpu.A + m;
-  if (cpu_status_enabled(&nes->cpu, C)) {
+  if (cpu_status_enabled(&nes->cpu, CPU_STATUS_C)) {
     r++;
   }
   set_carry_status(nes, m, r);
@@ -584,7 +584,7 @@ void abc(nes *nes, uint16_t v) {
 void sbc(nes *nes, uint16_t v) {
   uint8_t m = ~cpu_read(nes, v);
   uint8_t r = nes->cpu.A + m;
-  if (cpu_status_enabled(&nes->cpu, C)) {
+  if (cpu_status_enabled(&nes->cpu, CPU_STATUS_C)) {
     r++;
   }
   set_carry_status(nes, m, r);
@@ -595,18 +595,18 @@ void sbc(nes *nes, uint16_t v) {
 void cmp(nes *nes, uint8_t m, uint16_t v) {
   int16_t r = (int16_t)m - (int16_t)cpu_read(nes, v);
   cpu_status_set_zn(&nes->cpu, r);
-  cpu_status_set(&nes->cpu, C, 0 <= r);
+  cpu_status_set(&nes->cpu, CPU_STATUS_C, 0 <= r);
 }
 
 void asl(nes *nes, uint8_t *m) {
-  cpu_status_set(&nes->cpu, C, (*m & 0x80) == 0x80);
+  cpu_status_set(&nes->cpu, CPU_STATUS_C, (*m & 0x80) == 0x80);
   *m <<= 1;
   cpu_status_set_zn(&nes->cpu, *m);
   cpu_tick(nes);
 }
 
 void lsr(nes *nes, uint8_t *m) {
-  cpu_status_set(&nes->cpu, C, (*m & 1) == 1);
+  cpu_status_set(&nes->cpu, CPU_STATUS_C, (*m & 1) == 1);
   *m >>= 1;
   cpu_status_set_zn(&nes->cpu, *m);
   cpu_tick(nes);
@@ -615,10 +615,10 @@ void lsr(nes *nes, uint8_t *m) {
 void rol(nes *nes, uint8_t *m) {
   uint8_t carry = *m & 0x80;
   *m <<= 1;
-  if (cpu_status_enabled(&nes->cpu, C)) {
+  if (cpu_status_enabled(&nes->cpu, CPU_STATUS_C)) {
     *m |= 1;
   }
-  cpu_status_set(&nes->cpu, C, carry == 0x80);
+  cpu_status_set(&nes->cpu, CPU_STATUS_C, carry == 0x80);
   cpu_status_set_zn(&nes->cpu, *m);
   cpu_tick(nes);
 }
@@ -626,10 +626,10 @@ void rol(nes *nes, uint8_t *m) {
 void ror(nes *nes, uint8_t *m) {
   uint8_t carry = *m & 1;
   *m >>= 1;
-  if (cpu_status_enabled(&nes->cpu, C)) {
+  if (cpu_status_enabled(&nes->cpu, CPU_STATUS_C)) {
     *m |= 0x80;
   }
-  cpu_status_set(&nes->cpu, C, carry == 1);
+  cpu_status_set(&nes->cpu, CPU_STATUS_C, carry == 1);
   cpu_status_set_zn(&nes->cpu, *m);
   cpu_tick(nes);
 }
@@ -649,6 +649,6 @@ void set_carry_status(nes *nes, uint8_t m, uint8_t r) {
   uint8_t m7 = m >> 7 & 1;
   uint8_t c6 = a7 ^ m7 ^ (r >> 7 & 1);
   uint8_t c7 = (a7 & m7) | (a7 & c6) | (m7 & c6);
-  cpu_status_set(&nes->cpu, C, c7 == 1);
-  cpu_status_set(&nes->cpu, V, (c6 ^ c7) == 1);
+  cpu_status_set(&nes->cpu, CPU_STATUS_C, c7 == 1);
+  cpu_status_set(&nes->cpu, CPU_STATUS_V, (c6 ^ c7) == 1);
 }

@@ -21,12 +21,12 @@ typedef struct {
 } cpu;
 
 enum cpu_status {
-  C = 0, // Carry
-  Z = 1, // Zero
-  I = 2, // Interrupt Disable
-  D = 3, // Decimal
-  V = 6, // Overflow
-  N = 7, // Negative
+  CPU_STATUS_C = 0, // Carry
+  CPU_STATUS_Z = 1, // Zero
+  CPU_STATUS_I = 2, // Interrupt Disable
+  CPU_STATUS_D = 3, // Decimal
+  CPU_STATUS_V = 6, // Overflow
+  CPU_STATUS_N = 7, // Negative
 };
 
 cpu* cpu_new();

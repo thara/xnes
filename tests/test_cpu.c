@@ -7,10 +7,10 @@ TEST(test_cpu_status_set) {
   cpu cpu;
   cpu.P = 0b11001100;
 
-  cpu_status_set(&cpu, C, true);
+  cpu_status_set(&cpu, CPU_STATUS_C, true);
   test_assert_bit_eq(0b11001101, cpu.P);
 
-  cpu_status_set(&cpu, I, false);
+  cpu_status_set(&cpu, CPU_STATUS_I, false);
   test_assert_bit_eq(0b11001001, cpu.P);
 }
 
@@ -18,8 +18,8 @@ TEST(test_cpu_status_enabled) {
   cpu cpu;
   cpu.P = 0b11001100;
 
-  test_assert(cpu_status_enabled(&cpu, D), "decimal flag should be true");
-  test_assert(!cpu_status_enabled(&cpu, C), "carry flag should be false");
+  test_assert(cpu_status_enabled(&cpu, CPU_STATUS_D), "decimal flag should be true");
+  test_assert(!cpu_status_enabled(&cpu, CPU_STATUS_C), "carry flag should be false");
 }
 
 TEST(test_cpu_status_set_zn) {
@@ -27,8 +27,8 @@ TEST(test_cpu_status_set_zn) {
   cpu.P = 0b11001100;
   cpu_status_set_zn(&cpu, 0);
 
-  test_assert(cpu_status_enabled(&cpu, Z), "zero flag should be on");
-  test_assert(!cpu_status_enabled(&cpu, N), "negative flag should be off");
+  test_assert(cpu_status_enabled(&cpu, CPU_STATUS_Z), "zero flag should be on");
+  test_assert(!cpu_status_enabled(&cpu, CPU_STATUS_N), "negative flag should be off");
 }
 
 TEST_SUITE(test_cpu_status) {
