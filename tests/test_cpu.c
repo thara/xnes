@@ -4,7 +4,7 @@
 #include "mem.h"
 
 TEST(test_cpu_status_set) {
-  cpu cpu;
+  CPU cpu;
   cpu.P = 0b11001100;
 
   cpu_status_set(&cpu, CPU_STATUS_C, true);
@@ -15,7 +15,7 @@ TEST(test_cpu_status_set) {
 }
 
 TEST(test_cpu_status_enabled) {
-  cpu cpu;
+  CPU cpu;
   cpu.P = 0b11001100;
 
   test_assert(cpu_status_enabled(&cpu, CPU_STATUS_D),
@@ -25,7 +25,7 @@ TEST(test_cpu_status_enabled) {
 }
 
 TEST(test_cpu_status_set_zn) {
-  cpu cpu;
+  CPU cpu;
   cpu.P = 0b11001100;
   cpu_status_set_zn(&cpu, 0);
 
