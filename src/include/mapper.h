@@ -15,9 +15,9 @@ typedef enum{
 typedef enum {
     mapper_error_none,
     mapper_error_unsupported_mapper,
-} mapper_error;
+} MapperError;
 
-void detect_mapper(ROM *rom, struct mapper *mapper, mapper_error* error);
+void detect_mapper(ROM *rom, struct mapper *mapper, MapperError* error);
 
 uint8_t mapper_read(struct mapper *mapper, uint16_t addr);
 

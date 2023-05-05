@@ -28,11 +28,11 @@ typedef struct {
   bool mirrored;
 } mapper0;
 
-void mapper0_init(ROM *rom, struct mapper *mapper, mapper_error *error);
+void mapper0_init(ROM *rom, struct mapper *mapper, MapperError *error);
 uint8_t mapper0_read(struct mapper *self, uint16_t addr);
 void mapper0_write(struct mapper *self, uint16_t addr, uint8_t value);
 
-void detect_mapper(ROM *rom, struct mapper *mapper, mapper_error *error) {
+void detect_mapper(ROM *rom, struct mapper *mapper, MapperError *error) {
   switch (rom->mapper_no) {
   case 0:
     mapper0_init(rom, mapper, error);
@@ -43,7 +43,7 @@ void detect_mapper(ROM *rom, struct mapper *mapper, mapper_error *error) {
   }
 }
 
-void mapper0_init(ROM *rom, struct mapper *mapper, mapper_error *error) {
+void mapper0_init(ROM *rom, struct mapper *mapper, MapperError *error) {
   mapper0 *impl = (mapper0 *)malloc(sizeof(mapper0));
   impl->base = malloc(sizeof(struct mapper));
   impl->base->read = mapper0_read;
