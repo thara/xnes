@@ -26,7 +26,7 @@ typedef struct {
   uint16_t chr_size;
 
   bool mirrored;
-} mapper0;
+} Mapper0;
 
 void mapper0_init(ROM *rom, Mapper *mapper, MapperError *error);
 uint8_t mapper0_read(Mapper *self, uint16_t addr);
@@ -45,7 +45,7 @@ void detect_mapper(ROM *rom, Mapper *mapper, MapperError *error) {
 }
 
 void mapper0_init(ROM *rom, Mapper *mapper, MapperError *error) {
-  mapper0 *impl = (mapper0 *)malloc(sizeof(mapper0));
+  Mapper0 *impl = (Mapper0 *)malloc(sizeof(Mapper0));
   impl->base = malloc(sizeof(Mapper));
   impl->base->read = mapper0_read;
   impl->base->write = mapper0_write;
@@ -63,7 +63,7 @@ void mapper0_init(ROM *rom, Mapper *mapper, MapperError *error) {
 }
 
 uint8_t mapper0_read(Mapper *self, uint16_t addr) {
-  mapper0 *impl = (mapper0 *)self;
+  Mapper0 *impl = (Mapper0 *)self;
 
   if (0x0000 <= addr && addr <= 0x1FFF) {
     return impl->chr[addr];
@@ -79,7 +79,7 @@ uint8_t mapper0_read(Mapper *self, uint16_t addr) {
 }
 
 void mapper0_write(Mapper *self, uint16_t addr, uint8_t value) {
-  mapper0 *impl = (mapper0 *)self;
+  Mapper0 *impl = (Mapper0 *)self;
 
   if (0x0000 <= addr && addr <= 0x1FFF) {
     impl->chr[addr] = value;
