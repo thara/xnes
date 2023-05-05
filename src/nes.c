@@ -8,14 +8,18 @@ struct nes *nes_new() {
   if (nes == NULL) {
     return NULL;
   }
-  nes->cpu = cpu_new();
+  nes->cpu = calloc(1, sizeof(struct cpu));
   return nes;
 }
 
 void nes_release(struct nes *nes) {
-  if (nes == NULL) {
-    free(nes);
+  if (nes != NULL) {
+    return;
   }
+  if (nes->cpu != NULL) {
+    free(nes->cpu);
+  }
+  free(nes);
 }
 
 void nes_tick(struct nes *nes) {
