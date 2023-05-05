@@ -33,7 +33,7 @@ TEST(test_detect_mapper) {
   }
 
   ROM rom;
-  rom_parse_error error;
+  ROMParseError error;
   parse_rom(buf, file_size, &rom, &error);
 
   test_assert(error == rom_parse_error_none, "rom_parse_error should be none");

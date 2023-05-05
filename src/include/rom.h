@@ -18,8 +18,8 @@ typedef enum {
     rom_parse_error_null,
     rom_parse_error_invalid_magic_number,
     rom_parse_error_padding,
-} rom_parse_error;
+} ROMParseError;
 
-void parse_rom(uint8_t* buf, uint64_t buf_len, ROM* rom, rom_parse_error* error);
+void parse_rom(uint8_t* buf, uint64_t buf_len, ROM* rom, ROMParseError* error);
 
 #endif // ROM_H
