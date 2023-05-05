@@ -1,473 +1,473 @@
 #include "cpu_instruction.h"
 
-cpu_instruction cpu_decode(uint8_t opcode) {
+CPUInstruction cpu_decode(uint8_t opcode) {
   switch (opcode) {
   case 0x69:
-    return (cpu_instruction){ADC, immediate};
+    return (CPUInstruction){ADC, immediate};
   case 0x65:
-    return (cpu_instruction){ADC, zero_page};
+    return (CPUInstruction){ADC, zero_page};
   case 0x75:
-    return (cpu_instruction){ADC, zero_page_x};
+    return (CPUInstruction){ADC, zero_page_x};
   case 0x6D:
-    return (cpu_instruction){ADC, absolute};
+    return (CPUInstruction){ADC, absolute};
   case 0x7D:
-    return (cpu_instruction){ADC, absolute_x_with_penalty};
+    return (CPUInstruction){ADC, absolute_x_with_penalty};
   case 0x79:
-    return (cpu_instruction){ADC, absolute_y_with_penalty};
+    return (CPUInstruction){ADC, absolute_y_with_penalty};
   case 0x61:
-    return (cpu_instruction){ADC, indexed_indirect};
+    return (CPUInstruction){ADC, indexed_indirect};
   case 0x71:
-    return (cpu_instruction){ADC, indirect_indexed_with_penalty};
+    return (CPUInstruction){ADC, indirect_indexed_with_penalty};
 
   case 0x29:
-    return (cpu_instruction){AND, immediate};
+    return (CPUInstruction){AND, immediate};
   case 0x25:
-    return (cpu_instruction){AND, zero_page};
+    return (CPUInstruction){AND, zero_page};
   case 0x35:
-    return (cpu_instruction){AND, zero_page_x};
+    return (CPUInstruction){AND, zero_page_x};
   case 0x2D:
-    return (cpu_instruction){AND, absolute};
+    return (CPUInstruction){AND, absolute};
   case 0x3D:
-    return (cpu_instruction){AND, absolute_x_with_penalty};
+    return (CPUInstruction){AND, absolute_x_with_penalty};
   case 0x39:
-    return (cpu_instruction){AND, absolute_y_with_penalty};
+    return (CPUInstruction){AND, absolute_y_with_penalty};
   case 0x21:
-    return (cpu_instruction){AND, indexed_indirect};
+    return (CPUInstruction){AND, indexed_indirect};
   case 0x31:
-    return (cpu_instruction){AND, indirect_indexed_with_penalty};
+    return (CPUInstruction){AND, indirect_indexed_with_penalty};
 
   case 0x0A:
-    return (cpu_instruction){ASL, accumulator};
+    return (CPUInstruction){ASL, accumulator};
   case 0x06:
-    return (cpu_instruction){ASL, zero_page};
+    return (CPUInstruction){ASL, zero_page};
   case 0x16:
-    return (cpu_instruction){ASL, zero_page_x};
+    return (CPUInstruction){ASL, zero_page_x};
   case 0x0E:
-    return (cpu_instruction){ASL, absolute};
+    return (CPUInstruction){ASL, absolute};
   case 0x1E:
-    return (cpu_instruction){ASL, absolute_x};
+    return (CPUInstruction){ASL, absolute_x};
 
   case 0x90:
-    return (cpu_instruction){BCC, relative};
+    return (CPUInstruction){BCC, relative};
   case 0xB0:
-    return (cpu_instruction){BCS, relative};
+    return (CPUInstruction){BCS, relative};
   case 0xF0:
-    return (cpu_instruction){BEQ, relative};
+    return (CPUInstruction){BEQ, relative};
 
   case 0x24:
-    return (cpu_instruction){BIT, zero_page};
+    return (CPUInstruction){BIT, zero_page};
   case 0x2C:
-    return (cpu_instruction){BIT, absolute};
+    return (CPUInstruction){BIT, absolute};
 
   case 0x30:
-    return (cpu_instruction){BMI, relative};
+    return (CPUInstruction){BMI, relative};
   case 0xD0:
-    return (cpu_instruction){BNE, relative};
+    return (CPUInstruction){BNE, relative};
   case 0x10:
-    return (cpu_instruction){BPL, relative};
+    return (CPUInstruction){BPL, relative};
 
   case 0x00:
-    return (cpu_instruction){BRK, implicit};
+    return (CPUInstruction){BRK, implicit};
 
   case 0x50:
-    return (cpu_instruction){BVC, relative};
+    return (CPUInstruction){BVC, relative};
   case 0x70:
-    return (cpu_instruction){BVS, relative};
+    return (CPUInstruction){BVS, relative};
 
   case 0x18:
-    return (cpu_instruction){CLC, implicit};
+    return (CPUInstruction){CLC, implicit};
   case 0xD8:
-    return (cpu_instruction){CLD, implicit};
+    return (CPUInstruction){CLD, implicit};
   case 0x58:
-    return (cpu_instruction){CLI, implicit};
+    return (CPUInstruction){CLI, implicit};
   case 0xB8:
-    return (cpu_instruction){CLV, implicit};
+    return (CPUInstruction){CLV, implicit};
 
   case 0xC9:
-    return (cpu_instruction){CMP, immediate};
+    return (CPUInstruction){CMP, immediate};
   case 0xC5:
-    return (cpu_instruction){CMP, zero_page};
+    return (CPUInstruction){CMP, zero_page};
   case 0xD5:
-    return (cpu_instruction){CMP, zero_page_x};
+    return (CPUInstruction){CMP, zero_page_x};
   case 0xCD:
-    return (cpu_instruction){CMP, absolute};
+    return (CPUInstruction){CMP, absolute};
   case 0xDD:
-    return (cpu_instruction){CMP, absolute_x_with_penalty};
+    return (CPUInstruction){CMP, absolute_x_with_penalty};
   case 0xD9:
-    return (cpu_instruction){CMP, absolute_y_with_penalty};
+    return (CPUInstruction){CMP, absolute_y_with_penalty};
   case 0xC1:
-    return (cpu_instruction){CMP, indexed_indirect};
+    return (CPUInstruction){CMP, indexed_indirect};
   case 0xD1:
-    return (cpu_instruction){CMP, indirect_indexed_with_penalty};
+    return (CPUInstruction){CMP, indirect_indexed_with_penalty};
 
   case 0xE0:
-    return (cpu_instruction){CPX, immediate};
+    return (CPUInstruction){CPX, immediate};
   case 0xE4:
-    return (cpu_instruction){CPX, zero_page};
+    return (CPUInstruction){CPX, zero_page};
   case 0xEC:
-    return (cpu_instruction){CPX, absolute};
+    return (CPUInstruction){CPX, absolute};
   case 0xC0:
-    return (cpu_instruction){CPY, immediate};
+    return (CPUInstruction){CPY, immediate};
   case 0xC4:
-    return (cpu_instruction){CPY, zero_page};
+    return (CPUInstruction){CPY, zero_page};
   case 0xCC:
-    return (cpu_instruction){CPY, absolute};
+    return (CPUInstruction){CPY, absolute};
 
   case 0xC6:
-    return (cpu_instruction){DEC, zero_page};
+    return (CPUInstruction){DEC, zero_page};
   case 0xD6:
-    return (cpu_instruction){DEC, zero_page_x};
+    return (CPUInstruction){DEC, zero_page_x};
   case 0xCE:
-    return (cpu_instruction){DEC, absolute};
+    return (CPUInstruction){DEC, absolute};
   case 0xDE:
-    return (cpu_instruction){DEC, absolute_x};
+    return (CPUInstruction){DEC, absolute_x};
 
   case 0xCA:
-    return (cpu_instruction){DEX, implicit};
+    return (CPUInstruction){DEX, implicit};
   case 0x88:
-    return (cpu_instruction){DEY, implicit};
+    return (CPUInstruction){DEY, implicit};
 
   case 0x49:
-    return (cpu_instruction){EOR, immediate};
+    return (CPUInstruction){EOR, immediate};
   case 0x45:
-    return (cpu_instruction){EOR, zero_page};
+    return (CPUInstruction){EOR, zero_page};
   case 0x55:
-    return (cpu_instruction){EOR, zero_page_x};
+    return (CPUInstruction){EOR, zero_page_x};
   case 0x4D:
-    return (cpu_instruction){EOR, absolute};
+    return (CPUInstruction){EOR, absolute};
   case 0x5D:
-    return (cpu_instruction){EOR, absolute_x_with_penalty};
+    return (CPUInstruction){EOR, absolute_x_with_penalty};
   case 0x59:
-    return (cpu_instruction){EOR, absolute_y_with_penalty};
+    return (CPUInstruction){EOR, absolute_y_with_penalty};
   case 0x41:
-    return (cpu_instruction){EOR, indexed_indirect};
+    return (CPUInstruction){EOR, indexed_indirect};
   case 0x51:
-    return (cpu_instruction){EOR, indirect_indexed_with_penalty};
+    return (CPUInstruction){EOR, indirect_indexed_with_penalty};
 
   case 0xE6:
-    return (cpu_instruction){INC, zero_page};
+    return (CPUInstruction){INC, zero_page};
   case 0xF6:
-    return (cpu_instruction){INC, zero_page_x};
+    return (CPUInstruction){INC, zero_page_x};
   case 0xEE:
-    return (cpu_instruction){INC, absolute};
+    return (CPUInstruction){INC, absolute};
   case 0xFE:
-    return (cpu_instruction){INC, absolute_x};
+    return (CPUInstruction){INC, absolute_x};
 
   case 0xE8:
-    return (cpu_instruction){INX, implicit};
+    return (CPUInstruction){INX, implicit};
   case 0xC8:
-    return (cpu_instruction){INY, implicit};
+    return (CPUInstruction){INY, implicit};
 
   case 0x4C:
-    return (cpu_instruction){JMP, absolute};
+    return (CPUInstruction){JMP, absolute};
   case 0x6C:
-    return (cpu_instruction){JMP, indirect};
+    return (CPUInstruction){JMP, indirect};
 
   case 0x20:
-    return (cpu_instruction){JSR, absolute};
+    return (CPUInstruction){JSR, absolute};
 
   case 0xA9:
-    return (cpu_instruction){LDA, immediate};
+    return (CPUInstruction){LDA, immediate};
   case 0xA5:
-    return (cpu_instruction){LDA, zero_page};
+    return (CPUInstruction){LDA, zero_page};
   case 0xB5:
-    return (cpu_instruction){LDA, zero_page_x};
+    return (CPUInstruction){LDA, zero_page_x};
   case 0xAD:
-    return (cpu_instruction){LDA, absolute};
+    return (CPUInstruction){LDA, absolute};
   case 0xBD:
-    return (cpu_instruction){LDA, absolute_x_with_penalty};
+    return (CPUInstruction){LDA, absolute_x_with_penalty};
   case 0xB9:
-    return (cpu_instruction){LDA, absolute_y_with_penalty};
+    return (CPUInstruction){LDA, absolute_y_with_penalty};
   case 0xA1:
-    return (cpu_instruction){LDA, indexed_indirect};
+    return (CPUInstruction){LDA, indexed_indirect};
   case 0xB1:
-    return (cpu_instruction){LDA, indirect_indexed_with_penalty};
+    return (CPUInstruction){LDA, indirect_indexed_with_penalty};
 
   case 0xA2:
-    return (cpu_instruction){LDX, immediate};
+    return (CPUInstruction){LDX, immediate};
   case 0xA6:
-    return (cpu_instruction){LDX, zero_page};
+    return (CPUInstruction){LDX, zero_page};
   case 0xB6:
-    return (cpu_instruction){LDX, zero_page_y};
+    return (CPUInstruction){LDX, zero_page_y};
   case 0xAE:
-    return (cpu_instruction){LDX, absolute};
+    return (CPUInstruction){LDX, absolute};
   case 0xBE:
-    return (cpu_instruction){LDX, absolute_y_with_penalty};
+    return (CPUInstruction){LDX, absolute_y_with_penalty};
 
   case 0xA0:
-    return (cpu_instruction){LDY, immediate};
+    return (CPUInstruction){LDY, immediate};
   case 0xA4:
-    return (cpu_instruction){LDY, zero_page};
+    return (CPUInstruction){LDY, zero_page};
   case 0xB4:
-    return (cpu_instruction){LDY, zero_page_x};
+    return (CPUInstruction){LDY, zero_page_x};
   case 0xAC:
-    return (cpu_instruction){LDY, absolute};
+    return (CPUInstruction){LDY, absolute};
   case 0xBC:
-    return (cpu_instruction){LDY, absolute_x_with_penalty};
+    return (CPUInstruction){LDY, absolute_x_with_penalty};
 
   case 0x4A:
-    return (cpu_instruction){LSR, accumulator};
+    return (CPUInstruction){LSR, accumulator};
   case 0x46:
-    return (cpu_instruction){LSR, zero_page};
+    return (CPUInstruction){LSR, zero_page};
   case 0x56:
-    return (cpu_instruction){LSR, zero_page_x};
+    return (CPUInstruction){LSR, zero_page_x};
   case 0x4E:
-    return (cpu_instruction){LSR, absolute};
+    return (CPUInstruction){LSR, absolute};
   case 0x5E:
-    return (cpu_instruction){LSR, absolute_x};
+    return (CPUInstruction){LSR, absolute_x};
 
   case 0x09:
-    return (cpu_instruction){ORA, immediate};
+    return (CPUInstruction){ORA, immediate};
   case 0x05:
-    return (cpu_instruction){ORA, zero_page};
+    return (CPUInstruction){ORA, zero_page};
   case 0x15:
-    return (cpu_instruction){ORA, zero_page_x};
+    return (CPUInstruction){ORA, zero_page_x};
   case 0x0D:
-    return (cpu_instruction){ORA, absolute};
+    return (CPUInstruction){ORA, absolute};
   case 0x1D:
-    return (cpu_instruction){ORA, absolute_x_with_penalty};
+    return (CPUInstruction){ORA, absolute_x_with_penalty};
   case 0x19:
-    return (cpu_instruction){ORA, absolute_y_with_penalty};
+    return (CPUInstruction){ORA, absolute_y_with_penalty};
   case 0x01:
-    return (cpu_instruction){ORA, indexed_indirect};
+    return (CPUInstruction){ORA, indexed_indirect};
   case 0x11:
-    return (cpu_instruction){ORA, indirect_indexed_with_penalty};
+    return (CPUInstruction){ORA, indirect_indexed_with_penalty};
 
   case 0x48:
-    return (cpu_instruction){PHA, implicit};
+    return (CPUInstruction){PHA, implicit};
   case 0x08:
-    return (cpu_instruction){PHP, implicit};
+    return (CPUInstruction){PHP, implicit};
   case 0x68:
-    return (cpu_instruction){PLA, implicit};
+    return (CPUInstruction){PLA, implicit};
   case 0x28:
-    return (cpu_instruction){PLP, implicit};
+    return (CPUInstruction){PLP, implicit};
 
   case 0x2A:
-    return (cpu_instruction){ROL, accumulator};
+    return (CPUInstruction){ROL, accumulator};
   case 0x26:
-    return (cpu_instruction){ROL, zero_page};
+    return (CPUInstruction){ROL, zero_page};
   case 0x36:
-    return (cpu_instruction){ROL, zero_page_x};
+    return (CPUInstruction){ROL, zero_page_x};
   case 0x2E:
-    return (cpu_instruction){ROL, absolute};
+    return (CPUInstruction){ROL, absolute};
   case 0x3E:
-    return (cpu_instruction){ROL, absolute_x};
+    return (CPUInstruction){ROL, absolute_x};
 
   case 0x6A:
-    return (cpu_instruction){ROR, accumulator};
+    return (CPUInstruction){ROR, accumulator};
   case 0x66:
-    return (cpu_instruction){ROR, zero_page};
+    return (CPUInstruction){ROR, zero_page};
   case 0x76:
-    return (cpu_instruction){ROR, zero_page_x};
+    return (CPUInstruction){ROR, zero_page_x};
   case 0x6E:
-    return (cpu_instruction){ROR, absolute};
+    return (CPUInstruction){ROR, absolute};
   case 0x7E:
-    return (cpu_instruction){ROR, absolute_x};
+    return (CPUInstruction){ROR, absolute_x};
 
   case 0x40:
-    return (cpu_instruction){RTI, implicit};
+    return (CPUInstruction){RTI, implicit};
   case 0x60:
-    return (cpu_instruction){RTS, implicit};
+    return (CPUInstruction){RTS, implicit};
 
   case 0xE9:
-    return (cpu_instruction){SBC, immediate};
+    return (CPUInstruction){SBC, immediate};
   case 0xE5:
-    return (cpu_instruction){SBC, zero_page};
+    return (CPUInstruction){SBC, zero_page};
   case 0xF5:
-    return (cpu_instruction){SBC, zero_page_x};
+    return (CPUInstruction){SBC, zero_page_x};
   case 0xED:
-    return (cpu_instruction){SBC, absolute};
+    return (CPUInstruction){SBC, absolute};
   case 0xFD:
-    return (cpu_instruction){SBC, absolute_x_with_penalty};
+    return (CPUInstruction){SBC, absolute_x_with_penalty};
   case 0xF9:
-    return (cpu_instruction){SBC, absolute_y_with_penalty};
+    return (CPUInstruction){SBC, absolute_y_with_penalty};
   case 0xE1:
-    return (cpu_instruction){SBC, indexed_indirect};
+    return (CPUInstruction){SBC, indexed_indirect};
   case 0xF1:
-    return (cpu_instruction){SBC, indirect_indexed_with_penalty};
+    return (CPUInstruction){SBC, indirect_indexed_with_penalty};
 
   case 0x38:
-    return (cpu_instruction){SEC, implicit};
+    return (CPUInstruction){SEC, implicit};
   case 0xF8:
-    return (cpu_instruction){SED, implicit};
+    return (CPUInstruction){SED, implicit};
   case 0x78:
-    return (cpu_instruction){SEI, implicit};
+    return (CPUInstruction){SEI, implicit};
 
   case 0x85:
-    return (cpu_instruction){STA, zero_page};
+    return (CPUInstruction){STA, zero_page};
   case 0x95:
-    return (cpu_instruction){STA, zero_page_x};
+    return (CPUInstruction){STA, zero_page_x};
   case 0x8D:
-    return (cpu_instruction){STA, absolute};
+    return (CPUInstruction){STA, absolute};
   case 0x9D:
-    return (cpu_instruction){STA, absolute_x};
+    return (CPUInstruction){STA, absolute_x};
   case 0x99:
-    return (cpu_instruction){STA, absolute_y};
+    return (CPUInstruction){STA, absolute_y};
   case 0x81:
-    return (cpu_instruction){STA, indexed_indirect};
+    return (CPUInstruction){STA, indexed_indirect};
   case 0x91:
-    return (cpu_instruction){STA, indirect_indexed};
+    return (CPUInstruction){STA, indirect_indexed};
 
   case 0x86:
-    return (cpu_instruction){STX, zero_page};
+    return (CPUInstruction){STX, zero_page};
   case 0x96:
-    return (cpu_instruction){STX, zero_page_y};
+    return (CPUInstruction){STX, zero_page_y};
   case 0x8E:
-    return (cpu_instruction){STX, absolute};
+    return (CPUInstruction){STX, absolute};
   case 0x84:
-    return (cpu_instruction){STY, zero_page};
+    return (CPUInstruction){STY, zero_page};
   case 0x94:
-    return (cpu_instruction){STY, zero_page_x};
+    return (CPUInstruction){STY, zero_page_x};
   case 0x8C:
-    return (cpu_instruction){STY, absolute};
+    return (CPUInstruction){STY, absolute};
 
   case 0xAA:
-    return (cpu_instruction){TAX, implicit};
+    return (CPUInstruction){TAX, implicit};
   case 0xA8:
-    return (cpu_instruction){TAY, implicit};
+    return (CPUInstruction){TAY, implicit};
   case 0xBA:
-    return (cpu_instruction){TSX, implicit};
+    return (CPUInstruction){TSX, implicit};
   case 0x8A:
-    return (cpu_instruction){TXA, implicit};
+    return (CPUInstruction){TXA, implicit};
   case 0x9A:
-    return (cpu_instruction){TXS, implicit};
+    return (CPUInstruction){TXS, implicit};
   case 0x98:
-    return (cpu_instruction){TYA, implicit};
+    return (CPUInstruction){TYA, implicit};
 
     // clang-format off
   case 0x04: case 0x44: case 0x64:
-    return (cpu_instruction){NOP, zero_page};
+    return (CPUInstruction){NOP, zero_page};
   case 0x0C:
-    return (cpu_instruction){NOP, absolute};
+    return (CPUInstruction){NOP, absolute};
   case 0x14: case 0x34: case 0x54: case 0x74: case 0xD4: case 0xF4:
-    return (cpu_instruction){NOP, zero_page_x};
+    return (CPUInstruction){NOP, zero_page_x};
   case 0x1A: case 0x3A: case 0x5A: case 0x7A: case 0xDA: case 0xEA: case 0xFA:
-    return (cpu_instruction){NOP, implicit};
+    return (CPUInstruction){NOP, implicit};
   case 0x1C: case 0x3C: case 0x5C: case 0x7C: case 0xDC: case 0xFC:
-    return (cpu_instruction){NOP, absolute_x_with_penalty};
+    return (CPUInstruction){NOP, absolute_x_with_penalty};
   case 0x80: case 0x82: case 0x89: case 0xc2: case 0xE2:
-    return (cpu_instruction){NOP, immediate};
+    return (CPUInstruction){NOP, immediate};
     // clang-format on
 
   // unofficial
   case 0xEB:
-    return (cpu_instruction){SBC, immediate};
+    return (CPUInstruction){SBC, immediate};
 
   case 0xA3:
-    return (cpu_instruction){LAX, indexed_indirect};
+    return (CPUInstruction){LAX, indexed_indirect};
   case 0xA7:
-    return (cpu_instruction){LAX, zero_page};
+    return (CPUInstruction){LAX, zero_page};
   case 0xAB:
-    return (cpu_instruction){LAX, immediate};
+    return (CPUInstruction){LAX, immediate};
   case 0xAF:
-    return (cpu_instruction){LAX, absolute};
+    return (CPUInstruction){LAX, absolute};
   case 0xB3:
-    return (cpu_instruction){LAX, indirect_indexed_with_penalty};
+    return (CPUInstruction){LAX, indirect_indexed_with_penalty};
   case 0xB7:
-    return (cpu_instruction){LAX, zero_page_y};
+    return (CPUInstruction){LAX, zero_page_y};
   case 0xBF:
-    return (cpu_instruction){LAX, absolute_y_with_penalty};
+    return (CPUInstruction){LAX, absolute_y_with_penalty};
 
   case 0x83:
-    return (cpu_instruction){SAX, indexed_indirect};
+    return (CPUInstruction){SAX, indexed_indirect};
   case 0x87:
-    return (cpu_instruction){SAX, zero_page};
+    return (CPUInstruction){SAX, zero_page};
   case 0x8F:
-    return (cpu_instruction){SAX, absolute};
+    return (CPUInstruction){SAX, absolute};
   case 0x97:
-    return (cpu_instruction){SAX, zero_page_y};
+    return (CPUInstruction){SAX, zero_page_y};
 
   case 0xC3:
-    return (cpu_instruction){DCP, indexed_indirect};
+    return (CPUInstruction){DCP, indexed_indirect};
   case 0xC7:
-    return (cpu_instruction){DCP, zero_page};
+    return (CPUInstruction){DCP, zero_page};
   case 0xCF:
-    return (cpu_instruction){DCP, absolute};
+    return (CPUInstruction){DCP, absolute};
   case 0xD3:
-    return (cpu_instruction){DCP, indirect_indexed};
+    return (CPUInstruction){DCP, indirect_indexed};
   case 0xD7:
-    return (cpu_instruction){DCP, zero_page_x};
+    return (CPUInstruction){DCP, zero_page_x};
   case 0xDB:
-    return (cpu_instruction){DCP, absolute_y};
+    return (CPUInstruction){DCP, absolute_y};
   case 0xDF:
-    return (cpu_instruction){DCP, absolute_x};
+    return (CPUInstruction){DCP, absolute_x};
 
   case 0xE3:
-    return (cpu_instruction){ISB, indexed_indirect};
+    return (CPUInstruction){ISB, indexed_indirect};
   case 0xE7:
-    return (cpu_instruction){ISB, zero_page};
+    return (CPUInstruction){ISB, zero_page};
   case 0xEF:
-    return (cpu_instruction){ISB, absolute};
+    return (CPUInstruction){ISB, absolute};
   case 0xF3:
-    return (cpu_instruction){ISB, indirect_indexed};
+    return (CPUInstruction){ISB, indirect_indexed};
   case 0xF7:
-    return (cpu_instruction){ISB, zero_page_x};
+    return (CPUInstruction){ISB, zero_page_x};
   case 0xFB:
-    return (cpu_instruction){ISB, absolute_y};
+    return (CPUInstruction){ISB, absolute_y};
   case 0xFF:
-    return (cpu_instruction){ISB, absolute_x};
+    return (CPUInstruction){ISB, absolute_x};
 
   case 0x03:
-    return (cpu_instruction){SLO, indexed_indirect};
+    return (CPUInstruction){SLO, indexed_indirect};
   case 0x07:
-    return (cpu_instruction){SLO, zero_page};
+    return (CPUInstruction){SLO, zero_page};
   case 0x0F:
-    return (cpu_instruction){SLO, absolute};
+    return (CPUInstruction){SLO, absolute};
   case 0x13:
-    return (cpu_instruction){SLO, indirect_indexed};
+    return (CPUInstruction){SLO, indirect_indexed};
   case 0x17:
-    return (cpu_instruction){SLO, zero_page_x};
+    return (CPUInstruction){SLO, zero_page_x};
   case 0x1B:
-    return (cpu_instruction){SLO, absolute_y};
+    return (CPUInstruction){SLO, absolute_y};
   case 0x1F:
-    return (cpu_instruction){SLO, absolute_x};
+    return (CPUInstruction){SLO, absolute_x};
 
   case 0x23:
-    return (cpu_instruction){RLA, indexed_indirect};
+    return (CPUInstruction){RLA, indexed_indirect};
   case 0x27:
-    return (cpu_instruction){RLA, zero_page};
+    return (CPUInstruction){RLA, zero_page};
   case 0x2F:
-    return (cpu_instruction){RLA, absolute};
+    return (CPUInstruction){RLA, absolute};
   case 0x33:
-    return (cpu_instruction){RLA, indirect_indexed};
+    return (CPUInstruction){RLA, indirect_indexed};
   case 0x37:
-    return (cpu_instruction){RLA, zero_page_x};
+    return (CPUInstruction){RLA, zero_page_x};
   case 0x3B:
-    return (cpu_instruction){RLA, absolute_y};
+    return (CPUInstruction){RLA, absolute_y};
   case 0x3F:
-    return (cpu_instruction){RLA, absolute_x};
+    return (CPUInstruction){RLA, absolute_x};
 
   case 0x43:
-    return (cpu_instruction){SRE, indexed_indirect};
+    return (CPUInstruction){SRE, indexed_indirect};
   case 0x47:
-    return (cpu_instruction){SRE, zero_page};
+    return (CPUInstruction){SRE, zero_page};
   case 0x4F:
-    return (cpu_instruction){SRE, absolute};
+    return (CPUInstruction){SRE, absolute};
   case 0x53:
-    return (cpu_instruction){SRE, indirect_indexed};
+    return (CPUInstruction){SRE, indirect_indexed};
   case 0x57:
-    return (cpu_instruction){SRE, zero_page_x};
+    return (CPUInstruction){SRE, zero_page_x};
   case 0x5B:
-    return (cpu_instruction){SRE, absolute_y};
+    return (CPUInstruction){SRE, absolute_y};
   case 0x5F:
-    return (cpu_instruction){SRE, absolute_x};
+    return (CPUInstruction){SRE, absolute_x};
 
   case 0x63:
-    return (cpu_instruction){RRA, indexed_indirect};
+    return (CPUInstruction){RRA, indexed_indirect};
   case 0x67:
-    return (cpu_instruction){RRA, zero_page};
+    return (CPUInstruction){RRA, zero_page};
   case 0x6F:
-    return (cpu_instruction){RRA, absolute};
+    return (CPUInstruction){RRA, absolute};
   case 0x73:
-    return (cpu_instruction){RRA, indirect_indexed};
+    return (CPUInstruction){RRA, indirect_indexed};
   case 0x77:
-    return (cpu_instruction){RRA, zero_page_x};
+    return (CPUInstruction){RRA, zero_page_x};
   case 0x7B:
-    return (cpu_instruction){RRA, absolute_y};
+    return (CPUInstruction){RRA, absolute_y};
   case 0x7F:
-    return (cpu_instruction){RRA, absolute_x};
+    return (CPUInstruction){RRA, absolute_x};
 
   default:
-    return (cpu_instruction){NOP, implicit};
+    return (CPUInstruction){NOP, implicit};
   }
 }

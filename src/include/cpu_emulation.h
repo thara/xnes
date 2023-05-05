@@ -10,7 +10,7 @@ void cpu_step(NES *nes);
 #include "cpu_instruction.h"
 
 uint16_t cpu_get_operand(NES *nes, AddressingMode mode);
-void cpu_execute(NES *nes, cpu_instruction inst);
+void cpu_execute(NES *nes, CPUInstruction inst);
 #endif
 
 #endif // CPU_EMULATION_H

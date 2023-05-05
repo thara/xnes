@@ -48,9 +48,9 @@ typedef enum {
 typedef struct {
   Mnemonic mnemonic;
   AddressingMode mode;
-} cpu_instruction;
+} CPUInstruction;
 
-cpu_instruction cpu_decode(uint8_t opcode);
+CPUInstruction cpu_decode(uint8_t opcode);
 
 #endif // CPU_INSTRUCTION_H
 

@@ -33,13 +33,13 @@ void cpu_power_on(NES *nes) {
   cpu_write(nes, 0x4015, 0x00); // all channels disabled
 }
 
-void cpu_execute(NES *nes, cpu_instruction inst);
+void cpu_execute(NES *nes, CPUInstruction inst);
 
 void cpu_step(NES *nes) {
   uint8_t op = cpu_read(nes, nes->cpu.PC);
   nes->cpu.PC++;
 
-  cpu_instruction inst = cpu_decode(op);
+  CPUInstruction inst = cpu_decode(op);
   cpu_execute(nes, inst);
 }
 
@@ -193,7 +193,7 @@ void branch(NES *nes, uint8_t v);
 
 void set_carry_status(NES *nes, uint8_t m, uint8_t r);
 
-void cpu_execute(NES *nes, cpu_instruction inst) {
+void cpu_execute(NES *nes, CPUInstruction inst) {
   uint16_t operand = cpu_get_operand(nes, inst.mode);
 
   switch (inst.mnemonic) {
