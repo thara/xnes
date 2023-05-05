@@ -16,7 +16,7 @@ void mapper_write(struct mapper *mapper, uint16_t addr, uint8_t value) {
   mapper->write(mapper, addr, value);
 }
 
-struct mapper0 {
+typedef struct {
   struct mapper *base;
 
   uint8_t *prg;
@@ -26,7 +26,7 @@ struct mapper0 {
   uint16_t chr_size;
 
   bool mirrored;
-};
+} mapper0;
 
 void mapper0_init(rom *rom, struct mapper *mapper, mapper_error *error);
 uint8_t mapper0_read(struct mapper *self, uint16_t addr);
@@ -44,7 +44,7 @@ void detect_mapper(rom *rom, struct mapper *mapper, mapper_error *error) {
 }
 
 void mapper0_init(rom *rom, struct mapper *mapper, mapper_error *error) {
-  struct mapper0 *m = (struct mapper0 *)malloc(sizeof(struct mapper0));
+  mapper0 *m = (mapper0 *)malloc(sizeof(mapper0));
   m->base = malloc(sizeof(struct mapper));
   m->base->read = mapper0_read;
   m->base->write = mapper0_write;
@@ -62,7 +62,7 @@ void mapper0_init(rom *rom, struct mapper *mapper, mapper_error *error) {
 }
 
 uint8_t mapper0_read(struct mapper *self, uint16_t addr) {
-  struct mapper0 *m = (struct mapper0 *)self;
+  mapper0 *m = (mapper0 *)self;
   if (0x0000 <= addr && addr <= 0x1FFF) {
     return m->chr[addr];
   } else if (0x8000 <= addr && addr <= 0xFFFF) {
@@ -77,7 +77,7 @@ uint8_t mapper0_read(struct mapper *self, uint16_t addr) {
 }
 
 void mapper0_write(struct mapper *self, uint16_t addr, uint8_t value) {
-  struct mapper0 *m = (struct mapper0 *)self;
+  mapper0 *m = (mapper0 *)self;
 
   if (0x0000 <= addr && addr <= 0x1FFF) {
     m->chr[addr] = value;
