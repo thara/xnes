@@ -3,21 +3,21 @@
 #include "mapper.h"
 
 struct mapper {
-  uint8_t (*read)(struct mapper *self, uint16_t addr);
-  void (*write)(struct mapper *self, uint16_t addr, uint8_t value);
+  uint8_t (*read)(Mapper *self, uint16_t addr);
+  void (*write)(Mapper *self, uint16_t addr, uint8_t value);
   MirroringMode mirroring;
 };
 
-uint8_t mapper_read(struct mapper *mapper, uint16_t addr) {
+uint8_t mapper_read(Mapper *mapper, uint16_t addr) {
   return mapper->read(mapper, addr);
 }
 
-void mapper_write(struct mapper *mapper, uint16_t addr, uint8_t value) {
+void mapper_write(Mapper *mapper, uint16_t addr, uint8_t value) {
   mapper->write(mapper, addr, value);
 }
 
 typedef struct {
-  struct mapper *base;
+  Mapper *base;
 
   uint8_t *prg;
   uint16_t prg_size;
@@ -28,11 +28,11 @@ typedef struct {
   bool mirrored;
 } mapper0;
 
-void mapper0_init(ROM *rom, struct mapper *mapper, MapperError *error);
-uint8_t mapper0_read(struct mapper *self, uint16_t addr);
-void mapper0_write(struct mapper *self, uint16_t addr, uint8_t value);
+void mapper0_init(ROM *rom, Mapper *mapper, MapperError *error);
+uint8_t mapper0_read(Mapper *self, uint16_t addr);
+void mapper0_write(Mapper *self, uint16_t addr, uint8_t value);
 
-void detect_mapper(ROM *rom, struct mapper *mapper, MapperError *error) {
+void detect_mapper(ROM *rom, Mapper *mapper, MapperError *error) {
   switch (rom->mapper_no) {
   case 0:
     mapper0_init(rom, mapper, error);
@@ -43,9 +43,9 @@ void detect_mapper(ROM *rom, struct mapper *mapper, MapperError *error) {
   }
 }
 
-void mapper0_init(ROM *rom, struct mapper *mapper, MapperError *error) {
+void mapper0_init(ROM *rom, Mapper *mapper, MapperError *error) {
   mapper0 *impl = (mapper0 *)malloc(sizeof(mapper0));
-  impl->base = malloc(sizeof(struct mapper));
+  impl->base = malloc(sizeof(Mapper));
   impl->base->read = mapper0_read;
   impl->base->write = mapper0_write;
   impl->base->mirroring = rom->mirroring_vertical ? vertical : horizontal;
@@ -58,10 +58,10 @@ void mapper0_init(ROM *rom, struct mapper *mapper, MapperError *error) {
 
   impl->mirrored = impl->prg_size == 0x4000;
 
-  mapper = (struct mapper *)impl;
+  mapper = (Mapper *)impl;
 }
 
-uint8_t mapper0_read(struct mapper *self, uint16_t addr) {
+uint8_t mapper0_read(Mapper *self, uint16_t addr) {
   mapper0 *impl = (mapper0 *)self;
 
   if (0x0000 <= addr && addr <= 0x1FFF) {
@@ -77,7 +77,7 @@ uint8_t mapper0_read(struct mapper *self, uint16_t addr) {
   return 0;
 }
 
-void mapper0_write(struct mapper *self, uint16_t addr, uint8_t value) {
+void mapper0_write(Mapper *self, uint16_t addr, uint8_t value) {
   mapper0 *impl = (mapper0 *)self;
 
   if (0x0000 <= addr && addr <= 0x1FFF) {
