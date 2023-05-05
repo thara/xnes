@@ -27,13 +27,13 @@ typedef enum {
   CPU_STATUS_D = 3, // Decimal
   CPU_STATUS_V = 6, // Overflow
   CPU_STATUS_N = 7, // Negative
-} cpu_status;
+} CPUStatus;
 
 CPU* cpu_new();
 
-void cpu_status_set(CPU *cpu, cpu_status s, bool v);
+void cpu_status_set(CPU *cpu, CPUStatus s, bool v);
 
-bool cpu_status_enabled(CPU *cpu, cpu_status s);
+bool cpu_status_enabled(CPU *cpu, CPUStatus s);
 
 void cpu_status_set_zn(CPU *cpu, uint8_t v);
 

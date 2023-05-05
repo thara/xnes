@@ -2,12 +2,12 @@
 
 #include "cpu.h"
 
-void cpu_status_set(CPU *cpu, cpu_status s, bool v) {
+void cpu_status_set(CPU *cpu, CPUStatus s, bool v) {
   cpu->P &= ~(1 << s);
   cpu->P |= v << s;
 }
 
-bool cpu_status_enabled(CPU *cpu, cpu_status s) {
+bool cpu_status_enabled(CPU *cpu, CPUStatus s) {
   return ((cpu->P >> s) & 1) == 1;
 }
 
