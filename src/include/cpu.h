@@ -20,20 +20,20 @@ typedef struct {
   uintmax_t cycles;
 } cpu;
 
-enum cpu_status {
+typedef enum {
   CPU_STATUS_C = 0, // Carry
   CPU_STATUS_Z = 1, // Zero
   CPU_STATUS_I = 2, // Interrupt Disable
   CPU_STATUS_D = 3, // Decimal
   CPU_STATUS_V = 6, // Overflow
   CPU_STATUS_N = 7, // Negative
-};
+} cpu_status;
 
 cpu* cpu_new();
 
-void cpu_status_set(cpu *cpu, enum cpu_status s, bool v);
+void cpu_status_set(cpu *cpu, cpu_status s, bool v);
 
-bool cpu_status_enabled(cpu *cpu, enum cpu_status s);
+bool cpu_status_enabled(cpu *cpu, cpu_status s);
 
 void cpu_status_set_zn(cpu *cpu, uint8_t v);
 
