@@ -5,13 +5,13 @@
 
 typedef struct {
     cpu cpu;
-} nes;
+} NES;
 
-nes* nes_new();
+NES* nes_new();
 
-void nes_release(nes* nes);
+void nes_release(NES* nes);
 
-void nes_tick(nes* nes);
+void nes_tick(NES* nes);
 
 #endif // NES_H
 
