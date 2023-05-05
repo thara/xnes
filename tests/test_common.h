@@ -113,4 +113,19 @@ static void test_int_to_binary(uint16_t n, char* output) {
   }\
 } while(0)
 
+#define test_precondition_failed(msg) do {\
+  test_assert_count++;\
+  snprintf(test_last_message, TESTMESSAGE_LEN, "%s failed:\n\t%s:%d: %s", __func__, __FILE__, __LINE__, msg);\
+  test_status_failed = true;\
+  return;\
+} while(0)
+
+#ifndef TEST_DATA_PATH
+#define TEST_DATA_PATH ""
+#endif
+
+void get_test_data_path(char* buf, size_t len, const char* filename) {
+    snprintf(buf, len, "%s/%s", TEST_DATA_PATH, filename);
+}
+
 #endif // TEST_RUNNER_H
