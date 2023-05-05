@@ -32,7 +32,7 @@ TEST(test_detect_mapper) {
     test_precondition_failed("Failed to read test file\n");
   }
 
-  rom rom;
+  ROM rom;
   rom_parse_error error;
   parse_rom(buf, file_size, &rom, &error);
 

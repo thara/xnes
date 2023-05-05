@@ -11,7 +11,7 @@ typedef struct {
    bool mirroring_vertical;
 
    uint8_t* raw;
-} rom;
+} ROM;
 
 typedef enum {
     rom_parse_error_none,
@@ -20,6 +20,6 @@ typedef enum {
     rom_parse_error_padding,
 } rom_parse_error;
 
-void parse_rom(uint8_t* buf, uint64_t buf_len, rom* rom, rom_parse_error* error);
+void parse_rom(uint8_t* buf, uint64_t buf_len, ROM* rom, rom_parse_error* error);
 
 #endif // ROM_H
