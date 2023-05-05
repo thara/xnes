@@ -5,7 +5,7 @@
 struct mapper {
   uint8_t (*read)(struct mapper *self, uint16_t addr);
   void (*write)(struct mapper *self, uint16_t addr, uint8_t value);
-  mirroring mirroring;
+  MirroringMode mirroring;
 };
 
 uint8_t mapper_read(struct mapper *mapper, uint16_t addr) {

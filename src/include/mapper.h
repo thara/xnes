@@ -10,7 +10,7 @@ struct mapper;
 typedef enum{
     horizontal,
     vertical,
-} mirroring;
+} MirroringMode;
 
 typedef enum {
     mapper_error_none,
