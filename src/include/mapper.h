@@ -9,8 +9,8 @@ struct mapper;
 typedef struct mapper Mapper;
 
 typedef enum{
-    horizontal,
-    vertical,
+    MIRRORING_HORIZONTAL,
+    MIRRORING_VERTICAL,
 } MirroringMode;
 
 typedef enum {

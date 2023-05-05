@@ -49,7 +49,8 @@ void mapper0_init(ROM *rom, Mapper *mapper, MapperError *error) {
   impl->base = malloc(sizeof(Mapper));
   impl->base->read = mapper0_read;
   impl->base->write = mapper0_write;
-  impl->base->mirroring = rom->mirroring_vertical ? vertical : horizontal;
+  impl->base->mirroring =
+      rom->mirroring_vertical ? MIRRORING_VERTICAL : MIRRORING_HORIZONTAL;
 
   impl->prg = rom->raw;
   impl->prg_size = rom->prg_rom_size * 0x4000;
