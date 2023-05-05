@@ -7,7 +7,7 @@
 #include "mem.h"
 #include "mock_mem.h"
 
-uint16_t cpu_get_operand(nes *nes, enum cpu_addressing_mode mode);
+uint16_t cpu_get_operand(nes *nes, cpu_addressing_mode mode);
 
 TEST(test_get_operand_implicit) {
   nes *nes = nes_new();

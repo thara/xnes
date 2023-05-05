@@ -8,15 +8,15 @@
 // clang-format off
 
 // https://wiki.nesdev.org/w/index.php?title=CPU_addressing_modes
-enum cpu_addressing_mode {
+typedef enum {
   implicit, accumulator, immediate,
   zero_page, zero_page_x, zero_page_y,
   absolute, absolute_x, absolute_x_with_penalty, absolute_y, absolute_y_with_penalty,
   relative,
   indirect, indexed_indirect, indirect_indexed, indirect_indexed_with_penalty,
-};
+} cpu_addressing_mode;
 
-enum cpu_mnemonic {
+typedef enum {
   // Load/Store Operations,
   LDA, LDX, LDY, STA, STX, STY,
   // Register Operations,
@@ -41,13 +41,13 @@ enum cpu_mnemonic {
   BRK, NOP,
   // Unofficial,
   LAX, SAX, DCP, ISB, SLO, RLA, SRE, RRA,
-};
+} cpu_mnemonic;
 
 // clang-format on
 
 typedef struct {
-  enum cpu_mnemonic mnemonic;
-  enum cpu_addressing_mode mode;
+  cpu_mnemonic mnemonic;
+  cpu_addressing_mode mode;
 } cpu_instruction;
 
 cpu_instruction cpu_decode(uint8_t opcode);
