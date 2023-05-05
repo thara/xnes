@@ -41,12 +41,12 @@ typedef enum {
   BRK, NOP,
   // Unofficial,
   LAX, SAX, DCP, ISB, SLO, RLA, SRE, RRA,
-} cpu_mnemonic;
+} Mnemonic;
 
 // clang-format on
 
 typedef struct {
-  cpu_mnemonic mnemonic;
+  Mnemonic mnemonic;
   AddressingMode mode;
 } cpu_instruction;
 
