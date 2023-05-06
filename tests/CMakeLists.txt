@@ -23,4 +23,4 @@ endmacro()
 
 XNES_ADD_TEST(cpu_test test_cpu.c)
 XNES_ADD_TEST(cpu_emulation_test test_cpu_emulation.c)
-XNES_ADD_TEST(mapper_test test_mapper.c)
+XNES_ADD_TEST(rom_test test_rom.c)
