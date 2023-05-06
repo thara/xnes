@@ -32,9 +32,11 @@ TEST(test_parse_rom) {
     test_precondition_failed("Failed to read test file\n");
   }
 
+  ROMFile rom_file = {buf, file_size};
+
   ROM rom;
   ROMParseError error;
-  parse_rom(buf, file_size, &rom, &error);
+  parse_rom(&rom_file, &rom, &error);
 
   test_assert(error == ROM_PARSE_ERROR_NONE, "rom_parse_error should be none");
   test_assert_int_eq(0, rom.mapper_no);

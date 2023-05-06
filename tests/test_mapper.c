@@ -32,9 +32,11 @@ TEST(test_detect_mapper) {
     test_precondition_failed("Failed to read test file\n");
   }
 
+  ROMFile rom_file = {buf, file_size};
+
   ROM rom;
   ROMParseError romError;
-  parse_rom(buf, file_size, &rom, &romError);
+  parse_rom(&rom_file, &rom, &romError);
   if (romError != ROM_PARSE_ERROR_NONE) {
     free(buf);
     fclose(file);
