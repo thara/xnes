@@ -8,17 +8,17 @@
 struct mapper;
 typedef struct mapper Mapper;
 
-typedef enum{
-    MIRRORING_HORIZONTAL,
-    MIRRORING_VERTICAL,
+typedef enum {
+  MIRRORING_HORIZONTAL,
+  MIRRORING_VERTICAL,
 } MirroringMode;
 
 typedef enum {
-    MAPPER_ERROR_NONE,
-    MAPPER_ERROR_UNSUPPORTED,
+  MAPPER_ERROR_NONE,
+  MAPPER_ERROR_UNSUPPORTED,
 } MapperError;
 
-Mapper* detect_mapper(ROM *rom, MapperError* error);
+Mapper *detect_mapper(ROM *rom, MapperError *error);
 
 uint8_t mapper_no(Mapper *mapper);
 MirroringMode mapper_mirroring(Mapper *mapper);

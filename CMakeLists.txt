@@ -15,10 +15,12 @@ add_subdirectory(tests)
 
 file(GLOB_RECURSE TEST_SOURCES "${CMAKE_SOURCE_DIR}/tests/*.c")
 
+file(GLOB_RECURSE HEADERS "${CMAKE_SOURCE_DIR}/src/include/*.h")
+
 file(GLOB_RECURSE ALL_SOURCES
   ${SOURCES}
   ${TEST_SOURCES}
-  ${CMAKE_SOURCE_DIR}/src/include
+  ${HEADERS}
 )
 
 find_program(CLANG_FORMAT_EXE clang-format)

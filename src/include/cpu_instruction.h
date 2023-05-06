@@ -53,4 +53,3 @@ typedef struct {
 CPUInstruction cpu_decode(uint8_t opcode);
 
 #endif // CPU_INSTRUCTION_H
-

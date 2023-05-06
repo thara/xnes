@@ -29,7 +29,7 @@ typedef enum {
   CPU_STATUS_N = 7, // Negative
 } CPUStatus;
 
-CPU* cpu_new();
+CPU *cpu_new();
 
 void cpu_status_set(CPU *cpu, CPUStatus s, bool v);
 
