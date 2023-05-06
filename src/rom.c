@@ -8,7 +8,7 @@ static uint8_t padding[5];
 ROM *parse_rom(ROMFile *file, ROMParseError *error) {
   ROM *rom = malloc(sizeof(ROM));
   if (rom == NULL) {
-    *error = ROM_PARSE_ERROR_ARG_NULL;
+    *error = ROM_PARSE_ERROR_CAN_NOT_ALLOCATED;
     return NULL;
   }
   uint8_t *buf = file->buf;
