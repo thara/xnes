@@ -7,14 +7,14 @@ static uint8_t padding[5];
 
 void parse_rom(uint8_t *buf, uint64_t buf_len, ROM *rom, ROMParseError *error) {
   if (rom == NULL) {
-    *error = rom_parse_error_null;
+    *error = ROM_PARSE_ERROR_ARG_NULL;
     return;
   }
   rom->raw = buf;
 
   for (int i = 0; i < 4; i++) {
     if (buf[i] != magic_number[i]) {
-      *error = rom_parse_error_invalid_magic_number;
+      *error = ROM_PARSE_ERROR_INVALID_MAGIC_NUMBER;
       return;
     }
   }
@@ -35,10 +35,10 @@ void parse_rom(uint8_t *buf, uint64_t buf_len, ROM *rom, ROMParseError *error) {
   // validate unused padding
   for (int i = 0; i < 5; i++) {
     if (buf[i] != padding[i]) {
-      *error = rom_parse_error_padding;
+      *error = ROM_PARSE_ERROR_PADDING;
       return;
     }
   }
 
-  *error = rom_parse_error_none;
+  *error = ROM_PARSE_ERROR_NONE;
 }

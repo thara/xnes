@@ -36,7 +36,7 @@ TEST(test_parse_rom) {
   ROMParseError error;
   parse_rom(buf, file_size, &rom, &error);
 
-  test_assert(error == rom_parse_error_none, "rom_parse_error should be none");
+  test_assert(error == ROM_PARSE_ERROR_NONE, "rom_parse_error should be none");
   test_assert_int_eq(0, rom.mapper_no);
   test_assert_int_eq(1, rom.prg_rom_size);
   test_assert_int_eq(1, rom.chr_rom_size);

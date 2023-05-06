@@ -14,10 +14,10 @@ typedef struct {
 } ROM;
 
 typedef enum {
-    rom_parse_error_none,
-    rom_parse_error_null,
-    rom_parse_error_invalid_magic_number,
-    rom_parse_error_padding,
+    ROM_PARSE_ERROR_NONE,
+    ROM_PARSE_ERROR_ARG_NULL,
+    ROM_PARSE_ERROR_INVALID_MAGIC_NUMBER,
+    ROM_PARSE_ERROR_PADDING,
 } ROMParseError;
 
 void parse_rom(uint8_t* buf, uint64_t buf_len, ROM* rom, ROMParseError* error);
