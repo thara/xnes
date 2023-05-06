@@ -36,18 +36,16 @@ add_custom_target(
 )
 
 find_program(CPPCHECK_EXE cppcheck)
-if(NOT CPPCHECK_EXE)
-  message(FATAL_ERROR "cppcheck not found. Must be installed.")
+if(CPPCHECK_EXE)
+  add_custom_target(
+      lint
+      COMMAND ${CPPCHECK_EXE}
+      --enable=warning,performance,portability,style
+      --std=c11
+      --verbose
+      --quiet
+      ${SOURCES}
+      COMMENT "Running cppcheck"
+      VERBATIM
+  )
 endif()
-
-add_custom_target(
-    lint
-    COMMAND ${CPPCHECK_EXE}
-    --enable=warning,performance,portability,style
-    --std=c11
-    --verbose
-    --quiet
-    ${SOURCES}
-    COMMENT "Running cppcheck"
-    VERBATIM
-)
