@@ -1,8 +1,8 @@
-#include "rom.h"
 #include "stdlib.h"
 
 #include "test_common.h"
 
+#include "rom.h"
 #include "mapper.h"
 
 TEST(test_detect_mapper) {
