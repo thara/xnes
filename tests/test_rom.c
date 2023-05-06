@@ -34,17 +34,16 @@ TEST(test_parse_rom) {
 
   ROMFile rom_file = {buf, file_size};
 
-  ROM rom;
   ROMParseError error;
-  parse_rom(&rom_file, &rom, &error);
+  ROM *rom = parse_rom(&rom_file, &error);
 
   test_assert(error == ROM_PARSE_ERROR_NONE, "rom_parse_error should be none");
-  test_assert_int_eq(0, rom.mapper_no);
-  test_assert_int_eq(1, rom.prg_rom_size);
-  test_assert_int_eq(1, rom.chr_rom_size);
-  test_assert(!rom.mirroring_vertical, "mirroring should be horizontal");
+  test_assert_int_eq(0, rom->mapper_no);
+  test_assert_int_eq(1, rom->prg_rom_size);
+  test_assert_int_eq(1, rom->chr_rom_size);
+  test_assert(!rom->mirroring_vertical, "mirroring should be horizontal");
 
-  free(buf);
+  rom_release(rom);
   fclose(file);
 }
 

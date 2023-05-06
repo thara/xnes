@@ -5,10 +5,11 @@
 static uint8_t magic_number[4] = {0x4E, 0x45, 0x53, 0x1A};
 static uint8_t padding[5];
 
-void parse_rom(ROMFile *file, ROM *rom, ROMParseError *error) {
+ROM *parse_rom(ROMFile *file, ROMParseError *error) {
+  ROM *rom = malloc(sizeof(ROM));
   if (rom == NULL) {
     *error = ROM_PARSE_ERROR_ARG_NULL;
-    return;
+    return NULL;
   }
   uint8_t *buf = file->buf;
   rom->raw = buf;
@@ -16,7 +17,7 @@ void parse_rom(ROMFile *file, ROM *rom, ROMParseError *error) {
   for (int i = 0; i < 4; i++) {
     if (buf[i] != magic_number[i]) {
       *error = ROM_PARSE_ERROR_INVALID_MAGIC_NUMBER;
-      return;
+      return NULL;
     }
   }
   buf += 4;
@@ -37,9 +38,19 @@ void parse_rom(ROMFile *file, ROM *rom, ROMParseError *error) {
   for (int i = 0; i < 5; i++) {
     if (buf[i] != padding[i]) {
       *error = ROM_PARSE_ERROR_PADDING;
-      return;
+      return NULL;
     }
   }
 
   *error = ROM_PARSE_ERROR_NONE;
+  return rom;
+}
+
+void rom_release(ROM *rom) {
+  if (rom == NULL) {
+    return;
+  }
+
+  free(rom->raw);
+  free(rom);
 }

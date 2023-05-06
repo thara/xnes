@@ -34,9 +34,8 @@ TEST(test_detect_mapper) {
 
   ROMFile rom_file = {buf, file_size};
 
-  ROM rom;
   ROMParseError romError;
-  parse_rom(&rom_file, &rom, &romError);
+  ROM *rom = parse_rom(&rom_file, &romError);
   if (romError != ROM_PARSE_ERROR_NONE) {
     free(buf);
     fclose(file);
@@ -46,9 +45,9 @@ TEST(test_detect_mapper) {
   }
 
   MapperError mapperErr;
-  Mapper *mapper = detect_mapper(&rom, &mapperErr);
+  Mapper *mapper = detect_mapper(rom, &mapperErr);
   if (mapperErr != MAPPER_ERROR_NONE) {
-    free(buf);
+    rom_release(rom);
     fclose(file);
     char msg[256];
     snprintf(msg, sizeof(msg), "Failed to detect mapper: %d\n", romError);
@@ -59,7 +58,7 @@ TEST(test_detect_mapper) {
   test_assert_int_eq(MIRRORING_HORIZONTAL, mapper_mirroring(mapper));
 
   mapper_release(mapper);
-  free(buf);
+  rom_release(rom);
   fclose(file);
 }
 
