@@ -4,7 +4,7 @@
 
 #include "mock_mem.h"
 
-static uint8_t memory[10000];
+static uint8_t memory[0xFFFF];
 
 void mem_init() { memset(memory, 0, sizeof(memory)); }
 
