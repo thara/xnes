@@ -3,10 +3,16 @@
 #include "mapper.h"
 
 struct mapper {
+  uint8_t mapper_no;
+
   uint8_t (*read)(Mapper *self, uint16_t addr);
   void (*write)(Mapper *self, uint16_t addr, uint8_t value);
+
   MirroringMode mirroring;
 };
+
+uint8_t mapper_no(Mapper *mapper) { return mapper->mapper_no; }
+MirroringMode mapper_mirroring(Mapper *mapper) { return mapper->mirroring; }
 
 uint8_t mapper_read(Mapper *mapper, uint16_t addr) {
   return mapper->read(mapper, addr);
@@ -17,7 +23,7 @@ void mapper_write(Mapper *mapper, uint16_t addr, uint8_t value) {
 }
 
 typedef struct {
-  Mapper *base;
+  Mapper base;
 
   uint8_t *prg;
   uint16_t prg_size;
@@ -28,29 +34,47 @@ typedef struct {
   bool mirrored;
 } Mapper0;
 
-void mapper0_init(ROM *rom, Mapper *mapper, MapperError *error);
+Mapper *mapper0_new(ROM *rom, MapperError *error);
 uint8_t mapper0_read(Mapper *self, uint16_t addr);
 void mapper0_write(Mapper *self, uint16_t addr, uint8_t value);
 
-void detect_mapper(ROM *rom, Mapper *mapper, MapperError *error) {
-  switch (rom->mapper_no) {
-  case 0:
-    mapper0_init(rom, mapper, error);
-    break;
-  default:
-    *error = MAPPER_ERROR_UNSUPPORTED;
-    return;
-  }
-  *error = MAPPER_ERROR_NONE;
+void mapper_base_init(Mapper *base, ROM *rom) {
+  base->mapper_no = rom->mapper_no;
+  base->mirroring =
+      rom->mirroring_vertical ? MIRRORING_VERTICAL : MIRRORING_HORIZONTAL;
 }
 
-void mapper0_init(ROM *rom, Mapper *mapper, MapperError *error) {
+Mapper *detect_mapper(ROM *rom, MapperError *error) {
+  *error = MAPPER_ERROR_NONE;
+
+  switch (rom->mapper_no) {
+  case 0:
+    return mapper0_new(rom, error);
+  default:
+    *error = MAPPER_ERROR_UNSUPPORTED;
+    return NULL;
+  }
+}
+
+void mapper_release(Mapper *mapper) {
+  if (mapper == NULL) {
+    return;
+  }
+
+  switch (mapper->mapper_no) {
+  case 0: {
+    Mapper0 *impl = (Mapper0 *)malloc(sizeof(Mapper0));
+    free(impl);
+  }
+  }
+}
+
+Mapper *mapper0_new(ROM *rom, MapperError *error) {
   Mapper0 *impl = (Mapper0 *)malloc(sizeof(Mapper0));
-  impl->base = malloc(sizeof(Mapper));
-  impl->base->read = mapper0_read;
-  impl->base->write = mapper0_write;
-  impl->base->mirroring =
-      rom->mirroring_vertical ? MIRRORING_VERTICAL : MIRRORING_HORIZONTAL;
+
+  mapper_base_init(&impl->base, rom);
+  impl->base.read = mapper0_read;
+  impl->base.write = mapper0_write;
 
   impl->prg = rom->raw;
   impl->prg_size = rom->prg_rom_size * 0x4000;
@@ -60,7 +84,7 @@ void mapper0_init(ROM *rom, Mapper *mapper, MapperError *error) {
 
   impl->mirrored = impl->prg_size == 0x4000;
 
-  mapper = (Mapper *)impl;
+  return (Mapper *)impl;
 }
 
 uint8_t mapper0_read(Mapper *self, uint16_t addr) {

@@ -3,17 +3,18 @@
 #include "test_common.h"
 
 #include "rom.h"
+#include "mapper.h"
 
-TEST(test_parse_rom) {
+TEST(test_detect_mapper) {
   char test_file_path[256];
   get_test_data_path(test_file_path, sizeof(test_file_path), "nestest.nes");
 
   FILE *file = fopen(test_file_path, "r");
   if (!file) {
-    char str[256];
-    snprintf(str, sizeof(str), "Failed to open test file: %s\n",
+    char msg[256];
+    snprintf(msg, sizeof(msg), "Failed to open test file: %s\n",
              test_file_path);
-    test_precondition_failed(str);
+    test_precondition_failed(msg);
   }
 
   fseek(file, 0, SEEK_END);
@@ -32,23 +33,38 @@ TEST(test_parse_rom) {
   }
 
   ROM rom;
-  ROMParseError error;
-  parse_rom(buf, file_size, &rom, &error);
+  ROMParseError romError;
+  parse_rom(buf, file_size, &rom, &romError);
+  if (romError != ROM_PARSE_ERROR_NONE) {
+    free(buf);
+    fclose(file);
+    char msg[256];
+    snprintf(msg, sizeof(msg), "Failed to parse ROM: %d\n", romError);
+    test_precondition_failed(msg);
+  }
 
-  test_assert(error == rom_parse_error_none, "rom_parse_error should be none");
-  test_assert_int_eq(0, rom.mapper_no);
-  test_assert_int_eq(1, rom.prg_rom_size);
-  test_assert_int_eq(1, rom.chr_rom_size);
-  test_assert(!rom.mirroring_vertical, "mirroring should be horizontal");
+  MapperError mapperErr;
+  Mapper *mapper = detect_mapper(&rom, &mapperErr);
+  if (mapperErr != MAPPER_ERROR_NONE) {
+    free(buf);
+    fclose(file);
+    char msg[256];
+    snprintf(msg, sizeof(msg), "Failed to detect mapper: %d\n", romError);
+    test_precondition_failed(msg);
+  }
 
+  test_assert_int_eq(0, mapper_no(mapper));
+  test_assert_int_eq(MIRRORING_HORIZONTAL, mapper_mirroring(mapper));
+
+  mapper_release(mapper);
   free(buf);
   fclose(file);
 }
 
-TEST_SUITE(test_rom) { RUN_TEST(test_parse_rom); }
+TEST_SUITE(test_mapper) { RUN_TEST(test_detect_mapper); }
 
 int main(int argc, char *argv[]) {
-  RUN_TEST_SUITE(test_rom);
+  RUN_TEST_SUITE(test_mapper);
   TEST_REPORT();
   return TEST_EXIT_CODE;
 }

@@ -18,10 +18,15 @@ typedef enum {
     MAPPER_ERROR_UNSUPPORTED,
 } MapperError;
 
-void detect_mapper(ROM *rom, Mapper *mapper, MapperError* error);
+Mapper* detect_mapper(ROM *rom, MapperError* error);
+
+uint8_t mapper_no(Mapper *mapper);
+MirroringMode mapper_mirroring(Mapper *mapper);
 
 uint8_t mapper_read(Mapper *mapper, uint16_t addr);
 
 void mapper_write(Mapper *mapper, uint16_t addr, uint8_t value);
+
+void mapper_release(Mapper *mapper);
 
 #endif // MAPPER_H
