@@ -15,6 +15,8 @@ TEST(test_get_operand_implicit) {
   uint16_t result = cpu_get_operand(nes, IMPLICIT);
   test_assert_int_eq(0, result);
   test_assert_int_eq(0, nes->cpu.cycles);
+
+  nes_release(nes);
 }
 
 TEST(test_get_operand_accumulator) {
@@ -24,6 +26,8 @@ TEST(test_get_operand_accumulator) {
   uint16_t result = cpu_get_operand(nes, ACCUMULATOR);
   test_assert_byte_eq(0xFB, result);
   test_assert_int_eq(0, nes->cpu.cycles);
+
+  nes_release(nes);
 }
 
 TEST(test_get_operand_immediate) {
@@ -33,6 +37,8 @@ TEST(test_get_operand_immediate) {
   uint16_t result = cpu_get_operand(nes, IMMEDIATE);
   test_assert_byte_eq(0x8234, result);
   test_assert_int_eq(0, nes->cpu.cycles);
+
+  nes_release(nes);
 }
 
 TEST(test_get_operand_zero_page) {
@@ -45,6 +51,8 @@ TEST(test_get_operand_zero_page) {
   uint16_t result = cpu_get_operand(nes, ZERO_PAGE);
   test_assert_byte_eq(0x91, result);
   test_assert_int_eq(1, nes->cpu.cycles);
+
+  nes_release(nes);
 }
 
 TEST(test_get_operand_zero_page_x) {
@@ -58,6 +66,8 @@ TEST(test_get_operand_zero_page_x) {
   uint16_t result = cpu_get_operand(nes, ZERO_PAGE_X);
   test_assert_byte_eq(0x13, result);
   test_assert_int_eq(2, nes->cpu.cycles);
+
+  nes_release(nes);
 }
 
 TEST(test_get_operand_zero_page_y) {
@@ -71,6 +81,8 @@ TEST(test_get_operand_zero_page_y) {
   uint16_t result = cpu_get_operand(nes, ZERO_PAGE_Y);
   test_assert_byte_eq(0x27, result);
   test_assert_int_eq(2, nes->cpu.cycles);
+
+  nes_release(nes);
 }
 
 TEST(test_get_operand_absolute) {
@@ -84,6 +96,8 @@ TEST(test_get_operand_absolute) {
   uint16_t result = cpu_get_operand(nes, ABSOLUTE);
   test_assert_byte_eq(0xF036, result);
   test_assert_int_eq(2, nes->cpu.cycles);
+
+  nes_release(nes);
 }
 
 TEST(test_get_operand_absolute_x) {
@@ -99,6 +113,8 @@ TEST(test_get_operand_absolute_x) {
   uint16_t result = cpu_get_operand(nes, ABSOLUTE_X);
   test_assert_byte_eq(0xF067, result);
   test_assert_int_eq(3, nes->cpu.cycles);
+
+  nes_release(nes);
 }
 
 TEST(test_get_operand_absolute_x_with_penalty_not_page_crossed) {
@@ -114,6 +130,8 @@ TEST(test_get_operand_absolute_x_with_penalty_not_page_crossed) {
   uint16_t result = cpu_get_operand(nes, ABSOLUTE_X_WITH_PENALTY);
   test_assert_byte_eq(0xF067, result);
   test_assert_int_eq(2, nes->cpu.cycles);
+
+  nes_release(nes);
 }
 
 TEST(test_get_operand_absolute_x_with_penalty_page_crossed) {
@@ -129,6 +147,8 @@ TEST(test_get_operand_absolute_x_with_penalty_page_crossed) {
   uint16_t result = cpu_get_operand(nes, ABSOLUTE_X_WITH_PENALTY);
   test_assert_byte_eq(0xF126, result);
   test_assert_int_eq(3, nes->cpu.cycles);
+
+  nes_release(nes);
 }
 
 TEST(test_get_operand_absolute_y) {
@@ -144,6 +164,8 @@ TEST(test_get_operand_absolute_y) {
   uint16_t result = cpu_get_operand(nes, ABSOLUTE_Y);
   test_assert_byte_eq(0xF067, result);
   test_assert_int_eq(3, nes->cpu.cycles);
+
+  nes_release(nes);
 }
 
 TEST(test_get_operand_absolute_y_with_penalty_not_page_crossed) {
@@ -159,6 +181,8 @@ TEST(test_get_operand_absolute_y_with_penalty_not_page_crossed) {
   uint16_t result = cpu_get_operand(nes, ABSOLUTE_Y_WITH_PENALTY);
   test_assert_byte_eq(0xF067, result);
   test_assert_int_eq(2, nes->cpu.cycles);
+
+  nes_release(nes);
 }
 
 TEST(test_get_operand_absolute_y_with_penalty_page_crossed) {
@@ -174,6 +198,8 @@ TEST(test_get_operand_absolute_y_with_penalty_page_crossed) {
   uint16_t result = cpu_get_operand(nes, ABSOLUTE_Y_WITH_PENALTY);
   test_assert_byte_eq(0xF126, result);
   test_assert_int_eq(3, nes->cpu.cycles);
+
+  nes_release(nes);
 }
 
 TEST(test_get_operand_relative) {
@@ -186,6 +212,8 @@ TEST(test_get_operand_relative) {
   uint16_t result = cpu_get_operand(nes, RELATIVE);
   test_assert_byte_eq(0x91, result);
   test_assert_int_eq(1, nes->cpu.cycles);
+
+  nes_release(nes);
 }
 
 TEST(test_get_operand_indirect) {
@@ -200,6 +228,8 @@ TEST(test_get_operand_indirect) {
   uint16_t result = cpu_get_operand(nes, INDIRECT);
   test_assert_byte_eq(0x9F, result);
   test_assert_int_eq(4, nes->cpu.cycles);
+
+  nes_release(nes);
 }
 
 TEST(test_get_operand_indexed_indirect) {
@@ -215,6 +245,8 @@ TEST(test_get_operand_indexed_indirect) {
   uint16_t result = cpu_get_operand(nes, INDEXED_INDIRECT);
   test_assert_byte_eq(0x9012, result);
   test_assert_int_eq(4, nes->cpu.cycles);
+
+  nes_release(nes);
 }
 
 TEST(test_get_operand_indirect_indexed) {
@@ -231,6 +263,8 @@ TEST(test_get_operand_indirect_indexed) {
   uint16_t result = cpu_get_operand(nes, INDIRECT_INDEXED);
   test_assert_byte_eq(0x9105, result);
   test_assert_int_eq(4, nes->cpu.cycles);
+
+  nes_release(nes);
 }
 
 TEST(test_get_operand_indirect_indexed_with_penalty_not_page_crossed) {
@@ -247,6 +281,8 @@ TEST(test_get_operand_indirect_indexed_with_penalty_not_page_crossed) {
   uint16_t result = cpu_get_operand(nes, INDIRECT_INDEXED_WITH_PENALTY);
   test_assert_byte_eq(0x9095, result);
   test_assert_int_eq(3, nes->cpu.cycles);
+
+  nes_release(nes);
 }
 
 TEST(test_get_operand_indirect_indexed_with_penalty_page_crossed) {
@@ -263,6 +299,8 @@ TEST(test_get_operand_indirect_indexed_with_penalty_page_crossed) {
   uint16_t result = cpu_get_operand(nes, INDIRECT_INDEXED_WITH_PENALTY);
   test_assert_byte_eq(0x9105, result);
   test_assert_int_eq(4, nes->cpu.cycles);
+
+  nes_release(nes);
 }
 
 TEST_SUITE(test_get_operand) {
@@ -299,6 +337,8 @@ TEST(test_LDA) {
   test_assert_byte_eq(0x31, nes->cpu.A);
   test_assert_int_eq(2, nes->cpu.cycles);
   test_assert_byte_eq(0, nes->cpu.P);
+
+  nes_release(nes);
 }
 
 TEST(test_STA) {
@@ -316,6 +356,8 @@ TEST(test_STA) {
   test_assert_byte_eq(0x91, mem_read(nes, 0x0419));
   test_assert_int_eq(4, nes->cpu.cycles);
   test_assert_byte_eq(0, nes->cpu.P);
+
+  nes_release(nes);
 }
 
 TEST(test_TAX) {
@@ -331,6 +373,8 @@ TEST(test_TAX) {
   test_assert_byte_eq(0x83, nes->cpu.X);
   test_assert_int_eq(2, nes->cpu.cycles);
   test_assert_byte_eq(0x80, nes->cpu.P);
+
+  nes_release(nes);
 }
 
 TEST(test_TYA) {
@@ -346,6 +390,8 @@ TEST(test_TYA) {
   test_assert_byte_eq(0xF0, nes->cpu.A);
   test_assert_int_eq(2, nes->cpu.cycles);
   test_assert_byte_eq(0x80, nes->cpu.P);
+
+  nes_release(nes);
 }
 
 TEST(test_TSX) {
@@ -361,6 +407,8 @@ TEST(test_TSX) {
   test_assert_byte_eq(0xF3, nes->cpu.X);
   test_assert_int_eq(2, nes->cpu.cycles);
   test_assert_byte_eq(0x80, nes->cpu.P);
+
+  nes_release(nes);
 }
 
 TEST(test_PHA) {
@@ -378,6 +426,8 @@ TEST(test_PHA) {
   test_assert_byte_eq(0x72, mem_read(nes, 0x01FD));
   test_assert_int_eq(3, nes->cpu.cycles);
   test_assert_byte_eq(0, nes->cpu.P);
+
+  nes_release(nes);
 }
 
 TEST(test_PHP) {
@@ -395,6 +445,8 @@ TEST(test_PHP) {
   test_assert_byte_eq(0xFC, nes->cpu.S);
   test_assert_bit_eq(nes->cpu.P | 0b00110000, mem_read(nes, 0x01FD));
   test_assert_int_eq(3, nes->cpu.cycles);
+
+  nes_release(nes);
 }
 
 TEST(test_PLP) {
@@ -411,6 +463,8 @@ TEST(test_PLP) {
   test_assert_byte_eq(0xC0, nes->cpu.S);
   test_assert_bit_eq(0b01101010, nes->cpu.P);
   test_assert_int_eq(4, nes->cpu.cycles);
+
+  nes_release(nes);
 }
 
 TEST(test_EOR) {
@@ -427,6 +481,8 @@ TEST(test_EOR) {
   test_assert_byte_eq(0x19, nes->cpu.A);
   test_assert_bit_eq(0, nes->cpu.P);
   test_assert_int_eq(2, nes->cpu.cycles);
+
+  nes_release(nes);
 }
 
 TEST(test_BIT) {
@@ -444,6 +500,8 @@ TEST(test_BIT) {
 
   test_assert_bit_eq(0b11000000, nes->cpu.P);
   test_assert_int_eq(4, nes->cpu.cycles);
+
+  nes_release(nes);
 }
 
 struct adc_test_pattern {
@@ -475,6 +533,8 @@ TEST(test_ADC) {
 
     test_assert_byte_eq(test_case.expected_a, nes->cpu.A);
     test_assert_bit_eq(test_case.expected_p, nes->cpu.P);
+
+    nes_release(nes);
   }
 }
 
@@ -491,6 +551,8 @@ TEST(test_CPY) {
 
   test_assert_bit_eq(0b00000001, nes->cpu.P);
   test_assert_int_eq(4, nes->cpu.cycles);
+
+  nes_release(nes);
 }
 
 TEST(test_INC) {
@@ -508,6 +570,8 @@ TEST(test_INC) {
   test_assert_bit_eq(0b10000000, nes->cpu.P);
   test_assert_byte_eq(0x80, mem_read(nes, 0x04D3));
   test_assert_int_eq(6, nes->cpu.cycles);
+
+  nes_release(nes);
 }
 
 TEST(test_DEC) {
@@ -525,6 +589,8 @@ TEST(test_DEC) {
   test_assert_bit_eq(0b10000000, nes->cpu.P);
   test_assert_byte_eq(0xBF, mem_read(nes, 0x04D3));
   test_assert_int_eq(6, nes->cpu.cycles);
+
+  nes_release(nes);
 }
 
 TEST(test_ASL) {
@@ -540,6 +606,8 @@ TEST(test_ASL) {
   test_assert_bit_eq(0b00010100, nes->cpu.A);
   test_assert_bit_eq(0b00000001, nes->cpu.P);
   test_assert_int_eq(2, nes->cpu.cycles);
+
+  nes_release(nes);
 }
 
 TEST(test_ROL) {
@@ -556,6 +624,8 @@ TEST(test_ROL) {
   test_assert_bit_eq(0b00010101, nes->cpu.A);
   test_assert_bit_eq(0b00000001, nes->cpu.P);
   test_assert_int_eq(2, nes->cpu.cycles);
+
+  nes_release(nes);
 }
 
 TEST(test_ROL_carry) {
@@ -572,6 +642,8 @@ TEST(test_ROL_carry) {
   test_assert_bit_eq(0b00010100, nes->cpu.A);
   test_assert_bit_eq(0b00000001, nes->cpu.P);
   test_assert_int_eq(2, nes->cpu.cycles);
+
+  nes_release(nes);
 }
 
 TEST(test_JSR) {
@@ -591,6 +663,8 @@ TEST(test_JSR) {
   test_assert_byte_eq(0x11, mem_read(nes, 0x01BE));
   test_assert_byte_eq(0x02, mem_read(nes, 0x01BF));
   test_assert_int_eq(6, nes->cpu.cycles);
+
+  nes_release(nes);
 }
 
 TEST(test_RTS) {
@@ -608,6 +682,8 @@ TEST(test_RTS) {
   test_assert_byte_eq(0xBF, nes->cpu.S);
   test_assert_byte_eq(0x0212, nes->cpu.PC);
   test_assert_int_eq(6, nes->cpu.cycles);
+
+  nes_release(nes);
 }
 
 struct bcc_test_pattern {
@@ -636,6 +712,8 @@ TEST(test_BCC) {
 
     test_assert_byte_eq(test_case.expected_pc, nes->cpu.PC);
     test_assert_int_eq(test_case.expected_cycles, nes->cpu.cycles);
+
+    nes_release(nes);
   }
 }
 
@@ -652,6 +730,8 @@ TEST(test_CLD) {
   test_assert_byte_eq(0x0210, nes->cpu.PC);
   test_assert_bit_eq(0b011000001, nes->cpu.P);
   test_assert_int_eq(2, nes->cpu.cycles);
+
+  nes_release(nes);
 }
 
 TEST(test_SEI) {
@@ -667,6 +747,8 @@ TEST(test_SEI) {
   test_assert_byte_eq(0x0210, nes->cpu.PC);
   test_assert_bit_eq(0b011001101, nes->cpu.P);
   test_assert_int_eq(2, nes->cpu.cycles);
+
+  nes_release(nes);
 }
 
 TEST(test_BRK) {
@@ -686,6 +768,8 @@ TEST(test_BRK) {
   test_assert_bit_eq(0b01110001, nes->cpu.P);
   test_assert_byte_eq(0xBC, nes->cpu.S);
   test_assert_int_eq(7, nes->cpu.cycles);
+
+  nes_release(nes);
 }
 
 TEST(test_RTI) {
@@ -706,6 +790,8 @@ TEST(test_RTI) {
   test_assert_bit_eq(0b10000010, nes->cpu.P);
   test_assert_byte_eq(0xBF, nes->cpu.S);
   test_assert_int_eq(6, nes->cpu.cycles);
+
+  nes_release(nes);
 }
 
 TEST_SUITE(test_execute) {
