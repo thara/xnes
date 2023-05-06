@@ -24,12 +24,15 @@ static char test_last_message[TESTMESSAGE_LEN];
 
 #define RUN_TEST(test) do {\
   test_status_failed = false;\
+  printf("%s: ", #test);\
   test();\
   test_count++;\
   if (test_status_failed) {\
     test_failed_count++;\
-    printf("F");\
+    printf("NG");\
     printf("\n%s\n", test_last_message);\
+  } else { \
+    printf("OK\n");\
   }\
   fflush(stdout);\
 } while(0)
@@ -49,8 +52,6 @@ static char test_last_message[TESTMESSAGE_LEN];
   if (!(test)) {\
     snprintf(test_last_message, TESTMESSAGE_LEN, "%s failed:\n\t%s:%d: %s", __func__, __FILE__, __LINE__, msg);\
     test_status_failed = true;\
-  } else { \
-    printf(".");\
   }\
 } while(0)
 
@@ -61,8 +62,6 @@ static char test_last_message[TESTMESSAGE_LEN];
   if (want != got) {\
     snprintf(test_last_message, TESTMESSAGE_LEN, "%s failed:\n\t%s:%d: %d expected but was %d", __func__, __FILE__, __LINE__, want, got);\
     test_status_failed = true;\
-  } else { \
-    printf(".");\
   }\
 } while(0)
 
@@ -85,8 +84,6 @@ static void test_int_to_binary(uint16_t n, char* output) {
     test_int_to_binary(got, got_str);\
     snprintf(test_last_message, TESTMESSAGE_LEN, "%s failed:\n\t%s:%d: 0b%s expected but was 0b%s", __func__, __FILE__, __LINE__, want_str, got_str);\
     test_status_failed = true;\
-  } else { \
-    printf(".");\
   }\
 } while(0)
 
@@ -97,19 +94,6 @@ static void test_int_to_binary(uint16_t n, char* output) {
   if (want != got) {\
     snprintf(test_last_message, TESTMESSAGE_LEN, "%s failed:\n\t%s:%d: 0x%08X expected but was 0x%08X", __func__, __FILE__, __LINE__, want, got);\
     test_status_failed = true;\
-  } else { \
-    printf(".");\
-  }\
-} while(0)
-
-#define test_required(test, msg) do {\
-  test_assert_count++;\
-  if (!(test)) {\
-    snprintf(test_last_message, TESTMESSAGE_LEN, "%s failed:\n\t%s:%d: %s", __func__, __FILE__, __LINE__, msg);\
-    test_status_failed = true;\
-    return;\
-  } else { \
-    printf(".");\
   }\
 } while(0)
 
