@@ -13,9 +13,6 @@ NES *nes_new() {
   return nes;
 }
 
-NESError wrap_rom_parse_error(ROMParseError error);
-NESError wrap_mapper_error(MapperError error);
-
 void nes_init(NES *nes, ROMFile *rom_file, NESError *error) {
   ROMParseError rom_err;
   ROM *rom = parse_rom(rom_file, &rom_err);
@@ -33,32 +30,6 @@ void nes_init(NES *nes, ROMFile *rom_file, NESError *error) {
   }
 
   nes->mapper = mapper;
-}
-
-typedef enum {
-  NES_ERROR_NONE,
-  NES_ERROR_ROM_PARSE = 1000,
-  NES_ERROR_MAPPER = 2000,
-} NESErrorInternal;
-
-NESError wrap_rom_parse_error(ROMParseError error) {
-  return NES_ERROR_ROM_PARSE + error;
-}
-
-NESError wrap_mapper_error(MapperError error) {
-  return NES_ERROR_MAPPER + error;
-}
-
-void nes_as_rom_parse_error(NESError nes_error, ROMParseError *error) {
-  if (NES_ERROR_ROM_PARSE <= nes_error && nes_error < NES_ERROR_MAPPER) {
-    *error = nes_error - NES_ERROR_ROM_PARSE;
-  }
-}
-
-void nes_as_mapper_error(NESError nes_error, MapperError *error) {
-  if (NES_ERROR_MAPPER <= nes_error) {
-    *error = nes_error - NES_ERROR_MAPPER;
-  }
 }
 
 void nes_step(NES *nes) { cpu_step(nes); }
