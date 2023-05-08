@@ -6,6 +6,8 @@
 
 typedef int NESError;
 
+extern const NESError NES_ERROR_NONE;
+
 NESError wrap_rom_parse_error(ROMParseError error);
 NESError wrap_mapper_error(MapperError error);
 

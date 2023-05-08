@@ -1,7 +1,8 @@
 #include "error.h"
 
+const NESError NES_ERROR_NONE = 0;
+
 typedef enum {
-  NES_ERROR_NONE,
   NES_ERROR_ROM_PARSE = 1000,
   NES_ERROR_MAPPER = 2000,
 } NESErrorInternal;
