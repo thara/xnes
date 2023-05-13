@@ -63,7 +63,7 @@ void mapper_release(Mapper *mapper) {
 
   switch (mapper->mapper_no) {
   case 0: {
-    Mapper0 *impl = (Mapper0 *)malloc(sizeof(Mapper0));
+    Mapper0 *impl = (Mapper0 *)mapper;
     free(impl);
   }
   }
