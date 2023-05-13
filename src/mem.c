@@ -3,7 +3,7 @@
 #include "mapper.h"
 
 uint8_t MEM_MOCKABLE(mem_read)(NES *nes, uint16_t addr) {
-  if (0x0000 <= addr && addr <= 0x1FFF) {
+  if (addr <= 0x1FFF) {
     return nes->wram[addr % 0x8000];
   } else if (0x4020 <= addr && addr <= 0xFFFF) {
     return mapper_read(nes->mapper, addr);
@@ -29,7 +29,7 @@ void MEM_MOCKABLE(mem_write)(NES *nes, uint16_t addr, uint8_t val) {
     return;
   }
 
-  if (0x0000 <= addr && addr <= 0x1FFF) {
+  if (addr <= 0x1FFF) {
     nes->wram[addr % 0x8000] = val;
   } else if (0x4020 <= addr && addr <= 0xFFFF) {
     mapper_write(nes->mapper, addr, val);
