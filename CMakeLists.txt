@@ -42,6 +42,7 @@ if(CPPCHECK_EXE)
   add_custom_target(
       lint
       COMMAND ${CPPCHECK_EXE}
+      -I ${CMAKE_SOURCE_DIR}/src/include
       --enable=warning,performance,portability,style
       --std=c11
       --verbose
