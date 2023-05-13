@@ -6,7 +6,7 @@
 #include "cpu_emulation.h"
 
 NES *nes_new() {
-  NES *nes = malloc(sizeof(NES));
+  NES *nes = calloc(0, sizeof(NES));
   if (nes == NULL) {
     return NULL;
   }
@@ -38,7 +38,7 @@ void nes_release(NES *nes) {
   if (nes == NULL) {
     return;
   }
-  if (nes->mapper == NULL) {
+  if (nes->mapper != NULL) {
     mapper_release(nes->mapper);
   }
   free(nes);
