@@ -26,5 +26,6 @@ XNES_ADD_TEST(cpu_emulation_test test_cpu_emulation.c)
 XNES_ADD_TEST(rom_test test_rom.c)
 XNES_ADD_TEST(mapper_test test_mapper.c)
 XNES_ADD_TEST(error_test test_error.c)
+XNES_ADD_TEST(input_test test_input.c)
 
 XNES_ADD_TEST(nestest test_nestest.c)
