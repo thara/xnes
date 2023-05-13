@@ -35,10 +35,12 @@ void nes_init(NES *nes, ROMFile *rom_file, NESError *error) {
 void nes_step(NES *nes) { cpu_step(nes); }
 
 void nes_release(NES *nes) {
-  if (nes != NULL) {
+  if (nes == NULL) {
     return;
   }
-  mapper_release(nes->mapper);
+  if (nes->mapper == NULL) {
+    mapper_release(nes->mapper);
+  }
   free(nes);
 }
 
