@@ -90,7 +90,7 @@ Mapper *mapper0_new(ROM *rom, MapperError *error) {
 uint8_t mapper0_read(Mapper *self, uint16_t addr) {
   Mapper0 *impl = (Mapper0 *)self;
 
-  if (0x0000 <= addr && addr <= 0x1FFF) {
+  if (addr <= 0x1FFF) {
     return impl->chr[addr];
   } else if (0x8000 <= addr && addr <= 0xFFFF) {
     if (impl->mirrored) {
@@ -106,7 +106,7 @@ uint8_t mapper0_read(Mapper *self, uint16_t addr) {
 void mapper0_write(Mapper *self, uint16_t addr, uint8_t value) {
   Mapper0 *impl = (Mapper0 *)self;
 
-  if (0x0000 <= addr && addr <= 0x1FFF) {
+  if (addr <= 0x1FFF) {
     impl->chr[addr] = value;
   }
 }
