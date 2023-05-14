@@ -20,7 +20,7 @@ uint8_t MEM_MOCKABLE(mem_read)(NES *nes, uint16_t addr) {
   } else if (0x4020 <= addr && addr <= 0xFFFF) {
     return mapper_read(nes->mapper, addr);
   }
-  // TODO PPU, APU, controller
+  // TODO PPU, APU
   return 0;
 }
 
@@ -54,7 +54,7 @@ void MEM_MOCKABLE(mem_write)(NES *nes, uint16_t addr, uint8_t val) {
   } else if (0x4020 <= addr && addr <= 0xFFFF) {
     mapper_write(nes->mapper, addr, val);
   }
-  // TODO PPU, APU, controller
+  // TODO PPU, APU
 }
 
 #ifdef UNIT_TEST
