@@ -8,15 +8,15 @@ uint8_t MEM_MOCKABLE(mem_read)(NES *nes, uint16_t addr) {
   if (addr <= 0x1FFF) {
     return nes->wram[addr % 0x0800];
   } else if (addr == 0x4016) {
-      if (nes->input1 == NULL) {
-          return 0;
-      }
-      return input_read(nes->input1);
+    if (nes->input1 == NULL) {
+      return 0;
+    }
+    return input_read(nes->input1);
   } else if (addr == 0x4017) {
-      if (nes->input2 == NULL) {
-          return 0;
-      }
-      return input_read(nes->input2);
+    if (nes->input2 == NULL) {
+      return 0;
+    }
+    return input_read(nes->input2);
   } else if (0x4020 <= addr && addr <= 0xFFFF) {
     return mapper_read(nes->mapper, addr);
   }
@@ -44,13 +44,13 @@ void MEM_MOCKABLE(mem_write)(NES *nes, uint16_t addr, uint8_t val) {
   if (addr <= 0x1FFF) {
     nes->wram[addr % 0x0800] = val;
   } else if (addr == 0x4016) {
-      if (nes->input1 != NULL) {
-          input_write(nes->input1, val);
-      }
+    if (nes->input1 != NULL) {
+      input_write(nes->input1, val);
+    }
   } else if (addr == 0x4017) {
-      if (nes->input2 != NULL) {
-          input_write(nes->input2, val);
-      }
+    if (nes->input2 != NULL) {
+      input_write(nes->input2, val);
+    }
   } else if (0x4020 <= addr && addr <= 0xFFFF) {
     mapper_write(nes->mapper, addr, val);
   }
