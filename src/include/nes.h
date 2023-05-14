@@ -7,6 +7,7 @@
 #include "error.h"
 #include "mapper.h"
 #include "rom.h"
+#include "input.h"
 
 typedef struct {
   CPU cpu;
@@ -14,6 +15,9 @@ typedef struct {
   uint8_t wram[0x0800];
 
   Mapper *mapper;
+
+  Input* input1;
+  Input* input2;
 } NES;
 
 NES *nes_new();
