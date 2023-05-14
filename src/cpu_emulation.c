@@ -1,6 +1,7 @@
 #include <stdint.h>
 #include <stdbool.h>
 
+#include "cpu.h"
 #include "cpu_emulation.h"
 
 #include "cpu_instruction.h"
@@ -31,6 +32,12 @@ void cpu_power_on(NES *nes) {
   nes->cpu.P = 0x34;            // IRQ disabled
   cpu_write(nes, 0x4017, 0x00); // frame irq disabled
   cpu_write(nes, 0x4015, 0x00); // all channels disabled
+}
+
+void cpu_reset(NES *nes) {
+  nes->cpu.PC = cpu_read(nes, 0xFFFC);
+  nes->cpu.P = CPU_STATUS_I;
+  nes->cpu.S -= 3;
 }
 
 void cpu_execute(NES *nes, CPUInstruction inst);

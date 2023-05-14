@@ -4,6 +4,7 @@
 #include "nes.h"
 
 void cpu_power_on(NES *nes);
+void cpu_reset(NES *nes);
 void cpu_step(NES *nes);
 
 #ifdef UNIT_TEST

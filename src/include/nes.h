@@ -16,13 +16,17 @@ typedef struct {
 
   Mapper *mapper;
 
-  Input* input1;
-  Input* input2;
+  Input *input1;
+  Input *input2;
 } NES;
 
 NES *nes_new();
 
 void nes_init(NES *nes, ROMFile *rom_file, NESError *error);
+
+void nes_power_on(NES *nes);
+
+void nes_reset(NES *nes);
 
 void nes_step(NES *nes);
 
