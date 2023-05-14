@@ -14,25 +14,8 @@
     if (want != got) {                                                         \
       char msg[256];                                                           \
       snprintf(msg, sizeof(msg),                                               \
-               "%s unmatched: want=%08x, got=%08x line_no=%d\n", "##field",    \
+               "%s unmatched: want=%08x, got=%08x line_no=%d\n", #field,      \
                want, got, line_no);                                            \
-      test_fail(msg);                                                          \
-      goto NESTEST_END;                                                        \
-    }                                                                          \
-  } while (0)
-
-#define nestest_log_assert_bit_eq(expect_trace, actual_trace, field, line_no)  \
-  do {                                                                         \
-    int want = (expect_trace).field;                                           \
-    int got = (actual_trace).field;                                            \
-    if (want != got) {                                                         \
-      char want_str[17];                                                       \
-      test_int_to_binary(want, want_str);                                      \
-      char got_str[17];                                                        \
-      test_int_to_binary(got, got_str);                                        \
-      char msg[256];                                                           \
-      snprintf(msg, sizeof(msg), "%s unmatched: want=%s, got=%s line_no=%d\n", \
-               "##field", want_str, got_str, line_no);                         \
       test_fail(msg);                                                          \
       goto NESTEST_END;                                                        \
     }                                                                          \
@@ -43,7 +26,7 @@ TEST(test_nestest_log) {
   get_test_data_path(test_file_path, sizeof(test_file_path), "nestest.nes");
 
   char log_file_path[256];
-  get_test_data_path(log_file_path, sizeof(test_file_path), "nestest.log");
+  get_test_data_path(log_file_path, sizeof(log_file_path), "nestest.log");
 
   FILE *file = fopen(test_file_path, "r");
   if (!file) {
@@ -93,9 +76,9 @@ TEST(test_nestest_log) {
   nes->cpu.P = 0x24;
   nes->cpu.cycles = 7;
 
-  int line_no;
+  int line_no = 0;
   char line[256];
-  while (fgets(line, sizeof(line), file)) {
+  while (fgets(line, sizeof(line), log_file)) {
     CPUTrace actual = cpu_trace(nes);
 
     nes_step(nes);
