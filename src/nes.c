@@ -17,14 +17,14 @@ void nes_init(NES *nes, ROMFile *rom_file, NESError *error) {
   ROMParseError rom_err;
   ROM *rom = parse_rom(rom_file, &rom_err);
 
-  if (rom_err == ROM_PARSE_ERROR_NONE) {
+  if (rom_err != ROM_PARSE_ERROR_NONE) {
     *error = wrap_rom_parse_error(rom_err);
     return;
   }
 
   MapperError mapper_err;
   Mapper *mapper = detect_mapper(rom, &mapper_err);
-  if (mapper_err == MAPPER_ERROR_NONE) {
+  if (mapper_err != MAPPER_ERROR_NONE) {
     *error = wrap_mapper_error(mapper_err);
     return;
   }
