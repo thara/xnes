@@ -74,7 +74,7 @@ bool parse_cpu_trace(char *str, CPUTrace *dst) {
   int n = sscanf(str, "%04hX", &dst->current_state.PC);
   int offset = 6;
 
-  n += sscanf(str, "%02hhX", &dst->next_opcode);
+  n += sscanf(str + offset, "%02hhX", &dst->next_opcode);
   offset += 3;
 
   char operand[3] = {'\0'};
@@ -86,13 +86,12 @@ bool parse_cpu_trace(char *str, CPUTrace *dst) {
       sscanf(operand, "%02hhX", out);
     }
   }
-  offset += 1;
+  offset += 33;
 
   n += sscanf(str + offset, "A:%02hhX X:%02hhX Y:%02hhX P:%02hhX SP:%02hhX",
               &dst->current_state.A, &dst->current_state.X,
               &dst->current_state.Y, &dst->current_state.P,
               &dst->current_state.S);
-
   if (n != 9) {
     return false;
   }
