@@ -2,6 +2,8 @@
 
 #include "mapper.h"
 
+const uint8_t header_size = 16;
+
 struct mapper {
   uint8_t mapper_no;
 
@@ -76,10 +78,10 @@ Mapper *mapper0_new(ROM *rom, MapperError *error) {
   impl->base.read = mapper0_read;
   impl->base.write = mapper0_write;
 
-  impl->prg = rom->raw;
+  impl->prg = rom->raw + header_size;
   impl->prg_size = rom->prg_rom_size * 0x4000;
 
-  impl->chr = rom->raw + impl->prg_size;
+  impl->chr = impl->prg + impl->prg_size;
   impl->chr_size = rom->chr_rom_size * 0x2000;
 
   impl->mirrored = impl->prg_size == 0x4000;
