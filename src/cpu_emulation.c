@@ -298,7 +298,7 @@ void cpu_execute(NES *nes, CPUInstruction inst) {
   case ADC: {
     uint8_t m = cpu_read(nes, operand);
     uint8_t r = nes->cpu.A + m;
-    if (nes->cpu.P >> CPU_STATUS_C)
+    if (cpu_status_enabled(&nes->cpu, CPU_STATUS_C))
       r++;
     set_carry_status(nes, m, r);
     nes->cpu.A = r;
