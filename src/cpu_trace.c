@@ -70,6 +70,10 @@ void assemble_cpu_trace(CPUTrace *trace, char *str) {
            trace->current_state.P, trace->current_state.S);
 }
 
+// nestest.log line example:
+// C000  4C F5 C5  JMP $C5F5                       A:00 X:00 Y:00 P:24 SP:FD
+// PPU:  0, 21 CYC:7
+//
 bool parse_cpu_trace(char *str, CPUTrace *dst) {
   int n = sscanf(str, "%04hX", &dst->current_state.PC);
   int offset = 6;
@@ -77,22 +81,39 @@ bool parse_cpu_trace(char *str, CPUTrace *dst) {
   n += sscanf(str + offset, "%02hhX", &dst->next_opcode);
   offset += 3;
 
-  char operand[3] = {'\0'};
-  for (int i = 0; i < 2; i++) {
-    n += sscanf(str + offset, "%2s", operand);
-    offset += 3;
-    if (strlen(operand) == 2 && operand[0] != ' ' && operand[1] != ' ') {
-      uint8_t *out = i == 0 ? &dst->next_operand1 : &dst->next_operand2;
-      sscanf(operand, "%02hhX", out);
+  char operand1[3] = {'\0'};
+  char operand2[3] = {'\0'};
+  for (int i = 0; i < 6; i++) {
+    char c = *(str + offset + i);
+    if (c != ' ') {
+      char *operand = i < 3 ? operand1 : operand2 - 3;
+      operand[i] = c;
     }
   }
-  offset += 33;
+  if (strlen(operand1) == 2 && operand1[0] != ' ' && operand1[1] != ' ') {
+    sscanf(operand1, "%02hhX", &dst->next_operand1);
+  }
+  if (strlen(operand2) == 2 && operand2[0] != ' ' && operand2[1] != ' ') {
+    sscanf(operand2, "%02hhX", &dst->next_operand2);
+  }
+
+  n += 2;
+  offset += 39;
 
   n += sscanf(str + offset, "A:%02hhX X:%02hhX Y:%02hhX P:%02hhX SP:%02hhX",
               &dst->current_state.A, &dst->current_state.X,
               &dst->current_state.Y, &dst->current_state.P,
               &dst->current_state.S);
   if (n != 9) {
+    return false;
+  }
+  offset += 26;
+
+  // skip PPU state
+  offset += 12;
+
+  n += sscanf(str + offset, "CYC:%ld", &dst->current_state.cycles);
+  if (n != 10) {
     return false;
   }
 
