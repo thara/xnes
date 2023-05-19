@@ -289,9 +289,9 @@ void cpu_execute(NES *nes, CPUInstruction inst) {
   case BIT: {
     uint8_t m = cpu_read(nes, operand);
     uint8_t b = nes->cpu.A & m;
-    nes->cpu.P |= (b == 0) << CPU_STATUS_Z;
-    nes->cpu.P |= ((m & 0x40) == 0x40) << CPU_STATUS_V;
-    nes->cpu.P |= ((m & 0x80) == 0x80) << CPU_STATUS_N;
+    cpu_status_set(&nes->cpu, CPU_STATUS_Z, b == 0);
+    cpu_status_set(&nes->cpu, CPU_STATUS_V, (m & 0x40) == 0x40);
+    cpu_status_set(&nes->cpu, CPU_STATUS_N, (m & 0x80) == 0x80);
     break;
   }
 
