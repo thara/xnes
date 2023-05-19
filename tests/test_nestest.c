@@ -14,8 +14,8 @@
     if (want != got) {                                                         \
       char msg[256];                                                           \
       snprintf(msg, sizeof(msg),                                               \
-               "%s unmatched: want=%08x, got=%08x line_no=%d\n", #field,      \
-               want, got, line_no);                                            \
+               "%s unmatched: want=%08x, got=%08x line_no=%d\n", #field, want, \
+               got, line_no);                                                  \
       test_fail(msg);                                                          \
       goto NESTEST_END;                                                        \
     }                                                                          \
