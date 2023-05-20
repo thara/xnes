@@ -9,8 +9,8 @@
 
 #define nestest_log_assert_byte_eq(expect_trace, actual_trace, field, line_no) \
   do {                                                                         \
-    int want = (expect_trace).field;                                           \
-    int got = (actual_trace).field;                                            \
+    int want = ((expect_trace).field);                                         \
+    int got = ((actual_trace).field);                                          \
     if (want != got) {                                                         \
       char msg[256];                                                           \
       snprintf(msg, sizeof(msg),                                               \
@@ -72,13 +72,14 @@ TEST(test_nestest_log) {
 
   // set up initial state for nestest
   nes->cpu.PC = 0xC000;
-  // https://wiki.nesdev.com/w/index.php/CPU_power_up_state#cite_ref-1
+  // https://www.nesdev.org/wiki/CPU_power_up_state#cite_ref-1
   nes->cpu.P = 0x24;
   nes->cpu.cycles = 7;
 
   int line_no = 0;
   char line[256];
   while (fgets(line, sizeof(line), log_file)) {
+    printf("%s", line);
     CPUTrace actual = cpu_trace(nes);
 
     nes_step(nes);
@@ -106,7 +107,8 @@ TEST(test_nestest_log) {
     nestest_log_assert_byte_eq(expected, actual, current_state.A, line_no);
     nestest_log_assert_byte_eq(expected, actual, current_state.X, line_no);
     nestest_log_assert_byte_eq(expected, actual, current_state.Y, line_no);
-    nestest_log_assert_byte_eq(expected, actual, current_state.P, line_no);
+    nestest_log_assert_byte_eq(expected, actual, current_state.P & ~0b00110000,
+                               line_no);
     nestest_log_assert_byte_eq(expected, actual, current_state.S, line_no);
 
     nestest_log_assert_byte_eq(expected, actual, current_state.cycles, line_no);

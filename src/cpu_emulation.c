@@ -469,8 +469,8 @@ void cpu_execute(NES *nes, CPUInstruction inst) {
 
   case BRK:
     push_stack_word(nes, nes->cpu.PC);
-    nes->cpu.P |= cpu_status_instruction_b;
     push_stack(nes, nes->cpu.P);
+    nes->cpu.P |= cpu_status_instruction_b;
     nes->cpu.PC = cpu_read_word(nes, 0xFFFE);
     cpu_tick(nes);
     break;
@@ -479,6 +479,7 @@ void cpu_execute(NES *nes, CPUInstruction inst) {
     break;
   case RTI:
     nes->cpu.P = cpu_pull_stack(nes);
+    nes->cpu.P = nes->cpu.P & ~cpu_status_instruction_b;
     nes->cpu.PC = cpu_pull_stack_word(nes);
     cpu_tick(nes);
     cpu_tick(nes);
