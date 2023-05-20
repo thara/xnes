@@ -506,7 +506,7 @@ void cpu_execute(NES *nes, CPUInstruction inst) {
   }
   case ISB: {
     // incrementMemory excluding tick
-    uint8_t m = cpu_read(nes, operand) - 1;
+    uint8_t m = cpu_read(nes, operand) + 1;
     cpu_status_set_zn(&nes->cpu, m);
     cpu_write(nes, operand, m);
     sbc(nes, operand);
