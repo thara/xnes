@@ -370,6 +370,7 @@ void cpu_execute(NES *nes, CPUInstruction inst) {
       lsr(nes, &m);
       cpu_write(nes, operand, m);
     }
+    break;
   case ROL:
     if (inst.mode == ACCUMULATOR) {
       rol(nes, &nes->cpu.A);
