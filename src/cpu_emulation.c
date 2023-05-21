@@ -18,6 +18,10 @@ uint8_t cpu_read(NES *nes, uint16_t addr) {
   return m;
 }
 
+uint16_t cpu_read_word(NES *nes, uint16_t addr) {
+  return cpu_read(nes, addr) | cpu_read(nes, addr + 1) << 8;
+}
+
 void cpu_write(NES *nes, uint16_t addr, uint8_t val) {
   mem_write(nes, addr, val);
   cpu_tick(nes);
@@ -42,7 +46,11 @@ void cpu_reset(NES *nes) {
 
 void cpu_execute(NES *nes, CPUInstruction inst);
 
+void handle_interrupt(NES *nes);
+
 void cpu_step(NES *nes) {
+  handle_interrupt(nes);
+
   uint8_t op = cpu_read(nes, nes->cpu.PC);
   nes->cpu.PC++;
 
@@ -50,8 +58,39 @@ void cpu_step(NES *nes) {
   cpu_execute(nes, inst);
 }
 
-uint16_t cpu_read_word(NES *nes, uint16_t addr) {
-  return cpu_read(nes, addr) | cpu_read(nes, addr + 1) << 8;
+void push_stack(NES *nes, uint8_t v);
+void push_stack_word(NES *nes, uint16_t v);
+
+// B flags
+// https://wiki.nesdev.org/w/index.php?title=Status_flags#The_B_flag
+static uint8_t cpu_status_interrupt_b = 0b00100000;
+static uint8_t cpu_status_instruction_b = 0b00110000;
+
+void handle_interrupt(NES *nes) {
+  uint16_t vector;
+  switch (nes->interrupt) {
+  case INTERRUPT_NONE:
+    return; // not interrupted
+  case INTERRUPT_NMI:
+    vector = 0xFFFA;
+    break; // interrupted
+  case INTERRUPT_IRQ:
+    if (!cpu_status_enabled(&nes->cpu, CPU_STATUS_I)) {
+      return; // not interrupted
+    }
+    vector = 0xFFFE;
+    break; // interrupted
+  }
+
+  cpu_tick(nes);
+  cpu_tick(nes);
+  push_stack_word(nes, nes->cpu.PC);
+  // https://wiki.nesdev.com/w/index.php/Status_flags#The_B_flag
+  // http://visual6502.org/wiki/index.php?title=6502_BRK_and_B_bit
+  push_stack(nes, nes->cpu.P | cpu_status_interrupt_b);
+  cpu_status_set(&nes->cpu, CPU_STATUS_I, true);
+  nes->cpu.PC = cpu_read_word(nes, vector);
+  nes->interrupt = INTERRUPT_NONE;
 }
 
 uint16_t read_on_indirect(NES *nes, uint16_t addr) {
@@ -161,11 +200,6 @@ uint16_t cpu_get_operand(NES *nes, AddressingMode mode) {
   }
   return 0;
 }
-
-// B flags
-// https://wiki.nesdev.org/w/index.php?title=Status_flags#The_B_flag
-static uint8_t cpu_status_interrupt_b = 0b00100000;
-static uint8_t cpu_status_instruction_b = 0b00110000;
 
 void push_stack(NES *nes, uint8_t v) {
   cpu_write(nes, nes->cpu.S + 0x0100, v);

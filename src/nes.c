@@ -10,6 +10,7 @@ NES *nes_new() {
   if (nes == NULL) {
     return NULL;
   }
+  nes->interrupt = INTERRUPT_NONE;
   return nes;
 }
 

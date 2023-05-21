@@ -9,10 +9,18 @@
 #include "rom.h"
 #include "input.h"
 
+typedef enum {
+  INTERRUPT_NONE,
+  INTERRUPT_NMI,
+  INTERRUPT_IRQ,
+} Interrupt;
+
 typedef struct {
   CPU cpu;
 
   uint8_t wram[0x0800];
+
+  Interrupt interrupt;
 
   Mapper *mapper;
 
