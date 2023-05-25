@@ -93,4 +93,10 @@ typedef enum {
   PPUSTATUS_VBLANK = 1 << 7,       // In vblank?
 } PPUSTATUS;
 
+void ppu_ctrl_set(PPU *ppu, PPUCTRL c, bool v);
+void ppu_mask_set(PPU *ppu, PPUMASK m, bool v);
+void ppu_status_set(PPU *ppu, PPUSTATUS s, bool v);
+
+void ppu_incr_v(PPU *ppu);
+
 #endif // PPU_H
