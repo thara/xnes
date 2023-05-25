@@ -29,9 +29,9 @@ typedef struct {
   uint8_t data;     // PPUDATA
   uint8_t oam_addr; // OAMADDR
 
-  uint8_t v, t; // current/temporary VRAM address
-  uint8_t x;    // fine x scroll
-  bool w;       // first or second write toggle
+  uint16_t v, t; // current/temporary VRAM address
+  uint8_t x;     // fine x scroll
+  bool w;        // first or second write toggle
 
   uint8_t nt[0x1000];
   uint8_t pallete[0x0020];
