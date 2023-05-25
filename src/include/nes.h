@@ -4,6 +4,7 @@
 #include "stdint.h"
 
 #include "cpu.h"
+#include "ppu.h"
 #include "error.h"
 #include "mapper.h"
 #include "rom.h"
@@ -17,8 +18,9 @@ typedef enum {
 
 typedef struct {
   CPU cpu;
-
   uint8_t wram[0x0800];
+
+  PPU ppu;
 
   Interrupt interrupt;
 
