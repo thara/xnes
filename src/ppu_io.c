@@ -10,7 +10,7 @@ uint8_t ppu_read_register(NES *nes, uint16_t addr) {
     // PPUSTATUS
     ret = nes->ppu.status | (nes->ppu.cpu_data_bus & 0b11111);
     ppu_status_set(&nes->ppu, PPUSTATUS_VBLANK, false);
-    nes->ppu.w = true;
+    nes->ppu.w = false;
     // race condition
     if (nes->ppu.scan.line == 241 && nes->ppu.scan.dot < 2) {
       ret &= ~0x80;
@@ -91,7 +91,8 @@ void ppu_write_register(NES *nes, uint16_t addr, uint8_t value) {
       // first write
       // t: .FEDCBA ........ = d: ..FEDCBA
       // t: X...... ........ = 0
-      nes->ppu.t = (nes->ppu.t & ~0b011111100000000) | ((d & 0b111111) << 8);
+      nes->ppu.t =
+          (nes->ppu.t & ~0b011111100000000) | ((d & 0b111111) << 8);
     } else {
       // second write
       // t: ....... HGFEDCBA = d: HGFEDCBA
