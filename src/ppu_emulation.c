@@ -1,5 +1,6 @@
 #include "ppu_emulation.h"
 #include "ppu.h"
+#include "mapper.h"
 
 uint8_t ppu_read(NES *nes, uint16_t addr);
 void ppu_write(NES *nes, uint16_t addr, uint8_t value);
@@ -108,5 +109,53 @@ void ppu_write_register(NES *nes, uint16_t addr, uint8_t value) {
     ppu_write(nes, nes->ppu.v, value);
     ppu_incr_v(&nes->ppu);
     break;
+  }
+}
+
+uint16_t nt_addr(Mapper *mapper, uint16_t addr) {
+  switch (mapper_mirroring(mapper)) {
+  case MIRRORING_HORIZONTAL:
+    return 0x2800 <= addr ? 0x0800 + addr % 0x0400 : addr % 0x0400;
+  case MIRRORING_VERTICAL:
+    return addr % 0x0800;
+  }
+  return addr - 0x2000;
+}
+
+uint16_t pallete_addr(uint16_t addr) {
+  // http://wiki.nesdev.com/w/index.php/PPU_palettes#Memory_Map
+  uint16_t ret = addr % 32;
+  return ret % 4 == 0 ? ret | 0x10 : ret;
+}
+
+uint8_t ppu_read(NES *nes, uint16_t addr) {
+  if (0x0000 <= addr && addr <= 0x1FFF) {
+    return mapper_read(nes->mapper, addr);
+
+  } else if (0x2000 <= addr && addr <= 0x2FFF) {
+    return nes->ppu.nt[nt_addr(nes->mapper, addr)];
+
+  } else if (0x3000 <= addr && addr <= 0x3EFF) {
+    return nes->ppu.nt[nt_addr(nes->mapper, addr - 0x1000)];
+
+  } else if (0x3F00 <= addr && addr <= 0x3FFF) {
+    return nes->ppu.pallete[pallete_addr(addr)];
+  }
+
+  return 0;
+}
+
+void ppu_write(NES *nes, uint16_t addr, uint8_t value) {
+  if (0x0000 <= addr && addr <= 0x1FFF) {
+    mapper_write(nes->mapper, addr, value);
+
+  } else if (0x2000 <= addr && addr <= 0x2FFF) {
+    nes->ppu.nt[nt_addr(nes->mapper, addr)] = value;
+
+  } else if (0x3000 <= addr && addr <= 0x3EFF) {
+    nes->ppu.nt[nt_addr(nes->mapper, addr - 0x1000)] = value;
+
+  } else if (0x3F00 <= addr && addr <= 0x3FFF) {
+    nes->ppu.pallete[pallete_addr(addr)] = value;
   }
 }
