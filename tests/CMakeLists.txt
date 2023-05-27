@@ -28,6 +28,8 @@ XNES_ADD_MOCKED_TEST(mapper_test test_mapper.c)
 XNES_ADD_MOCKED_TEST(error_test test_error.c)
 XNES_ADD_MOCKED_TEST(input_test test_input.c)
 
+XNES_ADD_MOCKED_TEST(ppu_io_test test_ppu_io.c)
+
 macro(XNES_ADD_TEST NAME SOURCE)
   add_executable("${NAME}" "${SOURCE}")
   target_link_libraries("${NAME}" xnes)
