@@ -1,9 +1,6 @@
-#include "ppu_emulation.h"
+#include "ppu_io.h"
 #include "ppu.h"
 #include "mapper.h"
-
-uint8_t ppu_read(NES *nes, uint16_t addr);
-void ppu_write(NES *nes, uint16_t addr, uint8_t value);
 
 uint8_t ppu_read_register(NES *nes, uint16_t addr) {
   uint8_t ret;
