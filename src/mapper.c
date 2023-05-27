@@ -112,3 +112,20 @@ void mapper0_write(Mapper *self, uint16_t addr, uint8_t value) {
     impl->chr[addr] = value;
   }
 }
+
+typedef struct {
+  Mapper base;
+} MockMapper;
+
+uint8_t mock_mapper_read(Mapper *self, uint16_t addr) { return 0; }
+void mock_mapper_write(Mapper *self, uint16_t addr, uint8_t value) { /* NOP */
+}
+
+Mapper *mock_mapper_new(uint8_t mapper_no, MirroringMode mirroring) {
+  MockMapper *impl = (MockMapper *)malloc(sizeof(MockMapper));
+  impl->base.mapper_no = mapper_no;
+  impl->base.mirroring = mirroring;
+  impl->base.read = mock_mapper_read;
+  impl->base.write = mock_mapper_write;
+  return (Mapper *)impl;
+}

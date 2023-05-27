@@ -33,6 +33,8 @@ void nes_init(NES *nes, ROMFile *rom_file, NESError *error) {
   nes->mapper = mapper;
 }
 
+void nes_init_by_mapper(NES *nes, Mapper *mapper) { nes->mapper = mapper; }
+
 void nes_power_on(NES *nes) {
   // https://wiki.nesdev.com/w/index.php/CPU_power_up_state
   cpu_power_on(nes);

@@ -29,4 +29,8 @@ void mapper_write(Mapper *mapper, uint16_t addr, uint8_t value);
 
 void mapper_release(Mapper *mapper);
 
+#ifdef UNIT_TEST
+Mapper *mock_mapper_new(uint8_t mapper_no, MirroringMode mirroring);
+#endif
+
 #endif // MAPPER_H

@@ -34,6 +34,8 @@ NES *nes_new();
 
 void nes_init(NES *nes, ROMFile *rom_file, NESError *error);
 
+void nes_init_by_mapper(NES *nes, Mapper *mapper);
+
 void nes_power_on(NES *nes);
 
 void nes_reset(NES *nes);
