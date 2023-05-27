@@ -97,6 +97,23 @@ void ppu_ctrl_set(PPU *ppu, PPUCTRL c, bool v);
 void ppu_mask_set(PPU *ppu, PPUMASK m, bool v);
 void ppu_status_set(PPU *ppu, PPUSTATUS s, bool v);
 
+bool ppu_ctrl_enabled(PPU *ppu, PPUCTRL c);
+bool ppu_mask_enabled(PPU *ppu, PPUMASK m);
+bool ppu_status_enabled(PPU *ppu, PPUSTATUS s);
+
 void ppu_incr_v(PPU *ppu);
+
+/// https://wiki.nesdev.com/w/index.php/PPU_scrolling#PPU_internal_registers
+///
+/// yyy NN YYYYY XXXXX
+/// ||| || ||||| +++++-- coarse X scroll
+/// ||| || +++++-------- coarse Y scroll
+/// ||| ++-------------- nametable select
+/// +++----------------- fine Y scroll
+
+uint16_t ppu_coarse_x(uint16_t v);
+uint16_t ppu_coarse_y(uint16_t v);
+uint16_t ppu_nt_select(uint16_t v);
+uint16_t ppu_fine_y(uint16_t v);
 
 #endif // PPU_H
