@@ -31,6 +31,11 @@ uint16_t ppu_coarse_y(uint16_t v) { return (v & 0b000001111100000) >> 5; }
 uint16_t ppu_nt_select(uint16_t v) { return (v & 0b000110000000000) >> 10; }
 uint16_t ppu_fine_y(uint16_t v) { return (v & 0b111000000000000) >> 12; }
 
+uint16_t ppu_tile_addr(uint16_t v) { return 0x2000 | (v & 0x0FFF); }
+uint16_t ppu_attr_addr(uint16_t v) {
+  return 0x23C0 | (v & 0x0C00) | ((v >> 4) & 0x38) | ((v >> 2) & 0x07);
+}
+
 void ppu_incr_v(PPU *ppu) {
   if (((ppu->ctrl >> PPUCTRL_VRAM_INCR) & 1) == 1) {
     ppu->v += 32;

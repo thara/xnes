@@ -116,4 +116,14 @@ uint16_t ppu_coarse_y(uint16_t v);
 uint16_t ppu_nt_select(uint16_t v);
 uint16_t ppu_fine_y(uint16_t v);
 
+// https://www.nesdev.org/wiki/PPU_scrolling#Tile_and_attribute_fetching
+//
+// NN 1111 YYY XXX
+// || |||| ||| +++-- high 3 bits of coarse X (x/4)
+// || |||| +++------ high 3 bits of coarse Y (y/4)
+// || ++++---------- attribute offset (960 bytes)
+// ++--------------- nametable select
+uint16_t ppu_tile_addr(uint16_t v);
+uint16_t ppu_attr_addr(uint16_t v);
+
 #endif // PPU_H
