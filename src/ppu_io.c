@@ -91,8 +91,7 @@ void ppu_write_register(NES *nes, uint16_t addr, uint8_t value) {
       // first write
       // t: .FEDCBA ........ = d: ..FEDCBA
       // t: X...... ........ = 0
-      nes->ppu.t =
-          (nes->ppu.t & ~0b011111100000000) | ((d & 0b111111) << 8);
+      nes->ppu.t = (nes->ppu.t & ~0b011111100000000) | ((d & 0b111111) << 8);
     } else {
       // second write
       // t: ....... HGFEDCBA = d: HGFEDCBA
