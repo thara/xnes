@@ -48,7 +48,7 @@ typedef struct {
     uint16_t low, high;
     uint16_t shift_low, shift_high;
     uint8_t attr_shift_low, attr_shift_high;
-    uint8_t attr_latch_low, attr_latch_high;
+    bool attr_latch_low, attr_latch_high;
   } bg;
 
   struct {
@@ -65,6 +65,9 @@ typedef struct {
 
   uintmax_t frames;
 } PPU;
+
+void ppu_power_on(PPU *ppu);
+void ppu_reset(PPU *ppu);
 
 typedef enum {
   PPUCTRL_NT = 0b11,          // Base nametable address
@@ -101,7 +104,7 @@ bool ppu_ctrl_enabled(PPU *ppu, PPUCTRL c);
 bool ppu_mask_enabled(PPU *ppu, PPUMASK m);
 bool ppu_status_enabled(PPU *ppu, PPUSTATUS s);
 
-void ppu_incr_v(PPU *ppu);
+bool ppu_rendering_enabled(PPU *ppu);
 
 /// https://wiki.nesdev.com/w/index.php/PPU_scrolling#PPU_internal_registers
 ///
@@ -125,5 +128,15 @@ uint16_t ppu_fine_y(uint16_t v);
 // ++--------------- nametable select
 uint16_t ppu_tile_addr(uint16_t v);
 uint16_t ppu_attr_addr(uint16_t v);
+
+void ppu_incr_v(PPU *ppu);
+
+void ppu_incr_coarse_x(PPU *ppu);
+void ppu_incr_y(PPU *ppu);
+void ppu_copy_x(PPU *ppu);
+void ppu_copy_y(PPU *ppu);
+
+void ppu_bg_shift(PPU *ppu);
+void ppu_bg_shift_reload(PPU *ppu);
 
 #endif // PPU_H

@@ -38,9 +38,14 @@ void nes_init_by_mapper(NES *nes, Mapper *mapper) { nes->mapper = mapper; }
 void nes_power_on(NES *nes) {
   // https://wiki.nesdev.com/w/index.php/CPU_power_up_state
   cpu_power_on(nes);
+
+  ppu_power_on(&nes->ppu);
 }
 
-void nes_reset(NES *nes) { cpu_reset(nes); }
+void nes_reset(NES *nes) { 
+    cpu_reset(nes);
+    ppu_reset(&nes->ppu);
+}
 
 void nes_step(NES *nes) { cpu_step(nes); }
 
