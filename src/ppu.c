@@ -1,21 +1,21 @@
 #include "ppu.h"
 
 void ppu_power_on(PPU *ppu) {
-    // https://www.nesdev.org/wiki/PPU_power_up_state
-    ppu_reset(ppu);
-    ppu->status = 0;
+  // https://www.nesdev.org/wiki/PPU_power_up_state
+  ppu_reset(ppu);
+  ppu->status = 0;
 }
 
 void ppu_reset(PPU *ppu) {
-    ppu->ctrl = 0;
-    ppu->mask = 0;
-    ppu->data = 0;
-    ppu->oam_addr = 0;
+  ppu->ctrl = 0;
+  ppu->mask = 0;
+  ppu->data = 0;
+  ppu->oam_addr = 0;
 
-    ppu->v = 0;
-    ppu->t = 0;
-    ppu->x = 0;
-    ppu->w = false;
+  ppu->v = 0;
+  ppu->t = 0;
+  ppu->x = 0;
+  ppu->w = false;
 }
 
 void ppu_ctrl_set(PPU *ppu, PPUCTRL e, bool v) {
@@ -122,4 +122,19 @@ void ppu_bg_shift_reload(PPU *ppu) {
   ppu->bg.shift_high = (ppu->bg.shift_high & 0xFF00) | ppu->bg.high;
   ppu->bg.attr_latch_low = ppu->bg.at & 1;
   ppu->bg.attr_latch_high = ppu->bg.at & 2;
+}
+
+void ppu_sprite_clear(Sprite *spr) {
+  spr->enabled = false;
+  spr->index = 0xFF;
+  spr->x = 0xFF;
+  spr->y = 0xFF;
+  spr->tile = 0xFF;
+  spr->attr = 0xFF;
+  spr->low = 0;
+  spr->high = 0;
+}
+
+uint16_t ppu_sprite_height(PPU *ppu) {
+  return ppu_ctrl_enabled(ppu, PPUCTRL_SPR_8x16) ? 16 : 8;
 }

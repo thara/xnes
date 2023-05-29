@@ -42,9 +42,9 @@ void nes_power_on(NES *nes) {
   ppu_power_on(&nes->ppu);
 }
 
-void nes_reset(NES *nes) { 
-    cpu_reset(nes);
-    ppu_reset(&nes->ppu);
+void nes_reset(NES *nes) {
+  cpu_reset(nes);
+  ppu_reset(&nes->ppu);
 }
 
 void nes_step(NES *nes) { cpu_step(nes); }
