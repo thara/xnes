@@ -123,3 +123,18 @@ void ppu_bg_shift_reload(PPU *ppu) {
   ppu->bg.attr_latch_low = ppu->bg.at & 1;
   ppu->bg.attr_latch_high = ppu->bg.at & 2;
 }
+
+void ppu_sprite_clear(Sprite *spr) {
+  spr->enabled = false;
+  spr->index = 0xFF;
+  spr->x = 0xFF;
+  spr->y = 0xFF;
+  spr->tile = 0xFF;
+  spr->attr = 0xFF;
+  spr->low = 0;
+  spr->high = 0;
+}
+
+uint16_t ppu_sprite_height(PPU *ppu) {
+  return ppu_ctrl_enabled(ppu, PPUCTRL_SPR_8x16) ? 16 : 8;
+}

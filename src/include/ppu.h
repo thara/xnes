@@ -8,6 +8,7 @@
 #define SCREEN_HEIGHT 240
 
 #define SPRITE_COUNT 64
+#define SPRITE_LIMIT 8
 
 typedef struct {
   bool enabled;
@@ -16,7 +17,7 @@ typedef struct {
   uint8_t x;    // X position of left
   uint8_t y;    // Y position of top
   uint8_t tile; // tile index number
-  uint8_t attr; // attribute
+  uint8_t attr; // SpriteAttr
 
   uint8_t low, high;
 } Sprite;
@@ -138,5 +139,16 @@ void ppu_copy_y(PPU *ppu);
 
 void ppu_bg_shift(PPU *ppu);
 void ppu_bg_shift_reload(PPU *ppu);
+
+void ppu_sprite_clear(Sprite *spr);
+
+uint16_t ppu_sprite_height(PPU *ppu);
+
+typedef enum {
+  SPRITE_ATTR_PALETTE = 0b11,
+  SPRITE_ATTR_BEHIND_BG = 1 << 5,
+  SPRITE_ATTR_FLIP_HORIZONTALLY = 1 << 6,
+  SPRITE_ATTR_FLIP_VERTICALLY = 1 << 7,
+} SpriteAttr;
 
 #endif // PPU_H

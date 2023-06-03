@@ -16,7 +16,75 @@ void ppu_step(NES *nes) {
 
   if (ppu->scan.line == 261 || (0 <= ppu->scan.line && ppu->scan.line <= 239)) {
     // pre-render or visible
-    // TODO: sprites
+
+    // sprites
+    switch (ppu->scan.dot) {
+    case 1:
+      // clear OAM
+      for (int i = 0; i < 8; i++) {
+        ppu_sprite_clear(&ppu->spr.secondary[i]);
+      }
+      if (pre) {
+        ppu_status_set(ppu, PPUSTATUS_SPR_OVERFLOW, false);
+      }
+      break;
+
+    case 257:
+      // eval sprites
+      {
+        uint8_t n = 0;
+        for (int i = 0; i < SPRITE_COUNT; i++) {
+          uint8_t y = ppu->spr.oam[i * 4];
+          uint16_t row = pre ? (uint16_t)y - 1 : ppu->scan.dot - (uint16_t)y;
+          if (row < 0 || ppu_sprite_height(ppu) <= row) {
+            continue;
+          }
+          ppu->spr.secondary[n].enabled = true;
+          ppu->spr.secondary[n].index = (uint8_t)i;
+          ppu->spr.secondary[n].y = y;
+          ppu->spr.secondary[n].tile = ppu->spr.oam[i * 4 + 1];
+          ppu->spr.secondary[n].attr = ppu->spr.oam[i * 4 + 2];
+          ppu->spr.secondary[n].x = ppu->spr.oam[i * 4 + 3];
+          n++;
+          if (SPRITE_LIMIT <= n) {
+            ppu_status_set(ppu, PPUSTATUS_SPR_OVERFLOW, true);
+            break;
+          }
+        }
+        break;
+      }
+
+    case 321:
+      // load sprites
+      {
+        for (int i = 0; i < SPRITE_LIMIT; i++) {
+          ppu->spr.primary[i] = ppu->spr.secondary[i];
+          Sprite *spr = &ppu->spr.primary[i];
+
+          uint16_t tile = (uint16_t)spr->tile;
+
+          uint16_t base;
+          if (ppu_ctrl_enabled(ppu, PPUCTRL_SPR_8x16)) {
+            tile &= 0xFE;
+            base = (tile & 1) * 0x1000;
+          } else {
+            base = ppu_ctrl_enabled(ppu, PPUCTRL_SPR_TABLE) ? 0x1000 : 0x0000;
+          }
+
+          uint16_t y = (ppu->scan.line - spr->y) % ppu_sprite_height(ppu);
+          if (spr->attr & SPRITE_ATTR_FLIP_HORIZONTALLY) {
+            y ^= ppu_sprite_height(ppu) - 1; // vertical flip
+          }
+
+          uint16_t addr = base + tile * 16;
+          addr += y + (y & 8); // second tile on 8x16
+
+          ppu->spr.primary[i].low = ppu_read(nes, addr);
+          ppu->spr.primary[i].high = ppu_read(nes, addr + 8);
+        }
+      }
+      break;
+    }
 
     // background
     if ((2 <= ppu->scan.dot && ppu->scan.dot <= 255) ||
