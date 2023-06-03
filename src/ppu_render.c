@@ -200,10 +200,10 @@ void ppu_step(NES *nes) {
 
 void render_pixel(NES *nes) {
   PPU *ppu = &nes->ppu;
-  uint16_t x = ppu->scan.dot - PIXEL_DELAYED;
+  int16_t x = ppu->scan.dot - PIXEL_DELAYED;
 
   // visible
-  if (ppu->scan.line < 240 && 0 <= x && x < 256) {
+  if (ppu->scan.line < 240 && x < 256) {
     // background
     uint8_t bg = 0;
     if (ppu_mask_enabled(&nes->ppu, PPUMASK_BG) &&
