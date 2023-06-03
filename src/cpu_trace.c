@@ -9,7 +9,7 @@
 uint8_t instruction_length(AddressingMode mode);
 
 CPUTrace cpu_trace(NES *nes) {
-  CPUTrace trace;
+  CPUTrace trace = {0};
   trace.current_state = nes->cpu;
 
   uint8_t op = mem_read(nes, nes->cpu.PC);
