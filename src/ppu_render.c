@@ -36,7 +36,7 @@ void ppu_step(NES *nes) {
         for (int i = 0; i < SPRITE_COUNT; i++) {
           uint8_t y = ppu->spr.oam[i * 4];
           uint16_t row = pre ? (uint16_t)y - 1 : ppu->scan.dot - (uint16_t)y;
-          if (row < 0 || ppu_sprite_height(ppu) <= row) {
+          if (ppu_sprite_height(ppu) <= row) {
             continue;
           }
           ppu->spr.secondary[n].enabled = true;
