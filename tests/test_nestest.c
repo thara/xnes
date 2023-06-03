@@ -84,7 +84,7 @@ TEST(test_nestest_log) {
 
     nes_step(nes);
 
-    CPUTrace expected;
+    CPUTrace expected = {0};
     if (!parse_cpu_trace(line, &expected)) {
       // fail
       char msg[256];
