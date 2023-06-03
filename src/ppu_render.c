@@ -205,7 +205,7 @@ void render_pixel(NES *nes) {
   // visible
   if (ppu->scan.line < 240 && 0 <= x && x < 256) {
     // background
-    uint8_t bg;
+    uint8_t bg = 0;
     if (ppu_mask_enabled(&nes->ppu, PPUMASK_BG) &&
         !(!ppu_mask_enabled(&nes->ppu, PPUMASK_BG_LEFT) && x < 8)) {
       bg = NTH(ppu->bg.shift_high, 15 - ppu->x) << 1 |
@@ -216,11 +216,39 @@ void render_pixel(NES *nes) {
               << 2;
       }
     }
-    // TODO sprites
-    uint8_t spr;
-    bool behind_bg;
+    // sprites
+    uint8_t spr = 0;
+    bool behind_bg = 0;
+    if (ppu_mask_enabled(&nes->ppu, PPUMASK_SPR) &&
+        !(!ppu_mask_enabled(&nes->ppu, PPUMASK_SPR_LEFT) && x < 8)) {
+      // https://www.nesdev.org/wiki/PPU_sprite_priority
+      // Sprites with lower OAM indices are drawn in front
+      for (int i = 7; 0 <= i; i--) {
+        Sprite s = ppu->spr.primary[i];
+        if (!s.enabled) {
+          continue;
+        }
+        uint16_t spr_x = x - s.x;
+        if (8 <= spr_x) {
+          continue;
+        }
+        if (0 < (s.attr & SPRITE_ATTR_FLIP_HORIZONTALLY)) {
+          spr_x ^= 7; // horizontal flip
+        }
+        uint8_t px = 7 - spr_x;
+        uint8_t palette = ((s.high >> px) & 1) << 1 | (s.low >> px) << 1;
+        if (palette == 0) {
+          continue;
+        }
+        if (i == 0 && bg != 0 && x != 255) {
+          ppu_status_set(ppu, PPUSTATUS_SPR_0_HIT, true);
+        }
+        spr = (palette | (s.attr & SPRITE_ATTR_PALETTE) << 2) + 0x10;
+        behind_bg = 0 < (s.attr & SPRITE_ATTR_BEHIND_BG);
+      }
+    }
 
-    uint8_t color;
+    uint8_t color = 0;
     if (ppu_rendering_enabled(&nes->ppu)) {
       if (bg == 0 && spr == 0) {
         // default
