@@ -115,7 +115,7 @@ bool parse_cpu_trace(char *str, CPUTrace *dst) {
   // skip PPU state
   offset += 12;
 
-  n += sscanf(str + offset, "CYC:%ld", &dst->current_state.cycles);
+  n += sscanf(str + offset, "CYC:%ju", &dst->current_state.cycles);
   if (n != 10) {
     return false;
   }
