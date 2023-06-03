@@ -87,9 +87,9 @@ bool parse_cpu_trace(char *str, CPUTrace *dst) {
     char c = *(str + offset + i);
     if (c != ' ') {
       if (i < 3) {
-          operand1[i] = c;
+        operand1[i] = c;
       } else {
-          operand2[i - 3] = c;
+        operand2[i - 3] = c;
       }
     }
   }
