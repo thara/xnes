@@ -14,7 +14,7 @@ void ppu_step(NES *nes) {
   PPU *ppu = &nes->ppu;
   bool pre = ppu->scan.line == 261;
 
-  if (ppu->scan.line == 261 || (0 <= ppu->scan.line && ppu->scan.line <= 239)) {
+  if (ppu->scan.line == 261 || ppu->scan.line <= 239) {
     // pre-render or visible
 
     // sprites
