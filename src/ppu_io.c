@@ -126,16 +126,16 @@ uint16_t pallete_addr(uint16_t addr) {
 }
 
 uint8_t ppu_read(NES *nes, uint16_t addr) {
-  if (0x0000 <= addr && addr <= 0x1FFF) {
+  if (addr <= 0x1FFF) {
     return mapper_read(nes->mapper, addr);
 
-  } else if (0x2000 <= addr && addr <= 0x2FFF) {
+  } else if (addr <= 0x2FFF) {
     return nes->ppu.nt[nt_addr(nes->mapper, addr)];
 
-  } else if (0x3000 <= addr && addr <= 0x3EFF) {
+  } else if (addr <= 0x3EFF) {
     return nes->ppu.nt[nt_addr(nes->mapper, addr - 0x1000)];
 
-  } else if (0x3F00 <= addr && addr <= 0x3FFF) {
+  } else if (addr <= 0x3FFF) {
     return nes->ppu.pallete[pallete_addr(addr)];
   }
 
@@ -143,16 +143,16 @@ uint8_t ppu_read(NES *nes, uint16_t addr) {
 }
 
 void ppu_write(NES *nes, uint16_t addr, uint8_t value) {
-  if (0x0000 <= addr && addr <= 0x1FFF) {
+  if (addr <= 0x1FFF) {
     mapper_write(nes->mapper, addr, value);
 
-  } else if (0x2000 <= addr && addr <= 0x2FFF) {
+  } else if (addr <= 0x2FFF) {
     nes->ppu.nt[nt_addr(nes->mapper, addr)] = value;
 
-  } else if (0x3000 <= addr && addr <= 0x3EFF) {
+  } else if (addr <= 0x3EFF) {
     nes->ppu.nt[nt_addr(nes->mapper, addr - 0x1000)] = value;
 
-  } else if (0x3F00 <= addr && addr <= 0x3FFF) {
+  } else if (addr <= 0x3FFF) {
     nes->ppu.pallete[pallete_addr(addr)] = value;
   }
 }
