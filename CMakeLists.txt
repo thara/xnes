@@ -5,7 +5,7 @@ project(xnes LANGUAGES C)
 file(GLOB_RECURSE SOURCES "${CMAKE_SOURCE_DIR}/src/*.c")
 
 add_library(xnes STATIC ${SOURCES})
-target_include_directories(xnes PRIVATE ${CMAKE_SOURCE_DIR}/src/include)
+target_include_directories(xnes PRIVATE ${CMAKE_SOURCE_DIR}/src)
 set_target_properties(xnes PROPERTIES C_STANDARD 11)
 
 enable_testing()

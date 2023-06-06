@@ -3,7 +3,7 @@
 
 #include <stdint.h>
 
-#include <rom.h>
+#include "rom.h"
 
 struct mapper;
 typedef struct mapper Mapper;
