@@ -6,8 +6,15 @@
 
 #include "ppu_io.h"
 
+#include <stdio.h>
+
 uint8_t MEM_MOCKABLE(mem_read)(NES *nes, uint16_t addr) {
+  if (addr == 0x00FB + 0x101) {
+      printf("READ ****************************** %x\n", addr);
+  }
+
   if (addr <= 0x1FFF) {
+      printf("read wram %x -> %x\n", addr, nes->wram[addr % 0x0800]);
     return nes->wram[addr % 0x0800];
 
   } else if (addr <= 0x3FFF) {
@@ -49,8 +56,13 @@ void MEM_MOCKABLE(mem_write)(NES *nes, uint16_t addr, uint8_t val) {
     return;
   }
 
+
   if (addr <= 0x1FFF) {
+
     nes->wram[addr % 0x0800] = val;
+  if (addr % 0x0800 == 0x1fc) {
+      printf("WRITE %x(%x) -> %x(%x)\n", addr, addr % 0x0800, val, nes->wram[addr % 0x0800]);
+  }
 
   } else if (addr <= 0x3FFF) {
     ppu_write_register(nes, 0x2000 + addr % 8, val);

@@ -7,6 +7,8 @@
 #include "cpu_instruction.h"
 #include "mem.h"
 
+#include <stdio.h>
+
 void cpu_tick(NES *nes) {
   nes_tick(nes);
   nes->cpu.cycles++;
@@ -213,6 +215,9 @@ void push_stack_word(NES *nes, uint16_t v) {
 
 uint8_t cpu_pull_stack(NES *nes) {
   nes->cpu.S++;
+  if (nes->cpu.S == 0x00FB + 1) {
+      printf("PULL ******************************\n");
+  }
   return cpu_read(nes, nes->cpu.S + 0x0100);
 }
 
@@ -236,6 +241,8 @@ void set_carry_status(NES *nes, uint8_t m, uint8_t r);
 
 void cpu_execute(NES *nes, CPUInstruction inst) {
   uint16_t operand = cpu_get_operand(nes, inst.mode);
+
+    printf("MEM %04X\n", nes->wram[0x01fc]);
 
   switch (inst.mnemonic) {
   case LDA:
@@ -426,6 +433,7 @@ void cpu_execute(NES *nes, CPUInstruction inst) {
 
   case JMP:
     nes->cpu.PC = operand;
+    printf("JMP x %x\n", nes->wram[0x1fc]);
     break;
   case JSR:
     push_stack_word(nes, nes->cpu.PC - 1);
@@ -433,8 +441,15 @@ void cpu_execute(NES *nes, CPUInstruction inst) {
     cpu_tick(nes);
     break;
   case RTS:
+    printf("RTS PC %04X\n", nes->cpu.PC);
+
+    printf("RTS S %04X\n", nes->cpu.S);
     nes->cpu.PC = cpu_pull_stack_word(nes);
+    printf("RTS PC %04X\n", nes->cpu.PC);
     nes->cpu.PC++;
+
+    printf("RTS PC %04X\n", nes->cpu.PC);
+
     cpu_tick(nes);
     cpu_tick(nes);
     cpu_tick(nes);
@@ -511,6 +526,7 @@ void cpu_execute(NES *nes, CPUInstruction inst) {
     break;
   case NOP:
     cpu_tick(nes);
+    printf("NOP PC %04X\n", nes->cpu.PC);
     break;
   case RTI:
     nes->cpu.P = cpu_pull_stack(nes);
