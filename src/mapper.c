@@ -5,6 +5,8 @@
 const uint8_t header_size = 16;
 
 struct mapper {
+  ROM *rom;
+
   uint8_t mapper_no;
 
   uint8_t (*read)(Mapper *self, uint16_t addr);
@@ -41,6 +43,7 @@ uint8_t mapper0_read(Mapper *self, uint16_t addr);
 void mapper0_write(Mapper *self, uint16_t addr, uint8_t value);
 
 void mapper_base_init(Mapper *base, ROM *rom) {
+  base->rom = rom;
   base->mapper_no = rom->mapper_no;
   base->mirroring =
       rom->mirroring_vertical ? MIRRORING_VERTICAL : MIRRORING_HORIZONTAL;
@@ -61,6 +64,9 @@ Mapper *detect_mapper(ROM *rom, MapperError *error) {
 void mapper_release(Mapper *mapper) {
   if (mapper == NULL) {
     return;
+  }
+  if (mapper->rom != NULL) {
+    free(mapper->rom);
   }
 
   switch (mapper->mapper_no) {
@@ -123,6 +129,7 @@ void mock_mapper_write(Mapper *self, uint16_t addr, uint8_t value) { /* NOP */
 
 Mapper *mock_mapper_new(uint8_t mapper_no, MirroringMode mirroring) {
   MockMapper *impl = (MockMapper *)malloc(sizeof(MockMapper));
+  impl->base.rom = NULL;
   impl->base.mapper_no = mapper_no;
   impl->base.mirroring = mirroring;
   impl->base.read = mock_mapper_read;

@@ -122,6 +122,7 @@ TEST(test_nestest_log) {
   test_assert_int_eq(0, mem_read(nes, 0x0003));
 
 NESTEST_END:
+  free(buf);
   nes_release(nes);
   fclose(log_file);
   fclose(file);

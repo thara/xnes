@@ -51,6 +51,5 @@ void rom_release(ROM *rom) {
     return;
   }
 
-  free(rom->raw);
   free(rom);
 }

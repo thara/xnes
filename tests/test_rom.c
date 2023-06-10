@@ -44,6 +44,7 @@ TEST(test_parse_rom) {
   test_assert(!rom->mirroring_vertical, "mirroring should be horizontal");
 
   rom_release(rom);
+  free(buf);
   fclose(file);
 }
 
