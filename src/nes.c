@@ -6,7 +6,7 @@
 #include "cpu_emulation.h"
 
 NES *nes_new() {
-  NES *nes = calloc(0, sizeof(NES));
+  NES *nes = calloc(1, sizeof(NES));
   if (nes == NULL) {
     return NULL;
   }
