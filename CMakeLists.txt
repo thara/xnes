@@ -27,9 +27,7 @@ file(GLOB_RECURSE ALL_SOURCES
 )
 
 find_program(CLANG_FORMAT_EXE clang-format)
-if(NOT CLANG_FORMAT_EXE)
-  message(FATAL_ERROR "clang-format not found. Must be installed.")
-endif()
+if(CLANG_FORMAT_EXE)
 add_custom_target(
     format
     COMMAND clang-format
@@ -39,6 +37,7 @@ add_custom_target(
     COMMENT "Running clang-format"
     VERBATIM
 )
+endif()
 
 find_program(CPPCHECK_EXE cppcheck)
 if(CPPCHECK_EXE)
