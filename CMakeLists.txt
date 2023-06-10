@@ -8,6 +8,9 @@ add_library(xnes STATIC ${SOURCES})
 target_include_directories(xnes PRIVATE ${CMAKE_SOURCE_DIR}/src)
 set_target_properties(xnes PROPERTIES C_STANDARD 11)
 
+add_compile_options(-fsanitize=address)
+add_link_options(-fsanitize=address)
+
 enable_testing()
 set(CMAKE_CTEST_ARGUMENTS "--verbose")
 
