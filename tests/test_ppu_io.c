@@ -11,7 +11,7 @@ Mapper *mock_mapper_new(uint8_t mapper_no, MirroringMode mirroring);
 TEST(test_PPUCTRL) {
   NES *nes = nes_new();
   Mapper *mapper = mock_mapper_new(0, MIRRORING_HORIZONTAL);
-  nes_init_by_mapper(nes, mapper);
+  nes_insert_cartridge(nes, mapper);
 
   uint16_t addr = 0x2000;
 
@@ -31,7 +31,7 @@ TEST(test_PPUCTRL) {
 TEST(test_PPUMASK) {
   NES *nes = nes_new();
   Mapper *mapper = mock_mapper_new(0, MIRRORING_HORIZONTAL);
-  nes_init_by_mapper(nes, mapper);
+  nes_insert_cartridge(nes, mapper);
 
   uint16_t addr = 0x2001;
 
@@ -53,7 +53,7 @@ TEST(test_PPUMASK) {
 TEST(test_PPUSTATUS) {
   NES *nes = nes_new();
   Mapper *mapper = mock_mapper_new(0, MIRRORING_HORIZONTAL);
-  nes_init_by_mapper(nes, mapper);
+  nes_insert_cartridge(nes, mapper);
 
   uint16_t addr = 0x2002;
 
@@ -70,7 +70,7 @@ TEST(test_PPUSTATUS) {
 TEST(test_OAMDATA) {
   NES *nes = nes_new();
   Mapper *mapper = mock_mapper_new(0, MIRRORING_HORIZONTAL);
-  nes_init_by_mapper(nes, mapper);
+  nes_insert_cartridge(nes, mapper);
 
   uint16_t addr = 0x2003;
 
@@ -83,7 +83,7 @@ TEST(test_OAMDATA) {
 TEST(test_OAMDATA_read) {
   NES *nes = nes_new();
   Mapper *mapper = mock_mapper_new(0, MIRRORING_HORIZONTAL);
-  nes_init_by_mapper(nes, mapper);
+  nes_insert_cartridge(nes, mapper);
 
   uint16_t addr = 0x2004;
 
@@ -98,7 +98,7 @@ TEST(test_OAMDATA_read) {
 TEST(test_OAMDATA_write) {
   NES *nes = nes_new();
   Mapper *mapper = mock_mapper_new(0, MIRRORING_HORIZONTAL);
-  nes_init_by_mapper(nes, mapper);
+  nes_insert_cartridge(nes, mapper);
 
   uint16_t addr = 0x2004;
 
@@ -113,7 +113,7 @@ TEST(test_OAMDATA_write) {
 TEST(test_PPUSCROLL) {
   NES *nes = nes_new();
   Mapper *mapper = mock_mapper_new(0, MIRRORING_HORIZONTAL);
-  nes_init_by_mapper(nes, mapper);
+  nes_insert_cartridge(nes, mapper);
 
   uint16_t addr = 0x2005;
 
@@ -133,7 +133,7 @@ TEST(test_PPUSCROLL) {
 TEST(test_PPUADDR) {
   NES *nes = nes_new();
   Mapper *mapper = mock_mapper_new(0, MIRRORING_HORIZONTAL);
-  nes_init_by_mapper(nes, mapper);
+  nes_insert_cartridge(nes, mapper);
 
   uint16_t addr = 0x2006;
 
@@ -155,7 +155,7 @@ TEST(test_PPUADDR) {
 TEST(test_PPUDATA) {
   NES *nes = nes_new();
   Mapper *mapper = mock_mapper_new(0, MIRRORING_HORIZONTAL);
-  nes_init_by_mapper(nes, mapper);
+  nes_insert_cartridge(nes, mapper);
 
   uint16_t addr = 0x2007;
 

@@ -25,7 +25,7 @@ typedef enum {
   ROM_PARSE_ERROR_PADDING,
 } ROMParseError;
 
-ROM *parse_rom(ROMFile *file, ROMParseError *error);
+ROM *parse_rom(uint8_t *buf, uint64_t len, ROMParseError *error);
 
 void rom_release(ROM *rom);
 

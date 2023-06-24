@@ -14,26 +14,18 @@ NES *nes_new() {
   return nes;
 }
 
-void nes_init(NES *nes, ROMFile *rom_file, NESError *error) {
-  ROMParseError rom_err;
-  ROM *rom = parse_rom(rom_file, &rom_err);
-
-  if (rom_err != ROM_PARSE_ERROR_NONE) {
-    *error = wrap_rom_parse_error(rom_err);
-    return;
+Cartridge load_cartridge(uint8_t *buf, uint64_t len) {
+  Cartridge cart = {0};
+  ROM *rom = parse_rom(buf, len, &cart.rom_error);
+  if (cart.rom_error != ROM_PARSE_ERROR_NONE) {
+    return cart;
   }
-
-  MapperError mapper_err;
-  Mapper *mapper = detect_mapper(rom, &mapper_err);
-  if (mapper_err != MAPPER_ERROR_NONE) {
-    *error = wrap_mapper_error(mapper_err);
-    return;
-  }
-
-  nes->mapper = mapper;
+  cart.rom = rom;
+  cart.mapper = detect_mapper(rom);
+  return cart;
 }
 
-void nes_init_by_mapper(NES *nes, Mapper *mapper) { nes->mapper = mapper; }
+void nes_insert_cartridge(NES *nes, Mapper *mapper) { nes->mapper = mapper; }
 
 void nes_power_on(NES *nes) {
   // https://wiki.nesdev.com/w/index.php/CPU_power_up_state

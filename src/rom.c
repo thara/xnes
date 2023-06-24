@@ -5,13 +5,12 @@
 static uint8_t magic_number[4] = {0x4E, 0x45, 0x53, 0x1A};
 static uint8_t padding[5];
 
-ROM *parse_rom(ROMFile *file, ROMParseError *error) {
+ROM *parse_rom(uint8_t *buf, uint64_t len, ROMParseError *error) {
   ROM *rom = malloc(sizeof(ROM));
   if (rom == NULL) {
     *error = ROM_PARSE_ERROR_CAN_NOT_ALLOCATED;
     return NULL;
   }
-  uint8_t *buf = file->buf;
   rom->raw = buf;
 
   for (int i = 0; i < 4; i++) {
@@ -49,6 +48,9 @@ ROM *parse_rom(ROMFile *file, ROMParseError *error) {
 void rom_release(ROM *rom) {
   if (rom == NULL) {
     return;
+  }
+  if (rom->raw != NULL) {
+    free(rom->raw);
   }
 
   free(rom);

@@ -32,10 +32,8 @@ TEST(test_parse_rom) {
     test_precondition_failed("Failed to read test file\n");
   }
 
-  ROMFile rom_file = {buf, file_size};
-
   ROMParseError error;
-  ROM *rom = parse_rom(&rom_file, &error);
+  ROM *rom = parse_rom(buf, file_size, &error);
 
   test_assert(error == ROM_PARSE_ERROR_NONE, "rom_parse_error should be none");
   test_assert_int_eq(0, rom->mapper_no);
@@ -44,7 +42,6 @@ TEST(test_parse_rom) {
   test_assert(!rom->mirroring_vertical, "mirroring should be horizontal");
 
   rom_release(rom);
-  free(buf);
   fclose(file);
 }
 

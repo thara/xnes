@@ -5,7 +5,6 @@
 
 #include "cpu.h"
 #include "ppu.h"
-#include "error.h"
 #include "mapper.h"
 #include "rom.h"
 #include "input.h"
@@ -32,9 +31,16 @@ typedef struct {
 
 NES *nes_new();
 
-void nes_init(NES *nes, ROMFile *rom_file, NESError *error);
+typedef struct {
+  ROM *rom;
+  ROMParseError rom_error;
 
-void nes_init_by_mapper(NES *nes, Mapper *mapper);
+  Mapper *mapper;
+} Cartridge;
+
+Cartridge load_cartridge(uint8_t *buf, uint64_t len);
+
+void nes_insert_cartridge(NES *nes, Mapper* mapper);
 
 void nes_power_on(NES *nes);
 

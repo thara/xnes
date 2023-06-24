@@ -59,14 +59,18 @@ TEST(test_nestest_log) {
     test_precondition_failed("Failed to read test file\n");
   }
 
-  ROMFile rom_file = {buf, file_size};
-
   NES *nes = nes_new();
 
-  NESError error = NES_ERROR_NONE;
-  nes_init(nes, &rom_file, &error);
+  Cartridge cart = load_cartridge(buf, file_size);
+  if (cart.rom_error != ROM_PARSE_ERROR_NONE) {
+    free(buf);
+    fclose(file);
+    char msg[256];
+    snprintf(msg, sizeof(msg), "Failed to parse ROM: %d\n", cart.rom_error);
+    test_precondition_failed(msg);
+  }
 
-  test_assert_int_eq(NES_ERROR_NONE, error);
+  nes_insert_cartridge(nes, cart.mapper);
 
   nes_power_on(nes);
 
@@ -122,7 +126,6 @@ TEST(test_nestest_log) {
   test_assert_int_eq(0, mem_read(nes, 0x0003));
 
 NESTEST_END:
-  free(buf);
   nes_release(nes);
   fclose(log_file);
   fclose(file);
