@@ -14,14 +14,14 @@ NES *nes_new() {
   return nes;
 }
 
-Cartridge load_cartridge(uint8_t *buf, uint64_t len) {
-  Cartridge cart = {0};
-  ROM *rom = parse_rom(buf, len, &cart.rom_error);
-  if (cart.rom_error != ROM_PARSE_ERROR_NONE) {
+Cartridge *load_cartridge(uint8_t *buf, uint64_t len) {
+  Cartridge *cart = calloc(1, sizeof(Cartridge));
+  ROM *rom = parse_rom(buf, len, &cart->rom_error);
+  if (cart->rom_error != ROM_PARSE_ERROR_NONE) {
     return cart;
   }
-  cart.rom = rom;
-  cart.mapper = detect_mapper(rom);
+  cart->rom = rom;
+  cart->mapper = detect_mapper(rom);
   return cart;
 }
 
@@ -49,6 +49,16 @@ void nes_release(NES *nes) {
     mapper_release(nes->mapper);
   }
   free(nes);
+}
+
+void cartridge_release(Cartridge *cart) {
+  if (cart == NULL) {
+    return;
+  }
+  if (cart->rom != NULL) {
+    rom_release(cart->rom);
+  }
+  free(cart);
 }
 
 void nes_tick(NES *nes) {

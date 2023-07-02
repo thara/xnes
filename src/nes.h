@@ -38,7 +38,7 @@ typedef struct {
   Mapper *mapper;
 } Cartridge;
 
-Cartridge load_cartridge(uint8_t *buf, uint64_t len);
+Cartridge *load_cartridge(uint8_t *buf, uint64_t len);
 
 void nes_insert_cartridge(NES *nes, Mapper* mapper);
 
@@ -49,6 +49,8 @@ void nes_reset(NES *nes);
 void nes_step(NES *nes);
 
 void nes_release(NES *nes);
+
+void cartridge_release(Cartridge *cart);
 
 void nes_tick(NES *nes);
 
