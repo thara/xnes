@@ -4,13 +4,24 @@
 #include "cpu_emulation.h"
 #include "nes.h"
 
+#include "mapper.h"
+
 #include "mem.h"
 #include "mock_mem.h"
 
 uint16_t cpu_get_operand(NES *nes, AddressingMode mode);
 
-TEST(test_get_operand_implicit) {
+Mapper *mock_mapper_new(uint8_t mapper_no, MirroringMode mirroring);
+
+NES* nes_init() {
   NES *nes = nes_new();
+  Mapper *mapper = mock_mapper_new(0, MIRRORING_HORIZONTAL);
+  nes_insert_cartridge(nes, mapper);
+  return nes;
+}
+
+TEST(test_get_operand_implicit) {
+  NES *nes = nes_init();
 
   uint16_t result = cpu_get_operand(nes, IMPLICIT);
   test_assert_int_eq(0, result);
@@ -20,7 +31,7 @@ TEST(test_get_operand_implicit) {
 }
 
 TEST(test_get_operand_accumulator) {
-  NES *nes = nes_new();
+  NES *nes = nes_init();
   nes->cpu.A = 0xFB;
 
   uint16_t result = cpu_get_operand(nes, ACCUMULATOR);
@@ -31,7 +42,7 @@ TEST(test_get_operand_accumulator) {
 }
 
 TEST(test_get_operand_immediate) {
-  NES *nes = nes_new();
+  NES *nes = nes_init();
   nes->cpu.PC = 0x8234;
 
   uint16_t result = cpu_get_operand(nes, IMMEDIATE);
@@ -44,7 +55,7 @@ TEST(test_get_operand_immediate) {
 TEST(test_get_operand_zero_page) {
   mem_init();
 
-  NES *nes = nes_new();
+  NES *nes = nes_init();
   nes->cpu.PC = 0x0414;
   mem_write(nes, 0x0414, 0x91);
 
@@ -58,7 +69,7 @@ TEST(test_get_operand_zero_page) {
 TEST(test_get_operand_zero_page_x) {
   mem_init();
 
-  NES *nes = nes_new();
+  NES *nes = nes_init();
   nes->cpu.PC = 0x0100;
   nes->cpu.X = 0x93;
   mem_write(nes, 0x0100, 0x80);
@@ -73,7 +84,7 @@ TEST(test_get_operand_zero_page_x) {
 TEST(test_get_operand_zero_page_y) {
   mem_init();
 
-  NES *nes = nes_new();
+  NES *nes = nes_init();
   nes->cpu.PC = 0x0423;
   nes->cpu.Y = 0xF1;
   mem_write(nes, 0x0423, 0x36);
@@ -88,7 +99,7 @@ TEST(test_get_operand_zero_page_y) {
 TEST(test_get_operand_absolute) {
   mem_init();
 
-  NES *nes = nes_new();
+  NES *nes = nes_init();
   nes->cpu.PC = 0x0423;
   mem_write(nes, 0x0423, 0x36);
   mem_write(nes, 0x0424, 0xF0);
@@ -103,7 +114,7 @@ TEST(test_get_operand_absolute) {
 TEST(test_get_operand_absolute_x) {
   mem_init();
 
-  NES *nes = nes_new();
+  NES *nes = nes_init();
   nes->cpu.PC = 0x0423;
   mem_write(nes, 0x0423, 0x36);
   mem_write(nes, 0x0424, 0xF0);
@@ -120,7 +131,7 @@ TEST(test_get_operand_absolute_x) {
 TEST(test_get_operand_absolute_x_with_penalty_not_page_crossed) {
   mem_init();
 
-  NES *nes = nes_new();
+  NES *nes = nes_init();
   nes->cpu.PC = 0x0423;
   mem_write(nes, 0x0423, 0x36);
   mem_write(nes, 0x0424, 0xF0);
@@ -137,7 +148,7 @@ TEST(test_get_operand_absolute_x_with_penalty_not_page_crossed) {
 TEST(test_get_operand_absolute_x_with_penalty_page_crossed) {
   mem_init();
 
-  NES *nes = nes_new();
+  NES *nes = nes_init();
   nes->cpu.PC = 0x0423;
   mem_write(nes, 0x0423, 0x36);
   mem_write(nes, 0x0424, 0xF0);
@@ -154,7 +165,7 @@ TEST(test_get_operand_absolute_x_with_penalty_page_crossed) {
 TEST(test_get_operand_absolute_y) {
   mem_init();
 
-  NES *nes = nes_new();
+  NES *nes = nes_init();
   nes->cpu.PC = 0x0423;
   mem_write(nes, 0x0423, 0x36);
   mem_write(nes, 0x0424, 0xF0);
@@ -171,7 +182,7 @@ TEST(test_get_operand_absolute_y) {
 TEST(test_get_operand_absolute_y_with_penalty_not_page_crossed) {
   mem_init();
 
-  NES *nes = nes_new();
+  NES *nes = nes_init();
   nes->cpu.PC = 0x0423;
   mem_write(nes, 0x0423, 0x36);
   mem_write(nes, 0x0424, 0xF0);
@@ -188,7 +199,7 @@ TEST(test_get_operand_absolute_y_with_penalty_not_page_crossed) {
 TEST(test_get_operand_absolute_y_with_penalty_page_crossed) {
   mem_init();
 
-  NES *nes = nes_new();
+  NES *nes = nes_init();
   nes->cpu.PC = 0x0423;
   mem_write(nes, 0x0423, 0x36);
   mem_write(nes, 0x0424, 0xF0);
@@ -205,7 +216,7 @@ TEST(test_get_operand_absolute_y_with_penalty_page_crossed) {
 TEST(test_get_operand_relative) {
   mem_init();
 
-  NES *nes = nes_new();
+  NES *nes = nes_init();
   nes->cpu.PC = 0x0414;
   mem_write(nes, 0x0414, 0x91);
 
@@ -219,7 +230,7 @@ TEST(test_get_operand_relative) {
 TEST(test_get_operand_indirect) {
   mem_init();
 
-  NES *nes = nes_new();
+  NES *nes = nes_init();
   nes->cpu.PC = 0x020F;
   mem_write(nes, 0x020F, 0x10);
   mem_write(nes, 0x0210, 0x03);
@@ -235,7 +246,7 @@ TEST(test_get_operand_indirect) {
 TEST(test_get_operand_indexed_indirect) {
   mem_init();
 
-  NES *nes = nes_new();
+  NES *nes = nes_init();
   nes->cpu.PC = 0x020F;
   nes->cpu.X = 0x95;
   mem_write(nes, 0x020F, 0xF0);
@@ -252,7 +263,7 @@ TEST(test_get_operand_indexed_indirect) {
 TEST(test_get_operand_indirect_indexed) {
   mem_init();
 
-  NES *nes = nes_new();
+  NES *nes = nes_init();
   nes->cpu.PC = 0x020F;
   mem_write(nes, 0x020F, 0xF0);
   mem_write(nes, 0x00F0, 0x12);
@@ -270,7 +281,7 @@ TEST(test_get_operand_indirect_indexed) {
 TEST(test_get_operand_indirect_indexed_with_penalty_not_page_crossed) {
   mem_init();
 
-  NES *nes = nes_new();
+  NES *nes = nes_init();
   nes->cpu.PC = 0x020F;
   mem_write(nes, 0x020F, 0xF0);
   mem_write(nes, 0x00F0, 0x12);
@@ -288,7 +299,7 @@ TEST(test_get_operand_indirect_indexed_with_penalty_not_page_crossed) {
 TEST(test_get_operand_indirect_indexed_with_penalty_page_crossed) {
   mem_init();
 
-  NES *nes = nes_new();
+  NES *nes = nes_init();
   nes->cpu.PC = 0x020F;
   mem_write(nes, 0x020F, 0xF0);
   mem_write(nes, 0x00F0, 0x12);
@@ -327,7 +338,7 @@ TEST_SUITE(test_get_operand) {
 TEST(test_LDA) {
   mem_init();
 
-  NES *nes = nes_new();
+  NES *nes = nes_init();
   nes->cpu.PC = 0x020F;
   mem_write(nes, 0x020F, 0xA9);
   mem_write(nes, 0x0210, 0x31);
@@ -344,7 +355,7 @@ TEST(test_LDA) {
 TEST(test_STA) {
   mem_init();
 
-  NES *nes = nes_new();
+  NES *nes = nes_init();
   nes->cpu.PC = 0x020F;
   nes->cpu.A = 0x91;
   mem_write(nes, 0x020F, 0x8D);
@@ -363,7 +374,7 @@ TEST(test_STA) {
 TEST(test_TAX) {
   mem_init();
 
-  NES *nes = nes_new();
+  NES *nes = nes_init();
   nes->cpu.PC = 0x020F;
   nes->cpu.A = 0x83;
   mem_write(nes, 0x020F, 0xAA);
@@ -380,7 +391,7 @@ TEST(test_TAX) {
 TEST(test_TYA) {
   mem_init();
 
-  NES *nes = nes_new();
+  NES *nes = nes_init();
   nes->cpu.PC = 0x020F;
   nes->cpu.Y = 0xF0;
   mem_write(nes, 0x020F, 0x98);
@@ -397,7 +408,7 @@ TEST(test_TYA) {
 TEST(test_TSX) {
   mem_init();
 
-  NES *nes = nes_new();
+  NES *nes = nes_init();
   nes->cpu.PC = 0x020F;
   nes->cpu.S = 0xF3;
   mem_write(nes, 0x020F, 0xBA);
@@ -414,7 +425,7 @@ TEST(test_TSX) {
 TEST(test_PHA) {
   mem_init();
 
-  NES *nes = nes_new();
+  NES *nes = nes_init();
   nes->cpu.PC = 0x020F;
   nes->cpu.S = 0xFD;
   nes->cpu.A = 0x72;
@@ -433,7 +444,7 @@ TEST(test_PHA) {
 TEST(test_PHP) {
   mem_init();
 
-  NES *nes = nes_new();
+  NES *nes = nes_init();
   nes->cpu.PC = 0x020F;
   nes->cpu.S = 0xFD;
   nes->cpu.A = 0x72;
@@ -452,7 +463,7 @@ TEST(test_PHP) {
 TEST(test_PLP) {
   mem_init();
 
-  NES *nes = nes_new();
+  NES *nes = nes_init();
   nes->cpu.PC = 0x020F;
   nes->cpu.S = 0xBF;
   mem_write(nes, 0x020F, 0x28);
@@ -470,7 +481,7 @@ TEST(test_PLP) {
 TEST(test_EOR) {
   mem_init();
 
-  NES *nes = nes_new();
+  NES *nes = nes_init();
   nes->cpu.PC = 0x020F;
   nes->cpu.A = 0x21;
   mem_write(nes, 0x020F, 0x49);
@@ -488,7 +499,7 @@ TEST(test_EOR) {
 TEST(test_BIT) {
   mem_init();
 
-  NES *nes = nes_new();
+  NES *nes = nes_init();
   nes->cpu.PC = 0x020F;
   nes->cpu.A = 0x48;
   mem_write(nes, 0x020F, 0x2C);
@@ -520,7 +531,7 @@ TEST(test_ADC) {
     struct adc_test_pattern test_case = test_cases[i];
     mem_init();
 
-    NES *nes = nes_new();
+    NES *nes = nes_init();
     nes->cpu.PC = 0x020F;
     nes->cpu.A = test_case.input_a;
 
@@ -541,7 +552,7 @@ TEST(test_ADC) {
 TEST(test_CPY) {
   mem_init();
 
-  NES *nes = nes_new();
+  NES *nes = nes_init();
   nes->cpu.PC = 0x020F;
   nes->cpu.Y = 0x37;
   mem_write(nes, 0x020F, 0xCC);
@@ -558,7 +569,7 @@ TEST(test_CPY) {
 TEST(test_INC) {
   mem_init();
 
-  NES *nes = nes_new();
+  NES *nes = nes_init();
   nes->cpu.PC = 0x020F;
   mem_write(nes, 0x020F, 0xEE);
   mem_write(nes, 0x0210, 0xD3);
@@ -577,7 +588,7 @@ TEST(test_INC) {
 TEST(test_DEC) {
   mem_init();
 
-  NES *nes = nes_new();
+  NES *nes = nes_init();
   nes->cpu.PC = 0x020F;
   mem_write(nes, 0x020F, 0xCE);
   mem_write(nes, 0x0210, 0xD3);
@@ -596,7 +607,7 @@ TEST(test_DEC) {
 TEST(test_ASL) {
   mem_init();
 
-  NES *nes = nes_new();
+  NES *nes = nes_init();
   nes->cpu.PC = 0x020F;
   nes->cpu.A = 0b10001010;
   mem_write(nes, 0x020F, 0x0A);
@@ -613,7 +624,7 @@ TEST(test_ASL) {
 TEST(test_ROL) {
   mem_init();
 
-  NES *nes = nes_new();
+  NES *nes = nes_init();
   nes->cpu.PC = 0x020F;
   nes->cpu.A = 0b10001010;
   nes->cpu.P = 0b00000001;
@@ -631,7 +642,7 @@ TEST(test_ROL) {
 TEST(test_ROL_carry) {
   mem_init();
 
-  NES *nes = nes_new();
+  NES *nes = nes_init();
   nes->cpu.PC = 0x020F;
   nes->cpu.A = 0b10001010;
   nes->cpu.P = 0b10000000;
@@ -649,7 +660,7 @@ TEST(test_ROL_carry) {
 TEST(test_JSR) {
   mem_init();
 
-  NES *nes = nes_new();
+  NES *nes = nes_init();
   nes->cpu.PC = 0x020F;
   nes->cpu.S = 0xBF;
   mem_write(nes, 0x020F, 0x20);
@@ -670,7 +681,7 @@ TEST(test_JSR) {
 TEST(test_RTS) {
   mem_init();
 
-  NES *nes = nes_new();
+  NES *nes = nes_init();
   nes->cpu.PC = 0x0031;
   nes->cpu.S = 0xBD;
   mem_write(nes, 0x0031, 0x60);
@@ -701,7 +712,7 @@ TEST(test_BCC) {
     struct bcc_test_pattern test_case = test_cases[i];
     mem_init();
 
-    NES *nes = nes_new();
+    NES *nes = nes_init();
     nes->cpu.PC = 0x0031;
     nes->cpu.P = test_case.input_p;
 
@@ -720,7 +731,7 @@ TEST(test_BCC) {
 TEST(test_CLD) {
   mem_init();
 
-  NES *nes = nes_new();
+  NES *nes = nes_init();
   nes->cpu.PC = 0x020F;
   nes->cpu.P = 0b011001001;
   mem_write(nes, 0x020F, 0xD8);
@@ -737,7 +748,7 @@ TEST(test_CLD) {
 TEST(test_SEI) {
   mem_init();
 
-  NES *nes = nes_new();
+  NES *nes = nes_init();
   nes->cpu.PC = 0x020F;
   nes->cpu.P = 0b011001001;
   mem_write(nes, 0x020F, 0x78);
@@ -754,7 +765,7 @@ TEST(test_SEI) {
 TEST(test_BRK) {
   mem_init();
 
-  NES *nes = nes_new();
+  NES *nes = nes_init();
   nes->cpu.PC = 0x020F;
   nes->cpu.P = 0b01100001;
   nes->cpu.S = 0xBF;
@@ -775,7 +786,7 @@ TEST(test_BRK) {
 TEST(test_RTI) {
   mem_init();
 
-  NES *nes = nes_new();
+  NES *nes = nes_init();
   nes->cpu.PC = 0x020F;
   nes->cpu.P = 0b01100101;
   nes->cpu.S = 0xBC;

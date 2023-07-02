@@ -5,6 +5,8 @@
 #include "cpu.h"
 #include "cpu_emulation.h"
 
+#include "ppu_render.h"
+
 NES *nes_new() {
   NES *nes = calloc(1, sizeof(NES));
   if (nes == NULL) {
@@ -62,5 +64,7 @@ void cartridge_release(Cartridge *cart) {
 }
 
 void nes_tick(NES *nes) {
-  // TODO
+  ppu_step(nes);
+  ppu_step(nes);
+  ppu_step(nes);
 }
