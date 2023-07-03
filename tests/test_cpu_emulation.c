@@ -13,25 +13,27 @@ uint16_t cpu_get_operand(NES *nes, AddressingMode mode);
 
 Mapper *mock_mapper_new(uint8_t mapper_no, MirroringMode mirroring);
 
-NES* nes_init() {
+NES *nes_init(Mapper *mapper) {
   NES *nes = nes_new();
-  Mapper *mapper = mock_mapper_new(0, MIRRORING_HORIZONTAL);
   nes_insert_cartridge(nes, mapper);
   return nes;
 }
 
 TEST(test_get_operand_implicit) {
-  NES *nes = nes_init();
+  Mapper *mapper = mock_mapper_new(0, MIRRORING_HORIZONTAL);
+  NES *nes = nes_init(mapper);
 
   uint16_t result = cpu_get_operand(nes, IMPLICIT);
   test_assert_int_eq(0, result);
   test_assert_int_eq(0, nes->cpu.cycles);
 
   nes_release(nes);
+  mapper_release(mapper);
 }
 
 TEST(test_get_operand_accumulator) {
-  NES *nes = nes_init();
+  Mapper *mapper = mock_mapper_new(0, MIRRORING_HORIZONTAL);
+  NES *nes = nes_init(mapper);
   nes->cpu.A = 0xFB;
 
   uint16_t result = cpu_get_operand(nes, ACCUMULATOR);
@@ -39,10 +41,13 @@ TEST(test_get_operand_accumulator) {
   test_assert_int_eq(0, nes->cpu.cycles);
 
   nes_release(nes);
+  mapper_release(mapper);
 }
 
 TEST(test_get_operand_immediate) {
-  NES *nes = nes_init();
+  Mapper *mapper = mock_mapper_new(0, MIRRORING_HORIZONTAL);
+  NES *nes = nes_init(mapper);
+
   nes->cpu.PC = 0x8234;
 
   uint16_t result = cpu_get_operand(nes, IMMEDIATE);
@@ -50,12 +55,15 @@ TEST(test_get_operand_immediate) {
   test_assert_int_eq(0, nes->cpu.cycles);
 
   nes_release(nes);
+  mapper_release(mapper);
 }
 
 TEST(test_get_operand_zero_page) {
   mem_init();
 
-  NES *nes = nes_init();
+  Mapper *mapper = mock_mapper_new(0, MIRRORING_HORIZONTAL);
+  NES *nes = nes_init(mapper);
+
   nes->cpu.PC = 0x0414;
   mem_write(nes, 0x0414, 0x91);
 
@@ -64,12 +72,15 @@ TEST(test_get_operand_zero_page) {
   test_assert_int_eq(1, nes->cpu.cycles);
 
   nes_release(nes);
+  mapper_release(mapper);
 }
 
 TEST(test_get_operand_zero_page_x) {
   mem_init();
 
-  NES *nes = nes_init();
+  Mapper *mapper = mock_mapper_new(0, MIRRORING_HORIZONTAL);
+  NES *nes = nes_init(mapper);
+
   nes->cpu.PC = 0x0100;
   nes->cpu.X = 0x93;
   mem_write(nes, 0x0100, 0x80);
@@ -79,12 +90,15 @@ TEST(test_get_operand_zero_page_x) {
   test_assert_int_eq(2, nes->cpu.cycles);
 
   nes_release(nes);
+  mapper_release(mapper);
 }
 
 TEST(test_get_operand_zero_page_y) {
   mem_init();
 
-  NES *nes = nes_init();
+  Mapper *mapper = mock_mapper_new(0, MIRRORING_HORIZONTAL);
+  NES *nes = nes_init(mapper);
+
   nes->cpu.PC = 0x0423;
   nes->cpu.Y = 0xF1;
   mem_write(nes, 0x0423, 0x36);
@@ -94,12 +108,15 @@ TEST(test_get_operand_zero_page_y) {
   test_assert_int_eq(2, nes->cpu.cycles);
 
   nes_release(nes);
+  mapper_release(mapper);
 }
 
 TEST(test_get_operand_absolute) {
   mem_init();
 
-  NES *nes = nes_init();
+  Mapper *mapper = mock_mapper_new(0, MIRRORING_HORIZONTAL);
+  NES *nes = nes_init(mapper);
+
   nes->cpu.PC = 0x0423;
   mem_write(nes, 0x0423, 0x36);
   mem_write(nes, 0x0424, 0xF0);
@@ -109,12 +126,15 @@ TEST(test_get_operand_absolute) {
   test_assert_int_eq(2, nes->cpu.cycles);
 
   nes_release(nes);
+  mapper_release(mapper);
 }
 
 TEST(test_get_operand_absolute_x) {
   mem_init();
 
-  NES *nes = nes_init();
+  Mapper *mapper = mock_mapper_new(0, MIRRORING_HORIZONTAL);
+  NES *nes = nes_init(mapper);
+
   nes->cpu.PC = 0x0423;
   mem_write(nes, 0x0423, 0x36);
   mem_write(nes, 0x0424, 0xF0);
@@ -126,12 +146,15 @@ TEST(test_get_operand_absolute_x) {
   test_assert_int_eq(3, nes->cpu.cycles);
 
   nes_release(nes);
+  mapper_release(mapper);
 }
 
 TEST(test_get_operand_absolute_x_with_penalty_not_page_crossed) {
   mem_init();
 
-  NES *nes = nes_init();
+  Mapper *mapper = mock_mapper_new(0, MIRRORING_HORIZONTAL);
+  NES *nes = nes_init(mapper);
+
   nes->cpu.PC = 0x0423;
   mem_write(nes, 0x0423, 0x36);
   mem_write(nes, 0x0424, 0xF0);
@@ -143,12 +166,15 @@ TEST(test_get_operand_absolute_x_with_penalty_not_page_crossed) {
   test_assert_int_eq(2, nes->cpu.cycles);
 
   nes_release(nes);
+  mapper_release(mapper);
 }
 
 TEST(test_get_operand_absolute_x_with_penalty_page_crossed) {
   mem_init();
 
-  NES *nes = nes_init();
+  Mapper *mapper = mock_mapper_new(0, MIRRORING_HORIZONTAL);
+  NES *nes = nes_init(mapper);
+
   nes->cpu.PC = 0x0423;
   mem_write(nes, 0x0423, 0x36);
   mem_write(nes, 0x0424, 0xF0);
@@ -160,12 +186,15 @@ TEST(test_get_operand_absolute_x_with_penalty_page_crossed) {
   test_assert_int_eq(3, nes->cpu.cycles);
 
   nes_release(nes);
+  mapper_release(mapper);
 }
 
 TEST(test_get_operand_absolute_y) {
   mem_init();
 
-  NES *nes = nes_init();
+  Mapper *mapper = mock_mapper_new(0, MIRRORING_HORIZONTAL);
+  NES *nes = nes_init(mapper);
+
   nes->cpu.PC = 0x0423;
   mem_write(nes, 0x0423, 0x36);
   mem_write(nes, 0x0424, 0xF0);
@@ -177,12 +206,15 @@ TEST(test_get_operand_absolute_y) {
   test_assert_int_eq(3, nes->cpu.cycles);
 
   nes_release(nes);
+  mapper_release(mapper);
 }
 
 TEST(test_get_operand_absolute_y_with_penalty_not_page_crossed) {
   mem_init();
 
-  NES *nes = nes_init();
+  Mapper *mapper = mock_mapper_new(0, MIRRORING_HORIZONTAL);
+  NES *nes = nes_init(mapper);
+
   nes->cpu.PC = 0x0423;
   mem_write(nes, 0x0423, 0x36);
   mem_write(nes, 0x0424, 0xF0);
@@ -194,12 +226,15 @@ TEST(test_get_operand_absolute_y_with_penalty_not_page_crossed) {
   test_assert_int_eq(2, nes->cpu.cycles);
 
   nes_release(nes);
+  mapper_release(mapper);
 }
 
 TEST(test_get_operand_absolute_y_with_penalty_page_crossed) {
   mem_init();
 
-  NES *nes = nes_init();
+  Mapper *mapper = mock_mapper_new(0, MIRRORING_HORIZONTAL);
+  NES *nes = nes_init(mapper);
+
   nes->cpu.PC = 0x0423;
   mem_write(nes, 0x0423, 0x36);
   mem_write(nes, 0x0424, 0xF0);
@@ -211,12 +246,15 @@ TEST(test_get_operand_absolute_y_with_penalty_page_crossed) {
   test_assert_int_eq(3, nes->cpu.cycles);
 
   nes_release(nes);
+  mapper_release(mapper);
 }
 
 TEST(test_get_operand_relative) {
   mem_init();
 
-  NES *nes = nes_init();
+  Mapper *mapper = mock_mapper_new(0, MIRRORING_HORIZONTAL);
+  NES *nes = nes_init(mapper);
+
   nes->cpu.PC = 0x0414;
   mem_write(nes, 0x0414, 0x91);
 
@@ -225,12 +263,15 @@ TEST(test_get_operand_relative) {
   test_assert_int_eq(1, nes->cpu.cycles);
 
   nes_release(nes);
+  mapper_release(mapper);
 }
 
 TEST(test_get_operand_indirect) {
   mem_init();
 
-  NES *nes = nes_init();
+  Mapper *mapper = mock_mapper_new(0, MIRRORING_HORIZONTAL);
+  NES *nes = nes_init(mapper);
+
   nes->cpu.PC = 0x020F;
   mem_write(nes, 0x020F, 0x10);
   mem_write(nes, 0x0210, 0x03);
@@ -241,12 +282,15 @@ TEST(test_get_operand_indirect) {
   test_assert_int_eq(4, nes->cpu.cycles);
 
   nes_release(nes);
+  mapper_release(mapper);
 }
 
 TEST(test_get_operand_indexed_indirect) {
   mem_init();
 
-  NES *nes = nes_init();
+  Mapper *mapper = mock_mapper_new(0, MIRRORING_HORIZONTAL);
+  NES *nes = nes_init(mapper);
+
   nes->cpu.PC = 0x020F;
   nes->cpu.X = 0x95;
   mem_write(nes, 0x020F, 0xF0);
@@ -258,12 +302,15 @@ TEST(test_get_operand_indexed_indirect) {
   test_assert_int_eq(4, nes->cpu.cycles);
 
   nes_release(nes);
+  mapper_release(mapper);
 }
 
 TEST(test_get_operand_indirect_indexed) {
   mem_init();
 
-  NES *nes = nes_init();
+  Mapper *mapper = mock_mapper_new(0, MIRRORING_HORIZONTAL);
+  NES *nes = nes_init(mapper);
+
   nes->cpu.PC = 0x020F;
   mem_write(nes, 0x020F, 0xF0);
   mem_write(nes, 0x00F0, 0x12);
@@ -276,12 +323,15 @@ TEST(test_get_operand_indirect_indexed) {
   test_assert_int_eq(4, nes->cpu.cycles);
 
   nes_release(nes);
+  mapper_release(mapper);
 }
 
 TEST(test_get_operand_indirect_indexed_with_penalty_not_page_crossed) {
   mem_init();
 
-  NES *nes = nes_init();
+  Mapper *mapper = mock_mapper_new(0, MIRRORING_HORIZONTAL);
+  NES *nes = nes_init(mapper);
+
   nes->cpu.PC = 0x020F;
   mem_write(nes, 0x020F, 0xF0);
   mem_write(nes, 0x00F0, 0x12);
@@ -294,12 +344,15 @@ TEST(test_get_operand_indirect_indexed_with_penalty_not_page_crossed) {
   test_assert_int_eq(3, nes->cpu.cycles);
 
   nes_release(nes);
+  mapper_release(mapper);
 }
 
 TEST(test_get_operand_indirect_indexed_with_penalty_page_crossed) {
   mem_init();
 
-  NES *nes = nes_init();
+  Mapper *mapper = mock_mapper_new(0, MIRRORING_HORIZONTAL);
+  NES *nes = nes_init(mapper);
+
   nes->cpu.PC = 0x020F;
   mem_write(nes, 0x020F, 0xF0);
   mem_write(nes, 0x00F0, 0x12);
@@ -312,6 +365,7 @@ TEST(test_get_operand_indirect_indexed_with_penalty_page_crossed) {
   test_assert_int_eq(4, nes->cpu.cycles);
 
   nes_release(nes);
+  mapper_release(mapper);
 }
 
 TEST_SUITE(test_get_operand) {
@@ -338,7 +392,9 @@ TEST_SUITE(test_get_operand) {
 TEST(test_LDA) {
   mem_init();
 
-  NES *nes = nes_init();
+  Mapper *mapper = mock_mapper_new(0, MIRRORING_HORIZONTAL);
+  NES *nes = nes_init(mapper);
+
   nes->cpu.PC = 0x020F;
   mem_write(nes, 0x020F, 0xA9);
   mem_write(nes, 0x0210, 0x31);
@@ -350,12 +406,15 @@ TEST(test_LDA) {
   test_assert_byte_eq(0, nes->cpu.P);
 
   nes_release(nes);
+  mapper_release(mapper);
 }
 
 TEST(test_STA) {
   mem_init();
 
-  NES *nes = nes_init();
+  Mapper *mapper = mock_mapper_new(0, MIRRORING_HORIZONTAL);
+  NES *nes = nes_init(mapper);
+
   nes->cpu.PC = 0x020F;
   nes->cpu.A = 0x91;
   mem_write(nes, 0x020F, 0x8D);
@@ -369,12 +428,15 @@ TEST(test_STA) {
   test_assert_byte_eq(0, nes->cpu.P);
 
   nes_release(nes);
+  mapper_release(mapper);
 }
 
 TEST(test_TAX) {
   mem_init();
 
-  NES *nes = nes_init();
+  Mapper *mapper = mock_mapper_new(0, MIRRORING_HORIZONTAL);
+  NES *nes = nes_init(mapper);
+
   nes->cpu.PC = 0x020F;
   nes->cpu.A = 0x83;
   mem_write(nes, 0x020F, 0xAA);
@@ -386,12 +448,15 @@ TEST(test_TAX) {
   test_assert_byte_eq(0x80, nes->cpu.P);
 
   nes_release(nes);
+  mapper_release(mapper);
 }
 
 TEST(test_TYA) {
   mem_init();
 
-  NES *nes = nes_init();
+  Mapper *mapper = mock_mapper_new(0, MIRRORING_HORIZONTAL);
+  NES *nes = nes_init(mapper);
+
   nes->cpu.PC = 0x020F;
   nes->cpu.Y = 0xF0;
   mem_write(nes, 0x020F, 0x98);
@@ -403,12 +468,15 @@ TEST(test_TYA) {
   test_assert_byte_eq(0x80, nes->cpu.P);
 
   nes_release(nes);
+  mapper_release(mapper);
 }
 
 TEST(test_TSX) {
   mem_init();
 
-  NES *nes = nes_init();
+  Mapper *mapper = mock_mapper_new(0, MIRRORING_HORIZONTAL);
+  NES *nes = nes_init(mapper);
+
   nes->cpu.PC = 0x020F;
   nes->cpu.S = 0xF3;
   mem_write(nes, 0x020F, 0xBA);
@@ -420,12 +488,15 @@ TEST(test_TSX) {
   test_assert_byte_eq(0x80, nes->cpu.P);
 
   nes_release(nes);
+  mapper_release(mapper);
 }
 
 TEST(test_PHA) {
   mem_init();
 
-  NES *nes = nes_init();
+  Mapper *mapper = mock_mapper_new(0, MIRRORING_HORIZONTAL);
+  NES *nes = nes_init(mapper);
+
   nes->cpu.PC = 0x020F;
   nes->cpu.S = 0xFD;
   nes->cpu.A = 0x72;
@@ -439,12 +510,15 @@ TEST(test_PHA) {
   test_assert_byte_eq(0, nes->cpu.P);
 
   nes_release(nes);
+  mapper_release(mapper);
 }
 
 TEST(test_PHP) {
   mem_init();
 
-  NES *nes = nes_init();
+  Mapper *mapper = mock_mapper_new(0, MIRRORING_HORIZONTAL);
+  NES *nes = nes_init(mapper);
+
   nes->cpu.PC = 0x020F;
   nes->cpu.S = 0xFD;
   nes->cpu.A = 0x72;
@@ -458,12 +532,15 @@ TEST(test_PHP) {
   test_assert_int_eq(3, nes->cpu.cycles);
 
   nes_release(nes);
+  mapper_release(mapper);
 }
 
 TEST(test_PLP) {
   mem_init();
 
-  NES *nes = nes_init();
+  Mapper *mapper = mock_mapper_new(0, MIRRORING_HORIZONTAL);
+  NES *nes = nes_init(mapper);
+
   nes->cpu.PC = 0x020F;
   nes->cpu.S = 0xBF;
   mem_write(nes, 0x020F, 0x28);
@@ -476,12 +553,15 @@ TEST(test_PLP) {
   test_assert_int_eq(4, nes->cpu.cycles);
 
   nes_release(nes);
+  mapper_release(mapper);
 }
 
 TEST(test_EOR) {
   mem_init();
 
-  NES *nes = nes_init();
+  Mapper *mapper = mock_mapper_new(0, MIRRORING_HORIZONTAL);
+  NES *nes = nes_init(mapper);
+
   nes->cpu.PC = 0x020F;
   nes->cpu.A = 0x21;
   mem_write(nes, 0x020F, 0x49);
@@ -494,12 +574,15 @@ TEST(test_EOR) {
   test_assert_int_eq(2, nes->cpu.cycles);
 
   nes_release(nes);
+  mapper_release(mapper);
 }
 
 TEST(test_BIT) {
   mem_init();
 
-  NES *nes = nes_init();
+  Mapper *mapper = mock_mapper_new(0, MIRRORING_HORIZONTAL);
+  NES *nes = nes_init(mapper);
+
   nes->cpu.PC = 0x020F;
   nes->cpu.A = 0x48;
   mem_write(nes, 0x020F, 0x2C);
@@ -513,6 +596,7 @@ TEST(test_BIT) {
   test_assert_int_eq(4, nes->cpu.cycles);
 
   nes_release(nes);
+  mapper_release(mapper);
 }
 
 struct adc_test_pattern {
@@ -531,7 +615,9 @@ TEST(test_ADC) {
     struct adc_test_pattern test_case = test_cases[i];
     mem_init();
 
-    NES *nes = nes_init();
+    Mapper *mapper = mock_mapper_new(0, MIRRORING_HORIZONTAL);
+    NES *nes = nes_init(mapper);
+
     nes->cpu.PC = 0x020F;
     nes->cpu.A = test_case.input_a;
 
@@ -546,13 +632,16 @@ TEST(test_ADC) {
     test_assert_bit_eq(test_case.expected_p, nes->cpu.P);
 
     nes_release(nes);
+    mapper_release(mapper);
   }
 }
 
 TEST(test_CPY) {
   mem_init();
 
-  NES *nes = nes_init();
+  Mapper *mapper = mock_mapper_new(0, MIRRORING_HORIZONTAL);
+  NES *nes = nes_init(mapper);
+
   nes->cpu.PC = 0x020F;
   nes->cpu.Y = 0x37;
   mem_write(nes, 0x020F, 0xCC);
@@ -564,12 +653,15 @@ TEST(test_CPY) {
   test_assert_int_eq(4, nes->cpu.cycles);
 
   nes_release(nes);
+  mapper_release(mapper);
 }
 
 TEST(test_INC) {
   mem_init();
 
-  NES *nes = nes_init();
+  Mapper *mapper = mock_mapper_new(0, MIRRORING_HORIZONTAL);
+  NES *nes = nes_init(mapper);
+
   nes->cpu.PC = 0x020F;
   mem_write(nes, 0x020F, 0xEE);
   mem_write(nes, 0x0210, 0xD3);
@@ -583,12 +675,15 @@ TEST(test_INC) {
   test_assert_int_eq(6, nes->cpu.cycles);
 
   nes_release(nes);
+  mapper_release(mapper);
 }
 
 TEST(test_DEC) {
   mem_init();
 
-  NES *nes = nes_init();
+  Mapper *mapper = mock_mapper_new(0, MIRRORING_HORIZONTAL);
+  NES *nes = nes_init(mapper);
+
   nes->cpu.PC = 0x020F;
   mem_write(nes, 0x020F, 0xCE);
   mem_write(nes, 0x0210, 0xD3);
@@ -602,12 +697,15 @@ TEST(test_DEC) {
   test_assert_int_eq(6, nes->cpu.cycles);
 
   nes_release(nes);
+  mapper_release(mapper);
 }
 
 TEST(test_ASL) {
   mem_init();
 
-  NES *nes = nes_init();
+  Mapper *mapper = mock_mapper_new(0, MIRRORING_HORIZONTAL);
+  NES *nes = nes_init(mapper);
+
   nes->cpu.PC = 0x020F;
   nes->cpu.A = 0b10001010;
   mem_write(nes, 0x020F, 0x0A);
@@ -619,12 +717,15 @@ TEST(test_ASL) {
   test_assert_int_eq(2, nes->cpu.cycles);
 
   nes_release(nes);
+  mapper_release(mapper);
 }
 
 TEST(test_ROL) {
   mem_init();
 
-  NES *nes = nes_init();
+  Mapper *mapper = mock_mapper_new(0, MIRRORING_HORIZONTAL);
+  NES *nes = nes_init(mapper);
+
   nes->cpu.PC = 0x020F;
   nes->cpu.A = 0b10001010;
   nes->cpu.P = 0b00000001;
@@ -637,12 +738,15 @@ TEST(test_ROL) {
   test_assert_int_eq(2, nes->cpu.cycles);
 
   nes_release(nes);
+  mapper_release(mapper);
 }
 
 TEST(test_ROL_carry) {
   mem_init();
 
-  NES *nes = nes_init();
+  Mapper *mapper = mock_mapper_new(0, MIRRORING_HORIZONTAL);
+  NES *nes = nes_init(mapper);
+
   nes->cpu.PC = 0x020F;
   nes->cpu.A = 0b10001010;
   nes->cpu.P = 0b10000000;
@@ -655,12 +759,15 @@ TEST(test_ROL_carry) {
   test_assert_int_eq(2, nes->cpu.cycles);
 
   nes_release(nes);
+  mapper_release(mapper);
 }
 
 TEST(test_JSR) {
   mem_init();
 
-  NES *nes = nes_init();
+  Mapper *mapper = mock_mapper_new(0, MIRRORING_HORIZONTAL);
+  NES *nes = nes_init(mapper);
+
   nes->cpu.PC = 0x020F;
   nes->cpu.S = 0xBF;
   mem_write(nes, 0x020F, 0x20);
@@ -676,12 +783,15 @@ TEST(test_JSR) {
   test_assert_int_eq(6, nes->cpu.cycles);
 
   nes_release(nes);
+  mapper_release(mapper);
 }
 
 TEST(test_RTS) {
   mem_init();
 
-  NES *nes = nes_init();
+  Mapper *mapper = mock_mapper_new(0, MIRRORING_HORIZONTAL);
+  NES *nes = nes_init(mapper);
+
   nes->cpu.PC = 0x0031;
   nes->cpu.S = 0xBD;
   mem_write(nes, 0x0031, 0x60);
@@ -695,6 +805,7 @@ TEST(test_RTS) {
   test_assert_int_eq(6, nes->cpu.cycles);
 
   nes_release(nes);
+  mapper_release(mapper);
 }
 
 struct bcc_test_pattern {
@@ -712,7 +823,9 @@ TEST(test_BCC) {
     struct bcc_test_pattern test_case = test_cases[i];
     mem_init();
 
-    NES *nes = nes_init();
+    Mapper *mapper = mock_mapper_new(0, MIRRORING_HORIZONTAL);
+    NES *nes = nes_init(mapper);
+
     nes->cpu.PC = 0x0031;
     nes->cpu.P = test_case.input_p;
 
@@ -725,13 +838,17 @@ TEST(test_BCC) {
     test_assert_int_eq(test_case.expected_cycles, nes->cpu.cycles);
 
     nes_release(nes);
+
+    mapper_release(mapper);
   }
 }
 
 TEST(test_CLD) {
   mem_init();
 
-  NES *nes = nes_init();
+  Mapper *mapper = mock_mapper_new(0, MIRRORING_HORIZONTAL);
+  NES *nes = nes_init(mapper);
+
   nes->cpu.PC = 0x020F;
   nes->cpu.P = 0b011001001;
   mem_write(nes, 0x020F, 0xD8);
@@ -743,12 +860,15 @@ TEST(test_CLD) {
   test_assert_int_eq(2, nes->cpu.cycles);
 
   nes_release(nes);
+  mapper_release(mapper);
 }
 
 TEST(test_SEI) {
   mem_init();
 
-  NES *nes = nes_init();
+  Mapper *mapper = mock_mapper_new(0, MIRRORING_HORIZONTAL);
+  NES *nes = nes_init(mapper);
+
   nes->cpu.PC = 0x020F;
   nes->cpu.P = 0b011001001;
   mem_write(nes, 0x020F, 0x78);
@@ -760,12 +880,15 @@ TEST(test_SEI) {
   test_assert_int_eq(2, nes->cpu.cycles);
 
   nes_release(nes);
+  mapper_release(mapper);
 }
 
 TEST(test_BRK) {
   mem_init();
 
-  NES *nes = nes_init();
+  Mapper *mapper = mock_mapper_new(0, MIRRORING_HORIZONTAL);
+  NES *nes = nes_init(mapper);
+
   nes->cpu.PC = 0x020F;
   nes->cpu.P = 0b01100001;
   nes->cpu.S = 0xBF;
@@ -781,12 +904,15 @@ TEST(test_BRK) {
   test_assert_int_eq(7, nes->cpu.cycles);
 
   nes_release(nes);
+  mapper_release(mapper);
 }
 
 TEST(test_RTI) {
   mem_init();
 
-  NES *nes = nes_init();
+  Mapper *mapper = mock_mapper_new(0, MIRRORING_HORIZONTAL);
+  NES *nes = nes_init(mapper);
+
   nes->cpu.PC = 0x020F;
   nes->cpu.P = 0b01100101;
   nes->cpu.S = 0xBC;
@@ -803,6 +929,7 @@ TEST(test_RTI) {
   test_assert_int_eq(6, nes->cpu.cycles);
 
   nes_release(nes);
+  mapper_release(mapper);
 }
 
 TEST_SUITE(test_execute) {

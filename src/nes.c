@@ -47,9 +47,6 @@ void nes_release(NES *nes) {
   if (nes == NULL) {
     return;
   }
-  if (nes->mapper != NULL) {
-    mapper_release(nes->mapper);
-  }
   free(nes);
 }
 
@@ -59,6 +56,9 @@ void cartridge_release(Cartridge *cart) {
   }
   if (cart->rom != NULL) {
     rom_release(cart->rom);
+  }
+  if (cart->mapper != NULL) {
+    mapper_release(cart->mapper);
   }
   free(cart);
 }

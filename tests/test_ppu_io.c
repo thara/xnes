@@ -9,8 +9,9 @@
 Mapper *mock_mapper_new(uint8_t mapper_no, MirroringMode mirroring);
 
 TEST(test_PPUCTRL) {
-  NES *nes = nes_new();
   Mapper *mapper = mock_mapper_new(0, MIRRORING_HORIZONTAL);
+
+  NES *nes = nes_new();
   nes_insert_cartridge(nes, mapper);
 
   uint16_t addr = 0x2000;
@@ -26,11 +27,13 @@ TEST(test_PPUCTRL) {
   test_assert_bit_eq(0b11, nes->ppu.ctrl & PPUCTRL_NT);
 
   nes_release(nes);
+  mapper_release(mapper);
 }
 
 TEST(test_PPUMASK) {
-  NES *nes = nes_new();
   Mapper *mapper = mock_mapper_new(0, MIRRORING_HORIZONTAL);
+
+  NES *nes = nes_new();
   nes_insert_cartridge(nes, mapper);
 
   uint16_t addr = 0x2001;
@@ -48,11 +51,13 @@ TEST(test_PPUMASK) {
               "grayscale should be on");
 
   nes_release(nes);
+  mapper_release(mapper);
 }
 
 TEST(test_PPUSTATUS) {
-  NES *nes = nes_new();
   Mapper *mapper = mock_mapper_new(0, MIRRORING_HORIZONTAL);
+
+  NES *nes = nes_new();
   nes_insert_cartridge(nes, mapper);
 
   uint16_t addr = 0x2002;
@@ -65,6 +70,7 @@ TEST(test_PPUSTATUS) {
   test_assert_bit_eq(0b01000000, ppu_read_register(nes, addr));
 
   nes_release(nes);
+  mapper_release(mapper);
 }
 
 TEST(test_OAMDATA) {
@@ -78,11 +84,13 @@ TEST(test_OAMDATA) {
   test_assert_byte_eq(255, nes->ppu.oam_addr);
 
   nes_release(nes);
+  mapper_release(mapper);
 }
 
 TEST(test_OAMDATA_read) {
-  NES *nes = nes_new();
   Mapper *mapper = mock_mapper_new(0, MIRRORING_HORIZONTAL);
+
+  NES *nes = nes_new();
   nes_insert_cartridge(nes, mapper);
 
   uint16_t addr = 0x2004;
@@ -93,6 +101,7 @@ TEST(test_OAMDATA_read) {
   test_assert_byte_eq(0xA3, ppu_read_register(nes, addr));
 
   nes_release(nes);
+  mapper_release(mapper);
 }
 
 TEST(test_OAMDATA_write) {
@@ -108,11 +117,13 @@ TEST(test_OAMDATA_write) {
   test_assert_byte_eq(0x32, nes->ppu.spr.oam[0xAB]);
 
   nes_release(nes);
+  mapper_release(mapper);
 }
 
 TEST(test_PPUSCROLL) {
-  NES *nes = nes_new();
   Mapper *mapper = mock_mapper_new(0, MIRRORING_HORIZONTAL);
+
+  NES *nes = nes_new();
   nes_insert_cartridge(nes, mapper);
 
   uint16_t addr = 0x2005;
@@ -128,11 +139,13 @@ TEST(test_PPUSCROLL) {
   test_assert_byte_eq(1, ppu_coarse_y(nes->ppu.t));
 
   nes_release(nes);
+  mapper_release(mapper);
 }
 
 TEST(test_PPUADDR) {
-  NES *nes = nes_new();
   Mapper *mapper = mock_mapper_new(0, MIRRORING_HORIZONTAL);
+
+  NES *nes = nes_new();
   nes_insert_cartridge(nes, mapper);
 
   uint16_t addr = 0x2006;
@@ -150,11 +163,13 @@ TEST(test_PPUADDR) {
   test_assert_byte_eq(0x3F91, nes->ppu.t);
 
   nes_release(nes);
+  mapper_release(mapper);
 }
 
 TEST(test_PPUDATA) {
-  NES *nes = nes_new();
   Mapper *mapper = mock_mapper_new(0, MIRRORING_HORIZONTAL);
+
+  NES *nes = nes_new();
   nes_insert_cartridge(nes, mapper);
 
   uint16_t addr = 0x2007;
@@ -167,6 +182,7 @@ TEST(test_PPUDATA) {
   test_assert_byte_eq(0x83, ppu_read(nes, 0x2F11));
 
   nes_release(nes);
+  mapper_release(mapper);
 }
 
 TEST_SUITE(test_ppu_io) {
