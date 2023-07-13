@@ -26,6 +26,17 @@ file(GLOB_RECURSE ALL_SOURCES
   ${HEADERS}
 )
 
+# SDL2
+find_package(SDL2 REQUIRED)
+if(SDL2_FOUND)
+  include_directories(${SDL2_INCLUDE_DIRS})
+  add_executable(xnes_sdl "${SOURCES}" src/sdl/main.c)
+  set_target_properties(xnes_sdl PROPERTIES C_STANDARD 11)
+
+  target_include_directories(xnes_sdl PRIVATE ${CMAKE_SOURCE_DIR}/src/sdl)
+  target_link_libraries(xnes_sdl ${SDL2_LIBRARIES})
+endif()
+
 find_program(CLANG_FORMAT_EXE clang-format)
 if(CLANG_FORMAT_EXE)
 add_custom_target(
