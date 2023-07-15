@@ -13,7 +13,7 @@ uint16_t cpu_get_operand(NES *nes, AddressingMode mode);
 
 Mapper *mock_mapper_new(uint8_t mapper_no, MirroringMode mirroring);
 
-NES* nes_init() {
+NES *nes_init() {
   NES *nes = nes_new();
   Mapper *mapper = mock_mapper_new(0, MIRRORING_HORIZONTAL);
   nes_insert_cartridge(nes, mapper);
