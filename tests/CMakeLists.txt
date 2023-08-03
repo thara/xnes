@@ -4,7 +4,7 @@ list(REMOVE_ITEM MOCKED_SOURCES "${CMAKE_SOURCE_DIR}/src/mem.c")
 list(APPEND MOCKED_SOURCES "${CMAKE_SOURCE_DIR}/tests/mock_mem.c")
 
 add_library(mocked_xnes STATIC ${MOCKED_SOURCES})
-target_include_directories(mocked_xnes PRIVATE ${CMAKE_SOURCE_DIR}/src)
+target_include_directories(mocked_xnes PRIVATE ${CMAKE_SOURCE_DIR}/include ${CMAKE_SOURCE_DIR}/src)
 target_include_directories(mocked_xnes PRIVATE ${CMAKE_SOURCE_DIR}/tests)
 set_target_properties(mocked_xnes PROPERTIES C_STANDARD 11)
 target_compile_definitions(mocked_xnes PRIVATE UNIT_TEST)

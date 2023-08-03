@@ -1,3 +1,4 @@
 -I/opt/homebrew/include
+-I./include
 -I./src
 -I./tests
