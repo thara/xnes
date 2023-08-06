@@ -13,6 +13,9 @@ struct xnes {
 XNES *xnes_new(XNESFrameRenderer *frame_renderer) {
   struct xnes *xnes = calloc(1, sizeof(struct xnes));
   xnes->nes = nes_new();
+  xnes->nes->renderer.state = frame_renderer->state;
+  xnes->nes->renderer.update_frame = frame_renderer->update_frame;
+  xnes->nes->renderer.clean_up = frame_renderer->clean_up;
   return xnes;
 }
 

@@ -28,4 +28,3 @@ void xnes_run_frame(XNES *);
 void xnes_release(XNES *);
 
 #endif // XNES_H
-

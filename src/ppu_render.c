@@ -176,7 +176,8 @@ void ppu_step(NES *nes) {
 
   } else if (ppu->scan.line == 240 && ppu->scan.dot == 1) {
     // post-render
-    // TODO: update frame
+    nes->renderer.update_frame(nes->renderer.state, ppu->buffer,
+                               SCREEN_WIDTH * SCREEN_HEIGHT);
   } else if (ppu->scan.line == 241 && ppu->scan.dot == 1) {
     // NMI
     ppu_status_set(&nes->ppu, PPUSTATUS_VBLANK, true);
