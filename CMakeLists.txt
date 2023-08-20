@@ -39,8 +39,8 @@ if(SDL2_FOUND)
   add_executable(xnes_sdl src/sdl/main.c)
   set_target_properties(xnes_sdl PROPERTIES C_STANDARD 11)
 
-  target_include_directories(xnes_sdl PRIVATE ${SDL2_INCLUDE_DIRS})
-  target_link_libraries(xnes_sdl PkgConfig::SDL2)
+  target_include_directories(xnes_sdl PRIVATE ${SDL2_INCLUDE_DIRS} ${CMAKE_SOURCE_DIR}/include/)
+  target_link_libraries(xnes_sdl PkgConfig::SDL2 xnes)
   target_compile_options(xnes_sdl PRIVATE ${SDL2_CFLAGS_OTHER})
 endif()
 

@@ -19,9 +19,50 @@ void update_frame(void *state, uint8_t *buf, uint64_t len);
 void render_frame(RenderingState *renderingState, SDL_Renderer *ren,
                   SDL_Texture *frameTex, SDL_Rect *screenRect);
 
-int main(void) {
+int main(int argc, char *argv[]) {
+  if (argc != 2) {
+    fprintf(stderr, "Usage: %s <rom filename>\n", argv[0]);
+    return 1;
+  }
+
+  char *filename = argv[1];
+  FILE *file = fopen(filename, "rb");
+  if (file == NULL) {
+    fprintf(stderr, "fail to open ROM file: %s\n", filename);
+    return 2;
+  }
+
+  if (fseek(file, 0, SEEK_END) != 0) {
+    fprintf(stderr, "fail to seek %s\n", filename);
+    fclose(file);
+    return 3;
+  }
+  size_t rom_size = ftell(file);
+  if (fseek(file, 0, SEEK_SET) != 0) {
+    fprintf(stderr, "fail to seek %s\n", filename);
+    fclose(file);
+    return 4;
+  }
+
+  unsigned char *rom_data = malloc(rom_size);
+  if (rom_data == NULL) {
+    fprintf(stderr, "fail to malloc(%zu)\n", rom_size);
+    fclose(file);
+    return 5;
+  }
+
+  if (fread(rom_data, 1, rom_size, file) != rom_size) {
+    fprintf(stderr, "fail to fread\n");
+    free(rom_data);
+    fclose(file);
+    return 6;
+  }
+
+  fclose(file);
+
   if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO) != 0) {
     fprintf(stderr, "SDL_Init Error: %s\n", SDL_GetError());
+    free(rom_data);
     return EXIT_FAILURE;
   }
 
@@ -33,6 +74,7 @@ int main(void) {
       winHeight, SDL_WINDOW_SHOWN | SDL_WINDOW_INPUT_FOCUS);
   if (win == NULL) {
     fprintf(stderr, "SDL_CreateWindow Error: %s\n", SDL_GetError());
+    free(rom_data);
     return EXIT_FAILURE;
   }
 
@@ -42,6 +84,7 @@ int main(void) {
     fprintf(stderr, "SDL_CreateRenderer Error: %s\n", SDL_GetError());
     SDL_DestroyWindow(win);
     SDL_Quit();
+    free(rom_data);
     return EXIT_FAILURE;
   }
   SDL_RenderSetLogicalSize(ren, winWidth, winHeight);
@@ -56,6 +99,7 @@ int main(void) {
     SDL_DestroyRenderer(ren);
     SDL_DestroyWindow(win);
     SDL_Quit();
+    free(rom_data);
     return EXIT_FAILURE;
   }
 
@@ -65,8 +109,7 @@ int main(void) {
 
   XNES *xnes = xnes_new(&frameRenderer);
 
-  // TODO load ROM
-  /* xnes_insert_cartridge(xnes, ) */
+  xnes_insert_cartridge(xnes, rom_data, rom_size);
 
   bool quit = false;
   SDL_Event event;
@@ -102,6 +145,7 @@ int main(void) {
   SDL_DestroyWindow(win);
   SDL_Quit();
 
+  free(rom_data);
   return EXIT_SUCCESS;
 }
 
