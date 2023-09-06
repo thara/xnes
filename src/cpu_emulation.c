@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include <stdint.h>
 #include <stdbool.h>
 
@@ -39,7 +40,8 @@ void cpu_power_on(NES *nes) {
 }
 
 void cpu_reset(NES *nes) {
-  nes->cpu.PC = cpu_read(nes, 0xFFFC);
+  nes->cpu.PC = cpu_read_word(nes, 0xFFFC);
+  printf("initial PC: %x\n", nes->cpu.PC);
   nes->cpu.P = CPU_STATUS_I;
   nes->cpu.S -= 3;
 }
