@@ -23,6 +23,8 @@ typedef enum {
 
 XNESROMParseError xnes_insert_cartridge(XNES *xnes, uint8_t *buf, uint64_t len);
 
+void xnes_init(XNES *);
+
 void xnes_run_frame(XNES *);
 
 void xnes_release(XNES *);

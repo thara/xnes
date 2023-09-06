@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <stdio.h>
 
 #include "xnes.h"
 
@@ -26,7 +27,19 @@ XNES *xnes_new(XNESFrameRenderer *frame_renderer) {
 XNESROMParseError xnes_insert_cartridge(XNES *xnes, uint8_t *buf,
                                         uint64_t len) {
   xnes->cart = load_cartridge(buf, len);
+  if (xnes->cart->rom_error == ROM_PARSE_ERROR_NONE) {
+    nes_insert_cartridge(xnes->nes, xnes->cart->mapper);
+
+    char str[256];
+    mapper_info(xnes->cart->mapper, str, sizeof(str));
+    printf("%s\n", str);
+  }
   return (XNESROMParseError)xnes->cart->rom_error;
+}
+
+void xnes_init(XNES *xnes) {
+  nes_power_on(xnes->nes);
+  nes_reset(xnes->nes);
 }
 
 void xnes_run_frame(XNES *xnes) {
