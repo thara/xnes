@@ -12,7 +12,7 @@
 const int windowScale = 3;
 
 typedef struct {
-  uint32_t pixels[240];
+  uint32_t pixels[SCREEN_WIDTH * 240];
 } RenderingState;
 
 void update_frame(void *state, uint8_t *buf, uint64_t len);
@@ -109,7 +109,18 @@ int main(int argc, char *argv[]) {
 
   XNES *xnes = xnes_new(&frameRenderer);
 
-  xnes_insert_cartridge(xnes, rom_data, rom_size);
+  XNESROMParseError error = xnes_insert_cartridge(xnes, rom_data, rom_size);
+  if (error != XNES_ROM_PARSE_ERROR_NONE) {
+    fprintf(stderr, "xnes_insert_cartridge Error: %d\n", error);
+    xnes_release(xnes);
+    SDL_DestroyRenderer(ren);
+    SDL_DestroyWindow(win);
+    SDL_Quit();
+    free(rom_data);
+    return EXIT_FAILURE;
+  }
+
+  xnes_init(xnes);
 
   bool quit = false;
   SDL_Event event;
@@ -145,7 +156,6 @@ int main(int argc, char *argv[]) {
   SDL_DestroyWindow(win);
   SDL_Quit();
 
-  free(rom_data);
   return EXIT_SUCCESS;
 }
 
@@ -166,11 +176,12 @@ void update_frame(void *state, uint8_t *buf, uint64_t len) {
   RenderingState *renderingState = (RenderingState *)state;
 
   for (int i = 0; i < len; i++) {
+    /* printf("%d %d\n", i, buf[i]); */
     renderingState->pixels[i] = pallete[buf[i]];
   }
 }
 
-const int pitch = 240 * sizeof(uint32_t);
+const int pitch = 256 * sizeof(uint32_t);
 
 void render_frame(RenderingState *renderingState, SDL_Renderer *ren,
                   SDL_Texture *frameTex, SDL_Rect *screenRect) {
