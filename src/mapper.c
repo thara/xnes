@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <string.h>
 
 #include "mapper.h"
 
@@ -9,6 +10,7 @@ struct mapper {
 
   uint8_t (*read)(Mapper *self, uint16_t addr);
   void (*write)(Mapper *self, uint16_t addr, uint8_t value);
+  void (*info)(Mapper *self, uint8_t *buf, uint64_t len);
 
   MirroringMode mirroring;
 };
@@ -23,6 +25,12 @@ uint8_t mapper_read(Mapper *mapper, uint16_t addr) {
 void mapper_write(Mapper *mapper, uint16_t addr, uint8_t value) {
   mapper->write(mapper, addr, value);
 }
+
+void mapper_info(Mapper *mapper, char *buf, uint64_t len) {
+  mapper->info(mapper, buf, len);
+}
+
+void get_mirroring_str(MirroringMode mirroring, char *out);
 
 typedef struct {
   Mapper base;
@@ -39,6 +47,7 @@ typedef struct {
 Mapper *mapper0_new(ROM *rom);
 uint8_t mapper0_read(Mapper *self, uint16_t addr);
 void mapper0_write(Mapper *self, uint16_t addr, uint8_t value);
+void mapper0_info(Mapper *self, char *buf, uint64_t len);
 
 void mapper_base_init(Mapper *base, ROM *rom) {
   base->mapper_no = rom->mapper_no;
@@ -74,6 +83,7 @@ Mapper *mapper0_new(ROM *rom) {
   mapper_base_init(&impl->base, rom);
   impl->base.read = mapper0_read;
   impl->base.write = mapper0_write;
+  impl->base.info = mapper0_info;
 
   impl->prg = rom->raw + header_size;
   impl->prg_size = rom->prg_rom_size * 0x4000;
@@ -85,6 +95,8 @@ Mapper *mapper0_new(ROM *rom) {
 
   return (Mapper *)impl;
 }
+
+#include <stdio.h>
 
 uint8_t mapper0_read(Mapper *self, uint16_t addr) {
   Mapper0 *impl = (Mapper0 *)self;
@@ -110,6 +122,19 @@ void mapper0_write(Mapper *self, uint16_t addr, uint8_t value) {
   }
 }
 
+void mapper0_info(Mapper *self, char *buf, uint64_t len) {
+  Mapper0 *impl = (Mapper0 *)self;
+
+  char mirroring_str[10];
+  get_mirroring_str(self->mirroring, mirroring_str);
+
+  snprintf(buf, len,
+           "mapper 0:\n\tPRG: 0x%x byte\n\tCHR: 0x%x byte\n\tmirroring: "
+           "%s\n\tmirrored: %s",
+           impl->prg_size, impl->chr_size, mirroring_str,
+           impl->mirrored ? "true" : "false");
+}
+
 typedef struct {
   Mapper base;
 } MockMapper;
@@ -125,4 +150,18 @@ Mapper *mock_mapper_new(uint8_t mapper_no, MirroringMode mirroring) {
   impl->base.read = mock_mapper_read;
   impl->base.write = mock_mapper_write;
   return (Mapper *)impl;
+}
+
+void get_mirroring_str(MirroringMode mirroring, char *out) {
+  switch (mirroring) {
+  case MIRRORING_HORIZONTAL:
+    strcpy(out, "Horizontal");
+    break;
+  case MIRRORING_VERTICAL:
+    strcpy(out, "Vertical");
+    break;
+  default:
+    strcpy(out, "(unsupported)");
+    break;
+  }
 }
