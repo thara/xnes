@@ -4,10 +4,10 @@
 
 #include "cpu.h"
 #include "cpu_emulation.h"
+#include "cpu_decoder.h"
 
 #include "nes_emu.h"
 
-#include "cpu_instruction.h"
 #include "mem.h"
 
 void cpu_tick(NES *nes) {

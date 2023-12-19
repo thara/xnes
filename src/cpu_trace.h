@@ -2,7 +2,7 @@
 #define CPU_TRACE_H
 
 #include "nes.h"
-#include "cpu_instruction.h"
+#include "cpu_decoder.h"
 
 typedef struct {
   CPU current_state;

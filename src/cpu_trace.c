@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "cpu_instruction.h"
+#include "cpu_decoder.h"
 #include "mem.h"
 
 uint8_t instruction_length(AddressingMode mode);

@@ -8,7 +8,7 @@ void cpu_reset(NES *nes);
 void cpu_step(NES *nes);
 
 #ifdef UNIT_TEST
-#include "cpu_instruction.h"
+#include "cpu_decoder.h"
 
 uint16_t cpu_get_operand(NES *nes, AddressingMode mode);
 void cpu_execute(NES *nes, CPUInstruction inst);

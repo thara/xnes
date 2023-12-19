@@ -1,4 +1,4 @@
-#include "cpu_instruction.h"
+#include "cpu_decoder.h"
 
 CPUInstruction cpu_decode(uint8_t opcode) {
   switch (opcode) {

@@ -1,6 +1,6 @@
 #include "test_common.h"
 
-#include "cpu_instruction.h"
+#include "cpu_decoder.h"
 #include "cpu_emulation.h"
 #include "nes.h"
 #include "nes_emu.h"
