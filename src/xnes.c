@@ -4,6 +4,7 @@
 #include "xnes.h"
 
 #include "nes.h"
+#include "nes_emu.h"
 
 struct xnes {
   NES *nes;

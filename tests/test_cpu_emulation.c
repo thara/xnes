@@ -3,6 +3,7 @@
 #include "cpu_instruction.h"
 #include "cpu_emulation.h"
 #include "nes.h"
+#include "nes_emu.h"
 
 #include "mapper.h"
 

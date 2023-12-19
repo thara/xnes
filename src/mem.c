@@ -1,10 +1,14 @@
 #include "mem.h"
 
+#include "nes_emu.h"
+
 #include "input.h"
 #include "stdlib.h"
 #include "mapper.h"
 
 #include "ppu_io.h"
+
+#include <stdio.h>
 
 uint8_t MEM_MOCKABLE(mem_read)(NES *nes, uint16_t addr) {
   if (addr <= 0x1FFF) {

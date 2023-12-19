@@ -5,6 +5,8 @@
 #include "cpu.h"
 #include "cpu_emulation.h"
 
+#include "nes_emu.h"
+
 #include "cpu_instruction.h"
 #include "mem.h"
 

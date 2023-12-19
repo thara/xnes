@@ -3,6 +3,7 @@
 #include "ppu_io.h"
 
 #include "nes.h"
+#include "nes_emu.h"
 #include "ppu.h"
 #include "mapper.h"
 

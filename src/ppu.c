@@ -117,7 +117,13 @@ void ppu_bg_shift(PPU *ppu) {
       (ppu->bg.attr_shift_high << 1) | ppu->bg.attr_latch_high;
 }
 
+#include <stdio.h>
+
 void ppu_bg_shift_reload(PPU *ppu) {
+    if (0 < ppu->bg.high) {
+        printf("bsr[%d:%d]%x V:%x\n", ppu->scan.line, ppu->scan.dot, ppu->bg.high, ppu->bg.addr);
+    }
+
   ppu->bg.shift_low = (ppu->bg.shift_low & 0xFF00) | ppu->bg.low;
   ppu->bg.shift_high = (ppu->bg.shift_high & 0xFF00) | ppu->bg.high;
   ppu->bg.attr_latch_low = ppu->bg.at & 1;

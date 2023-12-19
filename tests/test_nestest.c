@@ -3,6 +3,7 @@
 #include "test_common.h"
 
 #include "nes.h"
+#include "nes_emu.h"
 #include "rom.h"
 #include "cpu_trace.h"
 #include "mem.h"
