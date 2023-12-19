@@ -1,5 +1,5 @@
-#ifndef CPU_INSTRUCTION_H
-#define CPU_INSTRUCTION_H
+#ifndef CPU_DECODER_H
+#define CPU_DECODER_H
 
 #include <stdint.h>
 
@@ -52,4 +52,4 @@ typedef struct {
 
 CPUInstruction cpu_decode(uint8_t opcode);
 
-#endif // CPU_INSTRUCTION_H
+#endif // CPU_DECODER_H
