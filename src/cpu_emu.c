@@ -3,7 +3,7 @@
 #include <stdbool.h>
 
 #include "cpu.h"
-#include "cpu_emulation.h"
+#include "cpu_emu.h"
 #include "cpu_decoder.h"
 
 #include "nes_emu.h"

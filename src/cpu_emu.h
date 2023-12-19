@@ -1,5 +1,5 @@
-#ifndef CPU_EMULATION_H
-#define CPU_EMULATION_H
+#ifndef CPU_EMU_H
+#define CPU_EMU_H
 
 #include "nes.h"
 
@@ -14,4 +14,4 @@ uint16_t cpu_get_operand(NES *nes, AddressingMode mode);
 void cpu_execute(NES *nes, CPUInstruction inst);
 #endif
 
-#endif // CPU_EMULATION_H
+#endif // CPU_EMU_H

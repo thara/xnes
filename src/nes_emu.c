@@ -4,7 +4,7 @@
 
 #include "mapper.h"
 #include "cpu.h"
-#include "cpu_emulation.h"
+#include "cpu_emu.h"
 
 #include "ppu_render.h"
 

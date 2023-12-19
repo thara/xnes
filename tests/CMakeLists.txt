@@ -22,7 +22,7 @@ macro(XNES_ADD_MOCKED_TEST NAME SOURCE)
 endmacro()
 
 XNES_ADD_MOCKED_TEST(cpu_test test_cpu.c)
-XNES_ADD_MOCKED_TEST(cpu_emulation_test test_cpu_emulation.c)
+XNES_ADD_MOCKED_TEST(cpu_emu_test test_cpu_emu.c)
 XNES_ADD_MOCKED_TEST(rom_test test_rom.c)
 XNES_ADD_MOCKED_TEST(mapper_test test_mapper.c)
 XNES_ADD_MOCKED_TEST(input_test test_input.c)
