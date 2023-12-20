@@ -6,7 +6,7 @@
 #include "cpu.h"
 #include "cpu_emu.h"
 
-#include "ppu_render.h"
+#include "ppu_emu.h"
 
 Cartridge *load_cartridge(uint8_t *buf, uint64_t len) {
   Cartridge *cart = calloc(1, sizeof(Cartridge));

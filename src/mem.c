@@ -6,7 +6,7 @@
 #include "stdlib.h"
 #include "mapper.h"
 
-#include "ppu_io.h"
+#include "ppu_emu.h"
 
 #include <stdio.h>
 

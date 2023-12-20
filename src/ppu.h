@@ -97,53 +97,6 @@ typedef enum {
   PPUSTATUS_VBLANK = 1 << 7,       // In vblank?
 } PPUSTATUS;
 
-void ppu_ctrl_set(PPU *ppu, PPUCTRL c, bool v);
-void ppu_mask_set(PPU *ppu, PPUMASK m, bool v);
-void ppu_status_set(PPU *ppu, PPUSTATUS s, bool v);
-
-bool ppu_ctrl_enabled(PPU *ppu, PPUCTRL c);
-bool ppu_mask_enabled(PPU *ppu, PPUMASK m);
-bool ppu_status_enabled(PPU *ppu, PPUSTATUS s);
-
-bool ppu_rendering_enabled(PPU *ppu);
-
-/// https://wiki.nesdev.com/w/index.php/PPU_scrolling#PPU_internal_registers
-///
-/// yyy NN YYYYY XXXXX
-/// ||| || ||||| +++++-- coarse X scroll
-/// ||| || +++++-------- coarse Y scroll
-/// ||| ++-------------- nametable select
-/// +++----------------- fine Y scroll
-
-uint16_t ppu_coarse_x(uint16_t v);
-uint16_t ppu_coarse_y(uint16_t v);
-uint16_t ppu_nt_select(uint16_t v);
-uint16_t ppu_fine_y(uint16_t v);
-
-// https://www.nesdev.org/wiki/PPU_scrolling#Tile_and_attribute_fetching
-//
-// NN 1111 YYY XXX
-// || |||| ||| +++-- high 3 bits of coarse X (x/4)
-// || |||| +++------ high 3 bits of coarse Y (y/4)
-// || ++++---------- attribute offset (960 bytes)
-// ++--------------- nametable select
-uint16_t ppu_tile_addr(uint16_t v);
-uint16_t ppu_attr_addr(uint16_t v);
-
-void ppu_incr_v(PPU *ppu);
-
-void ppu_incr_coarse_x(PPU *ppu);
-void ppu_incr_y(PPU *ppu);
-void ppu_copy_x(PPU *ppu);
-void ppu_copy_y(PPU *ppu);
-
-void ppu_bg_shift(PPU *ppu);
-void ppu_bg_shift_reload(PPU *ppu);
-
-void ppu_sprite_clear(Sprite *spr);
-
-uint16_t ppu_sprite_height(PPU *ppu);
-
 typedef enum {
   SPRITE_ATTR_PALETTE = 0b11,
   SPRITE_ATTR_BEHIND_BG = 1 << 5,

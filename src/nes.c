@@ -28,4 +28,3 @@ void nes_release(NES *nes) {
   nes->renderer.clean_up(nes->renderer.state);
   free(nes);
 }
-
