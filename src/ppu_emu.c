@@ -9,22 +9,10 @@
 // Notes in https://www.nesdev.org/w/images/default/d/d1/Ntsc_timing.png
 #define PIXEL_DELAYED 2
 
-void ppu_ctrl_set(PPU *ppu, PPUCTRL e, bool v) {
-  ppu->ctrl &= ~e;
-  if (v)
-    ppu->ctrl &= e;
-}
-
-void ppu_mask_set(PPU *ppu, PPUMASK e, bool v) {
-  ppu->mask &= ~e;
-  if (v)
-    ppu->mask &= e;
-}
-
 void ppu_status_set(PPU *ppu, PPUSTATUS e, bool v) {
   ppu->status &= ~e;
   if (v)
-    ppu->status &= e;
+    ppu->status |= e;
 }
 
 bool ppu_ctrl_enabled(PPU *ppu, PPUCTRL e) { return (ppu->ctrl & e) == e; }
@@ -75,8 +63,8 @@ void ppu_incr_v(PPU *ppu) {
 
 void ppu_incr_coarse_x(PPU *ppu) {
   // http://wiki.nesdev.com/w/index.php/PPU_scrolling#Coarse_X_increment
-  if (ppu_coarse_x(ppu->x) == 31) {
-    ppu->v &= !(uint16_t)0x001F; // coarse X = 0
+  if (ppu_coarse_x(ppu->v) == 31) {
+    ppu->v &= ~(uint16_t)0x001F; // coarse X = 0
     ppu->v ^= 0x0400;            // switch horizontal nametable
   } else {
     ppu->v++;
@@ -126,11 +114,6 @@ void ppu_bg_shift(PPU *ppu) {
 #include <stdio.h>
 
 void ppu_bg_shift_reload(PPU *ppu) {
-  if (0 < ppu->bg.high) {
-    printf("bsr[%d:%d]%x V:%x\n", ppu->scan.line, ppu->scan.dot, ppu->bg.high,
-           ppu->bg.addr);
-  }
-
   ppu->bg.shift_low = (ppu->bg.shift_low & 0xFF00) | ppu->bg.low;
   ppu->bg.shift_high = (ppu->bg.shift_high & 0xFF00) | ppu->bg.high;
   ppu->bg.attr_latch_low = ppu->bg.at & 1;
@@ -170,6 +153,7 @@ void ppu_step(NES *nes) {
       }
       if (pre) {
         ppu_status_set(ppu, PPUSTATUS_SPR_OVERFLOW, false);
+        ppu_status_set(ppu, PPUSTATUS_SPR_0_HIT, false);
       }
       break;
 
@@ -345,7 +329,7 @@ void ppu_step(NES *nes) {
 
 void render_pixel(NES *nes) {
   PPU *ppu = &nes->ppu;
-  int16_t x = ppu->scan.dot - PIXEL_DELAYED;
+  uint16_t x = ppu->scan.dot - PIXEL_DELAYED;
 
   // visible
   if (ppu->scan.line < 240 && x < 256) {
@@ -355,47 +339,43 @@ void render_pixel(NES *nes) {
         !(!ppu_mask_enabled(&nes->ppu, PPUMASK_BG_LEFT) && x < 8)) {
       bg = NTH(ppu->bg.shift_high, 15 - ppu->x) << 1 |
            NTH(ppu->bg.shift_low, 15 - ppu->x);
-      /* if (0 < bg) { */
-      /*     printf("[%d]bh:%d(%d)", ppu->scan.dot, ppu->bg.shift_high,
-       * ppu->bg.high); */
-      /* } */
-      /* if (0 < bg) { */
-      /*   bg |= (NTH(ppu->bg.attr_shift_high, 7 - ppu->x) << 1 | */
-      /*          NTH(ppu->bg.attr_shift_low, 7 - ppu->x)) */
-      /*         << 2; */
-      /* } */
+      if (0 < bg) {
+        bg |= (NTH(ppu->bg.attr_shift_high, 7 - ppu->x) << 1 |
+               NTH(ppu->bg.attr_shift_low, 7 - ppu->x))
+              << 2;
+      }
     }
     // sprites
     uint8_t spr = 0;
     bool behind_bg = 0;
-    /* if (ppu_mask_enabled(&nes->ppu, PPUMASK_SPR) && */
-    /*     !(!ppu_mask_enabled(&nes->ppu, PPUMASK_SPR_LEFT) && x < 8)) { */
-    /*   // https://www.nesdev.org/wiki/PPU_sprite_priority */
-    /*   // Sprites with lower OAM indices are drawn in front */
-    /*   for (int i = 7; 0 <= i; i--) { */
-    /*     Sprite s = ppu->spr.primary[i]; */
-    /*     if (!s.enabled) { */
-    /*       continue; */
-    /*     } */
-    /*     uint16_t spr_x = x - s.x; */
-    /*     if (8 <= spr_x) { */
-    /*       continue; */
-    /*     } */
-    /*     if (0 < (s.attr & SPRITE_ATTR_FLIP_HORIZONTALLY)) { */
-    /*       spr_x ^= 7; // horizontal flip */
-    /*     } */
-    /*     uint8_t px = 7 - spr_x; */
-    /*     uint8_t palette = ((s.high >> px) & 1) << 1 | (s.low >> px) << 1; */
-    /*     if (palette == 0) { */
-    /*       continue; */
-    /*     } */
-    /*     if (i == 0 && bg != 0 && x != 255) { */
-    /*       ppu_status_set(ppu, PPUSTATUS_SPR_0_HIT, true); */
-    /*     } */
-    /*     spr = (palette | (s.attr & SPRITE_ATTR_PALETTE) << 2) + 0x10; */
-    /*     behind_bg = 0 < (s.attr & SPRITE_ATTR_BEHIND_BG); */
-    /*   } */
-    /* } */
+    if (ppu_mask_enabled(&nes->ppu, PPUMASK_SPR) &&
+        !(!ppu_mask_enabled(&nes->ppu, PPUMASK_SPR_LEFT) && x < 8)) {
+      // https://www.nesdev.org/wiki/PPU_sprite_priority
+      // Sprites with lower OAM indices are drawn in front
+      for (int i = 7; 0 <= i; i--) {
+        Sprite s = ppu->spr.primary[i];
+        if (!s.enabled) {
+          continue;
+        }
+        uint16_t spr_x = x - s.x;
+        if (8 <= spr_x) {
+          continue;
+        }
+        if (0 < (s.attr & SPRITE_ATTR_FLIP_HORIZONTALLY)) {
+          spr_x ^= 7; // horizontal flip
+        }
+        uint8_t px = 7 - spr_x;
+        uint8_t palette = ((s.high >> px) & 1) << 1 | (s.low >> px) << 1;
+        if (palette == 0) {
+          continue;
+        }
+        if (i == 0 && bg != 0 && x != 255) {
+          ppu_status_set(ppu, PPUSTATUS_SPR_0_HIT, true);
+        }
+        spr = (palette | (s.attr & SPRITE_ATTR_PALETTE) << 2) + 0x10;
+        behind_bg = 0 < (s.attr & SPRITE_ATTR_BEHIND_BG);
+      }
+    }
 
     uint8_t color = 0;
     if (ppu_rendering_enabled(&nes->ppu)) {
@@ -408,10 +388,6 @@ void render_pixel(NES *nes) {
       } else if (0 < bg && 0 < spr) {
         color = behind_bg ? bg : spr;
       }
-    }
-    if (0 < color) {
-      /* printf("%d %d %d\n", ppu->scan.line, x, color); */
-      printf("%d(%d)", color, bg);
     }
     ppu->buffer[ppu->scan.line * 256 + x] = ppu_read(nes, 0x3F00 + color);
   }
