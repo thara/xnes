@@ -176,7 +176,6 @@ void update_frame(void *state, uint8_t *buf, uint64_t len) {
   RenderingState *renderingState = (RenderingState *)state;
 
   for (int i = 0; i < len; i++) {
-    /* printf("%d %d\n", i, buf[i]); */
     renderingState->pixels[i] = pallete[buf[i]];
   }
 }
