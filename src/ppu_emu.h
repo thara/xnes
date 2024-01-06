@@ -20,6 +20,7 @@ uint16_t ppu_fine_y(uint16_t v);
 uint16_t ppu_tile_addr(uint16_t v);
 uint16_t ppu_attr_addr(uint16_t v);
 
+void ppu_status_set(PPU *ppu, PPUSTATUS e, bool v);
 bool ppu_ctrl_enabled(PPU *ppu, PPUCTRL c);
 bool ppu_mask_enabled(PPU *ppu, PPUMASK m);
 bool ppu_status_enabled(PPU *ppu, PPUSTATUS s);

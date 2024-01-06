@@ -94,6 +94,14 @@ TEST(test_PPUSTATUS) {
   test_assert(nes->ppu.w == false, "w should be false");
   test_assert_bit_eq(0b01000000, ppu_read_register(nes, addr));
 
+  ppu_status_set(&nes->ppu, PPUSTATUS_VBLANK, false);
+  test_assert(!ppu_status_enabled(&nes->ppu, PPUSTATUS_VBLANK), "vblank should be disabled");
+  ppu_status_set(&nes->ppu, PPUSTATUS_SPR_0_HIT, false);
+  test_assert_bit_eq(0b00000000, ppu_read_register(nes, addr));
+
+  ppu_status_set(&nes->ppu, PPUSTATUS_VBLANK, true);
+  test_assert(ppu_status_enabled(&nes->ppu, PPUSTATUS_VBLANK), "vblank should be enabled");
+
   nes_release(nes);
 }
 
