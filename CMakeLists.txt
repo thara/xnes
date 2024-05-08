@@ -8,6 +8,11 @@ add_library(xnes STATIC ${SOURCES})
 target_include_directories(xnes PRIVATE ${CMAKE_SOURCE_DIR}/src)
 set_target_properties(xnes PROPERTIES C_STANDARD 17)
 
+file(GLOB_RECURSE ALL_SOURCES
+  ${SOURCES}
+  ${HEADERS}
+)
+
 # code formatter
 find_program(CLANG_FORMAT_EXE clang-format)
 if(CLANG_FORMAT_EXE)
